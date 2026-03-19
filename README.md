@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+ HEAD
 # Proyecto-UNV-HMND-fase-1-REAL
-=======
+
 # UNV-HMND
 
 <p align="center">
@@ -317,4 +317,4 @@ Esto reduce el costo de evolucionar hacia:
 ## Project Status
 
 Base técnica funcional, demostrable y con estructura suficientemente limpia para evolucionar a una primera versión de producto.
->>>>>>> eb5bbaa (Fase 1 base del sistema de agentes IA)
+ eb5bbaa (Fase 1 base del sistema de agentes IA)
