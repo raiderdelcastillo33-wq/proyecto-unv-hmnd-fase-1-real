@@ -1,0 +1,1 @@
+{"version":3,"file":"LearningRoomDTO.d.ts","sourceRoot":"","sources":["../../../src/application/dto/LearningRoomDTO.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe;IAC9B,MAAM,EAAE,MAAM,CAAA;IACd,KAAK,EAAE,MAAM,CAAA;IACb,IAAI,EAAE,MAAM,CAAA;CACb;AAED,MAAM,WAAW,kBAAkB;IACjC,MAAM,EAAE,MAAM,CAAA;IACd,MAAM,EAAE,MAAM,CAAA;IACd,IAAI,EAAE,MAAM,CAAA;CACb"}

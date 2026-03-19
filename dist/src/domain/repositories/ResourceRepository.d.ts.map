@@ -1,0 +1,1 @@
+{"version":3,"file":"ResourceRepository.d.ts","sourceRoot":"","sources":["../../../../src/domain/repositories/ResourceRepository.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,sBAAsB,CAAA;AAE/C,MAAM,WAAW,kBAAkB;IACjC,MAAM,CAAC,QAAQ,EAAE,QAAQ,GAAG,OAAO,CAAC,QAAQ,CAAC,CAAA;IAC7C,cAAc,CAAC,QAAQ,CAAC,EAAE,QAAQ,CAAC,UAAU,CAAC,GAAG,OAAO,CAAC,QAAQ,EAAE,CAAC,CAAA;CACrE"}

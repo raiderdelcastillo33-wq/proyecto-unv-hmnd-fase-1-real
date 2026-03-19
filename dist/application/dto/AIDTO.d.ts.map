@@ -1,0 +1,1 @@
+{"version":3,"file":"AIDTO.d.ts","sourceRoot":"","sources":["../../../src/application/dto/AIDTO.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,iBAAiB;IAChC,MAAM,EAAE,MAAM,CAAA;IACd,OAAO,EAAE,WAAW,GAAG,iBAAiB,GAAG,eAAe,CAAA;IAC1D,MAAM,EAAE,MAAM,CAAA;IACd,OAAO,CAAC,EAAE,MAAM,CAAA;CACjB"}

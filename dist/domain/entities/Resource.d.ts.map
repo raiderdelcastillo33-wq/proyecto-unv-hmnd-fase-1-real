@@ -1,0 +1,1 @@
+{"version":3,"file":"Resource.d.ts","sourceRoot":"","sources":["../../../src/domain/entities/Resource.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,QAAQ;IACvB,EAAE,EAAE,MAAM,CAAA;IACV,KAAK,EAAE,MAAM,CAAA;IACb,QAAQ,EAAE,SAAS,GAAG,MAAM,GAAG,QAAQ,GAAG,OAAO,CAAA;IACjD,WAAW,EAAE,MAAM,CAAA;IACnB,GAAG,CAAC,EAAE,MAAM,CAAA;IACZ,OAAO,CAAC,EAAE,MAAM,CAAA;CACjB"}

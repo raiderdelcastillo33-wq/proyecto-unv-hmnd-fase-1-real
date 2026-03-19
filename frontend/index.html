@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNV-HMND Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="ambient ambient-a"></div>
+      <div class="ambient ambient-b"></div>
+      <div class="ambient ambient-c"></div>
+
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark">
+            <span>UNV</span>
+          </div>
+          <div class="brand-copy">
+            <p class="eyebrow">UNV-HMND Intelligent Learning Console</p>
+            <h1>Una demo funcional con presencia de producto real.</h1>
+          </div>
+        </div>
+
+        <div class="topbar-status">
+          <span id="hero-status-pill" class="status-pill" data-state="pending">Sincronizando sistema</span>
+          <p id="hero-status-copy">
+            Preparando la vista, comprobando salud del servicio y activando el workspace.
+          </p>
+        </div>
+      </header>
+
+      <section class="hero-panel">
+        <div class="hero-copy">
+          <span class="hero-tag">SaaS Learning Ops + AI Assistant</span>
+          <h2>Panel premium para supervisar el sistema, crear usuarios demo y validar la capa IA.</h2>
+          <p class="hero-description">
+            El backend ya resuelve la logica. Esta nueva interfaz lo presenta como un producto moderno:
+            limpio, confiable, escalable y listo para crecer hacia una plataforma real.
+          </p>
+
+          <div class="hero-highlights">
+            <div class="highlight-pill">Arquitectura modular</div>
+            <div class="highlight-pill">API-ready</div>
+            <div class="highlight-pill">Asistente desacoplado</div>
+          </div>
+        </div>
+
+        <aside class="hero-preview">
+          <div class="preview-panel">
+            <div class="preview-header">
+              <p class="preview-kicker">Workspace overview</p>
+              <span class="preview-badge">Live surface</span>
+            </div>
+
+            <div class="preview-metrics">
+              <article class="metric-tile">
+                <span>Servicio</span>
+                <strong id="system-service-name">Pendiente</strong>
+              </article>
+              <article class="metric-tile">
+                <span>Usuario activo</span>
+                <strong id="current-user-chip">Sin crear</strong>
+              </article>
+              <article class="metric-tile">
+                <span>Catalogo</span>
+                <strong id="catalog-status-copy">Listo para cargar</strong>
+              </article>
+              <article class="metric-tile">
+                <span>Asistente</span>
+                <strong id="assistant-user-state">Esperando usuario</strong>
+              </article>
+            </div>
+
+            <div class="preview-note">
+              <span class="preview-note-label">Ultima verificacion</span>
+              <strong id="system-last-check">--:--</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <main class="dashboard-grid">
+        <section class="panel panel-status">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">01. Observabilidad</p>
+              <h2>Estado del sistema</h2>
+              <p class="panel-description">
+                Verifica conectividad con el backend y confirma que la experiencia esta lista para operar.
+              </p>
+            </div>
+            <span class="section-badge">Health check</span>
+          </div>
+
+          <div class="status-callout" data-state="pending">
+            <span class="status-dot"></span>
+            <div>
+              <p id="health-status" class="callout-title">Comprobando...</p>
+              <p id="health-meta" class="callout-copy">Esperando primera lectura del endpoint de salud.</p>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <article class="stat-card">
+              <span>Servicio conectado</span>
+              <strong id="health-service-detail">Pendiente</strong>
+            </article>
+            <article class="stat-card">
+              <span>Respuesta visual</span>
+              <strong id="health-visual-detail">En progreso</strong>
+            </article>
+          </div>
+
+          <button id="refresh-health" class="button-primary" type="button">Actualizar estado</button>
+        </section>
+
+        <section class="panel panel-user">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">02. Activation</p>
+              <h2>Crear usuario demo</h2>
+              <p class="panel-description">
+                Activa una identidad de prueba para simular onboarding y desbloquear el asistente IA.
+              </p>
+            </div>
+            <span class="section-badge">Demo identity</span>
+          </div>
+
+          <form id="user-form" class="form">
+            <label class="field">
+              <span>Email</span>
+              <input id="email" type="email" value="webdemo@example.com" required />
+            </label>
+            <label class="field">
+              <span>Nombre</span>
+              <input id="displayName" type="text" value="Web Demo" required />
+            </label>
+            <button class="button-primary" type="submit">Crear usuario</button>
+          </form>
+
+          <div class="feedback-card" data-state="neutral">
+            <p class="feedback-label">Estado del registro</p>
+            <p id="user-result" class="feedback-copy">Completa el formulario para crear un usuario demo.</p>
+          </div>
+        </section>
+
+        <section class="panel panel-wide panel-catalog">
+          <div class="panel-header panel-header-wide">
+            <div>
+              <p class="panel-kicker">03. Content Layer</p>
+              <h2>Catalogo de aprendizaje</h2>
+              <p class="panel-description">
+                Presenta cursos, modulos, lecciones y recursos con estructura de dashboard lista para escalar.
+              </p>
+            </div>
+            <button id="load-catalog" class="button-secondary" type="button">Cargar catalogo</button>
+          </div>
+
+          <div class="catalog-stats">
+            <article class="stat-card">
+              <span>Cursos</span>
+              <strong id="catalog-course-count">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Modulos</span>
+              <strong id="catalog-module-count">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Lecciones</span>
+              <strong id="catalog-lesson-count">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Recursos</span>
+              <strong id="catalog-resource-count">0</strong>
+            </article>
+          </div>
+
+          <div id="catalog-output" class="catalog-output">
+            <div class="empty-state">
+              <span class="empty-state-badge">Ready</span>
+              <h3>El contenido aun no se ha cargado</h3>
+              <p>
+                Cuando pulses "Cargar catalogo", aqui veras una vista editorial del contenido disponible y
+                los recursos base sembrados por la aplicacion.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel-wide panel-ai">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">04. AI Layer</p>
+              <h2>Pregunta al asistente IA</h2>
+              <p class="panel-description">
+                Un flujo conversacional mas limpio, con contexto visible y respuesta destacada como feature
+                principal del producto.
+              </p>
+            </div>
+            <span class="section-badge">Assistant</span>
+          </div>
+
+          <form id="ai-form" class="form-inline">
+            <input
+              id="ai-prompt"
+              type="text"
+              value="Dame una estrategia para aprender React con IA"
+              required
+            />
+            <button class="button-primary" type="submit">Preguntar</button>
+          </form>
+
+          <div class="assistant-panel">
+            <div class="assistant-orb"></div>
+            <div class="assistant-response" data-state="idle">
+              <p class="feedback-label">Respuesta del asistente</p>
+              <p id="ai-result" class="feedback-copy">
+                Crea un usuario demo para activar el asistente y recibir una respuesta generada.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

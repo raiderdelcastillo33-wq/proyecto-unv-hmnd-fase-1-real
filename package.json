@@ -1,0 +1,30 @@
+{
+  "name": "proyecto-unv-hmnd-fase-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "ts-node src/api/server.ts",
+    "dev:web": "vite --config vite.config.ts --open",
+    "build": "tsc --project tsconfig.json",
+    "start": "ts-node src/main.ts",
+    "start:api": "ts-node src/api/server.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "test": "ts-node tests/run-all.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "concurrently": "^9.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0"
+  }
+}
