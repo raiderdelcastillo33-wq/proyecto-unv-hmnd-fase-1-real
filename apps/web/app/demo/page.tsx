@@ -18,7 +18,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Erreur inconnue'
+  return error instanceof Error ? error.message : 'Error desconocido'
 }
 
 async function readJson(response: Response): Promise<unknown> {
@@ -31,7 +31,7 @@ async function readJson(response: Response): Promise<unknown> {
   try {
     return JSON.parse(text)
   } catch {
-    throw new Error('La réponse du serveur n’est pas un JSON valide')
+    throw new Error('La respuesta del servidor no es JSON válido')
   }
 }
 
@@ -48,7 +48,7 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
       throw new Error(payload.error)
     }
 
-    throw new Error(`La requête a échoué avec le statut ${response.status}`)
+    throw new Error(`La solicitud falló con estado ${response.status}`)
   }
 
   return payload as T
@@ -71,7 +71,7 @@ export default function DemoPage() {
       const payload = await requestJson<unknown>('/api/health')
 
       if (!isRecord(payload) || typeof payload.status !== 'string') {
-        throw new Error('Health check invalide')
+        throw new Error('Health check inválido')
       }
 
       setHealth({
@@ -114,13 +114,13 @@ export default function DemoPage() {
       })
 
       if (!isRecord(payload) || payload.success !== true || !isRecord(payload.data)) {
-        throw new Error('Réponse inattendue du backend')
+        throw new Error('Respuesta inesperada del backend')
       }
 
       const data = payload.data
 
       if (typeof data.id !== 'string' || typeof data.response !== 'string') {
-        throw new Error('Réponse inattendue du backend')
+        throw new Error('Respuesta inesperada del backend')
       }
 
       setResult({
@@ -137,23 +137,23 @@ export default function DemoPage() {
   }
 
   const statusTone = health.status === 'ok' ? 'success' : health.status === 'connecting' ? 'pending' : 'error'
-  const statusLabel = health.status === 'ok' ? 'Connecté' : health.status === 'connecting' ? 'Connexion...' : 'Erreur'
+  const statusLabel = health.status === 'ok' ? 'Conectado' : health.status === 'connecting' ? 'Conectando...' : 'Error'
 
   return (
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy">
           <span className={`status-pill status-pill--${statusTone}`}>{statusLabel}</span>
-          <h1>Démo Next.js</h1>
-          <p>Cette page passe exclusivement par Next.js sur `3001`, puis appelle le backend Node via l’API interne.</p>
+          <h1>Demo Next.js local</h1>
+          <p>Esta vista usa la API interna de Next.js en `localhost:3000` y activa un fallback local si no hay backend externo.</p>
         </div>
 
         <aside className="hero-card">
-          <p className="result-eyebrow">Service</p>
+          <p className="result-eyebrow">Servicio</p>
           <h2>{health.service}</h2>
-          <p className="meta-text">{health.error ?? 'Le backend est accessible via la route interne de Next.'}</p>
+          <p className="meta-text">{health.error ?? 'La API interna de Next.js está respondiendo correctamente.'}</p>
           <button className="secondary-button" onClick={() => void refreshHealth()} type="button">
-            Revalider
+            Revalidar
           </button>
         </aside>
       </section>
@@ -161,46 +161,46 @@ export default function DemoPage() {
       <section className="workspace">
         <form className="panel" onSubmit={handleSubmit}>
           <div className="panel-heading">
-            <h2>Requête vers /api/v1/run</h2>
-            <p>Le client n’utilise pas `localhost:3000` directement.</p>
+            <h2>Llamada a /api/v1/run</h2>
+            <p>El cliente usa la ruta interna de Next.js y mantiene el flujo local estable.</p>
           </div>
 
           <label className="field-label" htmlFor="agent-input">
-            Message
+            Mensaje
           </label>
           <textarea
             id="agent-input"
             className="prompt-input"
             onChange={(event) => setInput(event.target.value)}
-            placeholder="Décrivez le cas que vous souhaitez envoyer au système..."
+            placeholder="Describe la solicitud que quieres ejecutar en el sistema..."
             value={input}
           />
 
-          {error ? <p className="error-line">Erreur réelle: {error}</p> : null}
+          {error ? <p className="error-line">{error}</p> : null}
 
           <div className="actions">
             <button className="primary-button" disabled={loading} type="submit">
-              {loading ? 'Traitement...' : 'Exécuter'}
+              {loading ? 'Procesando...' : 'Ejecutar'}
             </button>
-            <span className="meta-text">Client → /api/v1/run</span>
+            <span className="meta-text">Cliente {'>'} /api/v1/run</span>
           </div>
         </form>
 
         <aside className="panel">
           <div className="panel-heading">
-            <h2>Réponse</h2>
-            <p>Validation fonctionnelle du flux Browser → Next → API.</p>
+            <h2>Respuesta</h2>
+            <p>Validación funcional del flujo Browser {'>'} Next {'>'} API.</p>
           </div>
 
           {loading ? (
             <section className="result-state">
-              <p className="result-eyebrow">Traitement</p>
-              <h3>Le système travaille</h3>
-              <p>La requête est en cours d’envoi via l’API interne de Next.</p>
+              <p className="result-eyebrow">Procesando</p>
+              <h3>El sistema está trabajando</h3>
+              <p>La solicitud se está enviando a través de la API interna de Next.js.</p>
             </section>
           ) : result ? (
             <section className="result-state">
-              <p className="result-eyebrow">Réponse générée</p>
+              <p className="result-eyebrow">Respuesta generada</p>
               <h3>{result.response}</h3>
               <div className="response-meta">
                 <span className="info-chip">ID {result.id}</span>
@@ -208,9 +208,9 @@ export default function DemoPage() {
             </section>
           ) : (
             <section className="result-state">
-              <p className="result-eyebrow">En attente</p>
-              <h3>La réponse apparaîtra ici</h3>
-              <p>Soumettez un message pour valider la connexion avec le backend Node.</p>
+              <p className="result-eyebrow">En espera</p>
+              <h3>La respuesta aparecerá aquí</h3>
+              <p>Envía un mensaje para validar la conexión local con la API.</p>
             </section>
           )}
         </aside>
