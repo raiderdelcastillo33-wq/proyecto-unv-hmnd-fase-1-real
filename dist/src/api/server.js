@@ -53,6 +53,12 @@ const server = (0, node_http_1.createServer)(async (request, response) => {
         });
         return;
     }
+    if (request.url === '/api/health' && request.method === 'GET') {
+        sendJson(response, 200, {
+            status: 'ok'
+        });
+        return;
+    }
     if (request.url.startsWith('/api/v1/')) {
         try {
             const body = request.method === 'GET' ? {} : await readBody(request);

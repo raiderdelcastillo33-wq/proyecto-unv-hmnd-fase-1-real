@@ -1,0 +1,8 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1000" rx="48" fill="#07111F"/>
+  <rect x="84" y="84" width="1432" height="832" rx="36" fill="#0E1A2D" stroke="#20314F"/>
+  <circle cx="800" cy="500" r="148" fill="#10233A" stroke="#38BDF8" stroke-width="2"/>
+  <circle cx="800" cy="500" r="84" fill="#0A1526" stroke="#34D399" stroke-width="2"/>
+  <text x="730" y="480" fill="#EAF4FF" font-family="Arial, sans-serif" font-size="54" font-weight="700">Système</text>
+  <text x="678" y="550" fill="#8CA3BF" font-family="Arial, sans-serif" font-size="36">modulaire</text>
+</svg>

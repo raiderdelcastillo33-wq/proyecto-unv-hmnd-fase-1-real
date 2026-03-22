@@ -1,100 +1,81 @@
-# 🚀 UNV-HMND — AI Modular System
+# UNV-HMND
 
-> AI-powered web system built with clean architecture and modular design.
+Frontend Next.js dans `apps/web` et API Node dans `src/api`.
 
----
+## Stack
 
-## 🧠 About the Project
-
-UNV-HMND is a full-stack AI system that simulates a real-world backend architecture using:
-
-- 🧩 Planner
-- ⚙️ Executor
-- ✅ Validator
-
-It connects a modern frontend interface with a structured backend capable of processing AI-driven tasks.
-
----
-
-## 🎯 Why this project?
-
-This project demonstrates my ability to:
-
-- Build scalable systems
-- Work with clean architecture
-- Connect frontend and backend
-- Design modular AI workflows
-
----
-
-## ⚙️ Tech Stack
-
+- Next.js
+- React
 - TypeScript
-- Node.js (HTTP server)
-- Vite (Frontend)
-- Clean Architecture principles
+- Node.js
+- Architecture modulaire
 
----
+## Architecture
 
-## 🏗️ Architecture
+Browser -> Next.js (`apps/web`)
+Next.js -> routes internes `/api/*`
+API Node -> `http://127.0.0.1:3000`
 
-Frontend (Vite)
-↓
-Node API (/api/v1/run)
-↓
-ApplicationContainer
-↓
-Agent Orchestrator
-→ Planner
-→ Executor
-→ Validator
+## Lancer le projet en local
 
----
-
-## 🚀 Features
-
-- AI request execution from UI
-- Modular backend system
-- Error handling & validation
-- Frontend ↔ Backend communication
-
----
-
-## ▶️ Run the project
-
-### Backend
 ```bash
-npm run dev:api
+npm run dev
+```
 
-Frontend 
-npm run dev:web
+Frontend local:
 
-📡 API
+```text
+http://localhost:3001
+```
 
-POST /api/v1/run
+API locale:
 
-{
-  "input": "Create an AI app"
-}
+```text
+http://localhost:3000
+```
 
-🌍 Live Vision
+## Deployer le frontend sur Vercel
 
-🚧 Currently improving UI and preparing deployment
-➡️ Goal: production-ready AI web application
+Le backend Node n'est pas deploye ici. En production, il faut definir `UNV_API_BASE_URL` avec l'URL publique reelle de l'API.
 
-⸻
+### 1. Verifier le frontend
 
-👨‍💻 About Me
+```bash
+cd apps/web
+npm install
+npm run build
+npm run start
+```
 
-Raider del Castillo
-Frontend Developer in Training — Bordeaux 🇫🇷
-	•	Focus: AI systems + modern web development
-	•	Looking for: Junior Developer opportunity
+### 2. Configurer Vercel
 
-⸻
+- Root Directory: `apps/web`
+- Framework Preset: `Next.js`
+- Build Command: laisser la valeur par defaut (`next build`)
+- Output Directory: laisser la valeur par defaut (`.next`)
 
-📬 Contact
+### 3. Variable d'environnement
 
-📧 raiderdelcastillo33@icloud.com
-🌍 Bordeaux, France
+```bash
+UNV_API_BASE_URL=https://your-node-api.example.com
+```
 
+Le fichier de reference est:
+
+```text
+apps/web/.env.example
+```
+
+### 4. Deploy via CLI
+
+```bash
+npm i -g vercel
+vercel
+vercel --prod
+```
+
+La commande de production renvoie une URL publique du type:
+
+```text
+https://tu-projet.vercel.app
+```
