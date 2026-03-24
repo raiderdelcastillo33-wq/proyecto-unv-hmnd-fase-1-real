@@ -6,8 +6,23 @@ const app = new ApplicationContainer()
 
 void app.seedBaseResources()
 
-function setCorsHeaders(response: ServerResponse): void {
-  response.setHeader('Access-Control-Allow-Origin', '*')
+function getAllowedOrigins(): Set<string> {
+  const configuredOrigins = process.env.UNV_ALLOWED_ORIGINS
+    ?.split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0)
+
+  return new Set(configuredOrigins && configuredOrigins.length > 0 ? configuredOrigins : ['http://localhost:3001'])
+}
+
+function setCorsHeaders(request: IncomingMessage, response: ServerResponse): void {
+  const origin = request.headers.origin
+
+  if (origin && getAllowedOrigins().has(origin)) {
+    response.setHeader('Access-Control-Allow-Origin', origin)
+    response.setHeader('Vary', 'Origin')
+  }
+
   response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
@@ -16,6 +31,40 @@ function sendJson(response: ServerResponse, statusCode: number, payload: unknown
   response.statusCode = statusCode
   response.setHeader('Content-Type', 'application/json; charset=utf-8')
   response.end(JSON.stringify(payload))
+}
+
+function getApiStatusCode(payload: unknown): number {
+  if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
+    return 200
+  }
+
+  const responsePayload = payload as {
+    success?: unknown
+    error?: { code?: unknown }
+  }
+
+  if (responsePayload.success === true) {
+    return 200
+  }
+
+  const errorCode = responsePayload.error?.code
+
+  switch (errorCode) {
+    case 'VALIDATION_ERROR':
+      return 400
+    case 'NOT_FOUND':
+      return 404
+    case 'CONFLICT':
+      return 409
+    case 'UNAUTHORIZED':
+      return 401
+    case 'FORBIDDEN':
+      return 403
+    case 'INFRASTRUCTURE_ERROR':
+      return 503
+    default:
+      return 500
+  }
 }
 
 async function readBody(request: IncomingMessage): Promise<unknown> {
@@ -38,7 +87,7 @@ async function readBody(request: IncomingMessage): Promise<unknown> {
 }
 
 const server = createServer(async (request, response) => {
-  setCorsHeaders(response)
+  setCorsHeaders(request, response)
 
   if (!request.url || !request.method) {
     sendJson(response, 400, {
@@ -67,7 +116,8 @@ const server = createServer(async (request, response) => {
 
   if (request.url === '/api/health' && request.method === 'GET') {
     sendJson(response, 200, {
-      status: 'ok'
+      status: 'ok',
+      service: 'api-server'
     })
     return
   }
@@ -76,7 +126,7 @@ const server = createServer(async (request, response) => {
     try {
       const body = request.method === 'GET' ? {} : await readBody(request)
       const result = await app.apiV1Router.handle(request.url, body, request.method as 'GET' | 'POST')
-      sendJson(response, 200, result)
+      sendJson(response, getApiStatusCode(result), result)
       return
     } catch (error) {
       sendJson(response, 500, {
@@ -97,6 +147,16 @@ const server = createServer(async (request, response) => {
       message: 'Route not found'
     }
   })
+})
+
+server.on('error', (error: NodeJS.ErrnoException) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`API server failed to start (EADDRINUSE): http://localhost:${API_PORT} is already in use.`)
+    process.exit(1)
+  }
+
+  console.error('API server error:', error)
+  process.exit(1)
 })
 
 server.listen(API_PORT, '127.0.0.1', () => {

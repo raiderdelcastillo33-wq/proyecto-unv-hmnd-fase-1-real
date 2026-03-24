@@ -1,9 +1,22 @@
-const DEFAULT_API_BASE_URL = 'http://127.0.0.1:3000'
-const MISSING_BACKEND_URL_ERROR = 'UNV_API_BASE_URL is required in production'
+const DEFAULT_LOCAL_API_BASE_URL = 'http://127.0.0.1:3000'
+export const MISSING_BACKEND_URL_ERROR = 'UNV_API_BASE_URL is not configured for production.'
 const REQUEST_TIMEOUT_MS = 15_000
+
+export type BackendMode = 'local' | 'external' | 'missing'
+
+export type BackendRuntimeInfo = {
+  configured: boolean
+  mode: BackendMode
+  baseUrl: string | null
+  service: string
+}
 
 function normalizeBaseUrl(value: string): string {
   return value.endsWith('/') ? value.slice(0, -1) : value
+}
+
+function isProductionEnvironment(): boolean {
+  return process.env.VERCEL === '1' || process.env.NODE_ENV === 'production'
 }
 
 function getConfiguredBackendBaseUrl(): string | null {
@@ -11,22 +24,47 @@ function getConfiguredBackendBaseUrl(): string | null {
   return configuredBaseUrl ? normalizeBaseUrl(configuredBaseUrl) : null
 }
 
-function requireBackendBaseUrl(): string {
+export function getBackendRuntimeInfo(): BackendRuntimeInfo {
   const configuredBaseUrl = getConfiguredBackendBaseUrl()
 
   if (configuredBaseUrl) {
-    return configuredBaseUrl
+    return {
+      configured: true,
+      mode: 'external',
+      baseUrl: configuredBaseUrl,
+      service: 'api-server'
+    }
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    return DEFAULT_API_BASE_URL
+  if (!isProductionEnvironment()) {
+    return {
+      configured: false,
+      mode: 'local',
+      baseUrl: DEFAULT_LOCAL_API_BASE_URL,
+      service: 'api-server'
+    }
   }
 
-  throw new Error(MISSING_BACKEND_URL_ERROR)
+  return {
+    configured: false,
+    mode: 'missing',
+    baseUrl: null,
+    service: 'backend-not-configured'
+  }
 }
 
 export function getBackendBaseUrl(): string {
-  return getConfiguredBackendBaseUrl() || (process.env.NODE_ENV === 'production' ? 'UNV_API_BASE_URL is not configured' : DEFAULT_API_BASE_URL)
+  return getBackendRuntimeInfo().baseUrl ?? ''
+}
+
+function requireBackendBaseUrl(): string {
+  const runtimeInfo = getBackendRuntimeInfo()
+
+  if (!runtimeInfo.baseUrl) {
+    throw new Error(MISSING_BACKEND_URL_ERROR)
+  }
+
+  return runtimeInfo.baseUrl
 }
 
 function getBackendUrl(path: string): string {
@@ -68,15 +106,15 @@ export async function forwardJson(path: string, init: RequestInit = {}): Promise
       payload: await readPayload(response)
     }
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error(`Timeout contacting backend at ${getBackendBaseUrl()}`)
-    }
-
     if (error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR) {
       throw error
     }
 
-    throw new Error(`Backend unavailable at ${getBackendBaseUrl()}`)
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`Timeout contacting backend at ${getBackendBaseUrl() || 'unconfigured-backend'}`)
+    }
+
+    throw new Error(`Backend unavailable at ${getBackendBaseUrl() || 'unconfigured-backend'}`)
   } finally {
     clearTimeout(timeout)
   }

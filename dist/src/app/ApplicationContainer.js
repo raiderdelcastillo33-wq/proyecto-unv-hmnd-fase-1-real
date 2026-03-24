@@ -24,6 +24,7 @@ const LearningRoomController_1 = require("../interfaces/http/controllers/Learnin
 const ProgressController_1 = require("../interfaces/http/controllers/ProgressController");
 const UserController_1 = require("../interfaces/http/controllers/UserController");
 const ApiV1Router_1 = require("../interfaces/http/routing/ApiV1Router");
+const demoUser_1 = require("../shared/demoUser");
 class ApplicationContainer {
     logger = new ConsoleLogger_1.ConsoleLogger();
     userRepository = new InMemoryUserRepository_1.InMemoryUserRepository();
@@ -49,6 +50,13 @@ class ApplicationContainer {
     aiController = new AIController_1.AIController(this.askAIAssistantUseCase);
     apiV1Router = new ApiV1Router_1.ApiV1Router(this.userController, this.courseController, this.learningRoomController, this.progressController, this.aiController);
     async seedBaseResources() {
+        const existingDemoUser = await this.userRepository.findByEmail(demoUser_1.DEMO_USER.email);
+        if (!existingDemoUser) {
+            await this.userRepository.create({
+                ...demoUser_1.DEMO_USER,
+                goals: [...demoUser_1.DEMO_USER.goals]
+            });
+        }
         await this.addResourceUseCase.execute({
             title: 'Prompt Base para Debug',
             category: 'prompt',

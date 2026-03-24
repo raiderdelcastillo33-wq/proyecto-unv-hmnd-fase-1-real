@@ -25,6 +25,11 @@ export class ApiV1Router {
     private readonly aiController: AIController
   ) {
     this.routes = {
+      '/api/v1/run': {
+        method: 'POST',
+        requiresBody: true,
+        handler: (body) => this.aiController.run(body as { input: string })
+      },
       '/api/v1/users/register': {
         method: 'POST',
         requiresBody: true,
