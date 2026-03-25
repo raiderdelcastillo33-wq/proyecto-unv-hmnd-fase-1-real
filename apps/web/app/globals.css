@@ -649,6 +649,20 @@ textarea {
   margin-top: 24px;
 }
 
+.gallery-grid--empty {
+  display: block;
+  max-width: 52rem;
+  padding: 24px 20px;
+  margin: 24px 0 0;
+  border-radius: 20px;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  background: rgba(2, 6, 23, 0.45);
+}
+
+.gallery-grid--empty code {
+  font-size: 0.9em;
+}
+
 .gallery-card {
   grid-column: span 6;
   padding: 18px;

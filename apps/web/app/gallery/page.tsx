@@ -1,36 +1,22 @@
-import { promises as fs } from 'fs'
-import path from 'path'
-import { GalleryGrid } from '../../components/gallery/GalleryGrid'
-import { runAiTask } from '../../services/ai'
+import type { Metadata } from 'next'
+import { GalleryGrid } from '@/components/gallery/GalleryGrid'
+import { captionFromFilename, galleryPublicUrl, listGalleryImageFiles } from '@/lib/gallery'
 
-async function getImageFiles(): Promise<string[]> {
-  const galleryPath = path.join(process.cwd(), 'public/gallery')
-  const files = await fs.readdir(galleryPath)
-  return files.filter(file => /\.(jpg|jpeg|png|gif|webp)$/i.test(file))
-}
-
-async function generateDescription(filename: string): Promise<string> {
-  try {
-    const result = await runAiTask({
-      task: 'summary',
-      text: `Generate a short, descriptive caption for an image file named "${filename}". Make it professional and concise.`
-    })
-    return result.output
-  } catch (error) {
-    // Fallback: clean filename
-    return filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase())
-  }
+export const metadata: Metadata = {
+  title: 'Gallery',
+  description: 'Professional image gallery served as static assets from public/gallery.'
 }
 
 export default async function GalleryPage() {
-  const imageFiles = await getImageFiles()
-  const galleryItems = await Promise.all(
-    imageFiles.map(async (file) => ({
-      src: `/gallery/${encodeURI(file)}`,
-      alt: file,
-      description: await generateDescription(file)
-    }))
-  )
+  const files = await listGalleryImageFiles()
+  const galleryItems = files.map((file) => {
+    const caption = captionFromFilename(file)
+    return {
+      src: galleryPublicUrl(file),
+      alt: caption,
+      description: caption
+    }
+  })
 
   return (
     <main className="page-shell">
@@ -39,7 +25,8 @@ export default async function GalleryPage() {
         <h1>Galería Profesional</h1>
         <p>
           Colección de visuales que ilustran conceptos tecnológicos, interfaces y momentos capturados.
-          Optimizada para presentaciones y revisiones técnicas.
+          Las imágenes se sirven como archivos estáticos desde <code>public/gallery</code> (sin rutas API
+          intermedias), optimizado para Vercel y <code>next/image</code>.
         </p>
       </section>
 
