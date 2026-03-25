@@ -1,23 +1,26 @@
 import type { Metadata } from 'next'
 import { GalleryGrid } from '@/components/gallery/GalleryGrid'
-import { captionFromFilename, galleryPublicUrl, listGalleryImageFiles } from '@/lib/gallery'
+import type { GalleryItem } from '@/components/gallery/GalleryGrid'
 
 export const metadata: Metadata = {
   title: 'Gallery',
   description: 'Professional image gallery served as static assets from public/gallery.'
 }
 
-export default async function GalleryPage() {
-  const files = await listGalleryImageFiles()
-  const galleryItems = files.map((file) => {
-    const caption = captionFromFilename(file)
-    return {
-      src: galleryPublicUrl(file),
-      alt: caption,
-      description: caption
-    }
-  })
+const galleryItems: GalleryItem[] = [
+  {
+    src: '/gallery/paisajes-1.jpg',
+    alt: 'Paisajes 1',
+    description: 'Paisajes 1'
+  },
+  {
+    src: '/gallery/paisajes-2.jpg',
+    alt: 'Paisajes 2',
+    description: 'Paisajes 2'
+  }
+]
 
+export default function GalleryPage() {
   return (
     <main className="page-shell">
       <section className="page-intro">
@@ -26,7 +29,7 @@ export default async function GalleryPage() {
         <p>
           Colección de visuales que ilustran conceptos tecnológicos, interfaces y momentos capturados.
           Las imágenes se sirven como archivos estáticos desde <code>public/gallery</code> (sin rutas API
-          intermedias), optimizado para Vercel y <code>next/image</code>.
+          intermedias), optimizado para Vercel y carga directa con <code>{'<img src="/gallery/..." />'}</code>.
         </p>
       </section>
 
