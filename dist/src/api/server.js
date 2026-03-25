@@ -5,8 +5,19 @@ const ApplicationContainer_1 = require("../app/ApplicationContainer");
 const API_PORT = 3000;
 const app = new ApplicationContainer_1.ApplicationContainer();
 void app.seedBaseResources();
-function setCorsHeaders(response) {
-    response.setHeader('Access-Control-Allow-Origin', '*');
+function getAllowedOrigins() {
+    const configuredOrigins = process.env.UNV_ALLOWED_ORIGINS
+        ?.split(',')
+        .map((origin) => origin.trim())
+        .filter((origin) => origin.length > 0);
+    return new Set(configuredOrigins && configuredOrigins.length > 0 ? configuredOrigins : ['http://localhost:3001']);
+}
+function setCorsHeaders(request, response) {
+    const origin = request.headers.origin;
+    if (origin && getAllowedOrigins().has(origin)) {
+        response.setHeader('Access-Control-Allow-Origin', origin);
+        response.setHeader('Vary', 'Origin');
+    }
     response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
@@ -14,6 +25,32 @@ function sendJson(response, statusCode, payload) {
     response.statusCode = statusCode;
     response.setHeader('Content-Type', 'application/json; charset=utf-8');
     response.end(JSON.stringify(payload));
+}
+function getApiStatusCode(payload) {
+    if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
+        return 200;
+    }
+    const responsePayload = payload;
+    if (responsePayload.success === true) {
+        return 200;
+    }
+    const errorCode = responsePayload.error?.code;
+    switch (errorCode) {
+        case 'VALIDATION_ERROR':
+            return 400;
+        case 'NOT_FOUND':
+            return 404;
+        case 'CONFLICT':
+            return 409;
+        case 'UNAUTHORIZED':
+            return 401;
+        case 'FORBIDDEN':
+            return 403;
+        case 'INFRASTRUCTURE_ERROR':
+            return 503;
+        default:
+            return 500;
+    }
 }
 async function readBody(request) {
     const chunks = [];
@@ -30,7 +67,7 @@ async function readBody(request) {
     return JSON.parse(rawBody);
 }
 const server = (0, node_http_1.createServer)(async (request, response) => {
-    setCorsHeaders(response);
+    setCorsHeaders(request, response);
     if (!request.url || !request.method) {
         sendJson(response, 400, {
             success: false,
@@ -55,7 +92,8 @@ const server = (0, node_http_1.createServer)(async (request, response) => {
     }
     if (request.url === '/api/health' && request.method === 'GET') {
         sendJson(response, 200, {
-            status: 'ok'
+            status: 'ok',
+            service: 'api-server'
         });
         return;
     }
@@ -63,7 +101,7 @@ const server = (0, node_http_1.createServer)(async (request, response) => {
         try {
             const body = request.method === 'GET' ? {} : await readBody(request);
             const result = await app.apiV1Router.handle(request.url, body, request.method);
-            sendJson(response, 200, result);
+            sendJson(response, getApiStatusCode(result), result);
             return;
         }
         catch (error) {

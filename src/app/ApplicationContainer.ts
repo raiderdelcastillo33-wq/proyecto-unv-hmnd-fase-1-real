@@ -21,6 +21,7 @@ import { LearningRoomController } from '../interfaces/http/controllers/LearningR
 import { ProgressController } from '../interfaces/http/controllers/ProgressController'
 import { UserController } from '../interfaces/http/controllers/UserController'
 import { ApiV1Router } from '../interfaces/http/routing/ApiV1Router'
+import { DEMO_USER } from '../shared/demoUser'
 
 export class ApplicationContainer {
   readonly logger = new ConsoleLogger()
@@ -83,6 +84,15 @@ export class ApplicationContainer {
   )
 
   async seedBaseResources(): Promise<void> {
+    const existingDemoUser = await this.userRepository.findByEmail(DEMO_USER.email)
+
+    if (!existingDemoUser) {
+      await this.userRepository.create({
+        ...DEMO_USER,
+        goals: [...DEMO_USER.goals]
+      })
+    }
+
     await this.addResourceUseCase.execute({
       title: 'Prompt Base para Debug',
       category: 'prompt',

@@ -17,6 +17,11 @@ class ApiV1Router {
         this.progressController = progressController;
         this.aiController = aiController;
         this.routes = {
+            '/api/v1/run': {
+                method: 'POST',
+                requiresBody: true,
+                handler: (body) => this.aiController.run(body)
+            },
             '/api/v1/users/register': {
                 method: 'POST',
                 requiresBody: true,

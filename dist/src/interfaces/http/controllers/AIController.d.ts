@@ -8,5 +8,11 @@ export declare class AIController {
         id: string;
         response: string;
     }>>;
+    run(input: {
+        input: string;
+    }): Promise<ApiResponse<{
+        id: string;
+        response: string;
+    }>>;
 }
 //# sourceMappingURL=AIController.d.ts.map
