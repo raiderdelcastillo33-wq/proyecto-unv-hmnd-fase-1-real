@@ -25,12 +25,31 @@ export class ListLearningCatalogUseCase {
   ) {}
 
   async execute(): Promise<LearningCatalog> {
-    const [courses, resources] = await Promise.all([
-      this.courseRepository.listPublishedCourses(),
-      this.resourceRepository.listByCategory()
-    ])
+    try {
+      const [courses, resources] = await Promise.all([
+        this.courseRepository.listPublishedCourses(),
+        this.resourceRepository.listByCategory()
+      ])
 
-    const items = await Promise.all(
+      if (!courses || !resources) {
+        throw new Error('Failed to fetch courses or resources')
+      }
+
+      const items = await this.buildCatalogItems(courses)
+
+      return {
+        items,
+        resources
+      }
+    } catch (error) {
+      // Log error and re-throw or handle appropriately
+      console.error('Error in ListLearningCatalogUseCase:', error)
+      throw error
+    }
+  }
+
+  private async buildCatalogItems(courses: Course[]): Promise<LearningCatalogItem[]> {
+    return Promise.all(
       courses.map(async (course) => {
         const modules = await this.courseRepository.listModulesByCourse(course.id)
 
@@ -44,10 +63,5 @@ export class ListLearningCatalogUseCase {
         return { course, modules: moduleItems }
       })
     )
-
-    return {
-      items,
-      resources
-    }
   }
 }
