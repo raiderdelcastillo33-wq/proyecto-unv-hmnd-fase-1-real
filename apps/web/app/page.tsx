@@ -2,53 +2,53 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Raider del Castillo - Frontend Developer & AI Integration Specialist',
+  title: 'Raider del Castillo - Développeur Frontend & Intégration IA',
   description:
-    'Portfolio profesional de desarrollador frontend con experiencia en React, Next.js, TypeScript y integración de IA. Arquitectura modular, UX/UI moderna y soluciones escalables.'
+    'Portfolio professionnel de développeur frontend avec expertise en React, Next.js, TypeScript et intégration IA. Architecture modulaire, UX/UI moderne et solutions scalables.'
 }
 
 const systemSignals = [
   {
-    kicker: 'Frontend execution',
-    title: 'Arquitectura modular orientada a producto',
-    description: 'Sistema construido con Next.js 15, TypeScript estricto y separación clara entre frontend, backend y servicios de IA.'
+    kicker: 'Exécution Frontend',
+    title: 'Architecture modulaire orientée produit',
+    description: 'Système construit avec Next.js 15, TypeScript strict et séparation claire entre frontend, backend et services IA.'
   },
   {
-    kicker: 'Engineering quality',
-    title: 'Integración tipada de IA',
-    description: 'Flujo controlado Browser → Next.js → API interna → Servicios de IA, con manejo robusto de errores y estados de carga.'
+    kicker: 'Qualité engineering',
+    title: 'Intégration IA typée',
+    description: 'Flux contrôlé Browser → Next.js → API interne → Services IA, avec gestion robuste des erreurs et des états de chargement.'
   },
   {
-    kicker: 'Production mindset',
-    title: 'Preparado para despliegue empresarial',
-    description: 'Monorepo optimizado para Vercel, con rutas API internas, validación de tipos y estrategias de fallback en producción.'
+    kicker: 'Mentalité production',
+    title: 'Prêt pour déploiement entreprise',
+    description: 'Monorepo optimisé pour Vercel, avec routes API internes, validation de types et stratégies de fallback en production.'
   }
 ]
 
 const stackHighlights = [
   'Next.js 15 App Router',
   'React 19 + TypeScript',
-  'Arquitectura modular',
-  'Integración IA',
-  'API REST tipada',
-  'Monorepo escalable'
+  'Architecture modulaire',
+  'Intégration IA',
+  'API REST typée',
+  'Monorepo scalable'
 ]
 
 const walkthrough = [
   {
     step: '01',
-    title: 'Explora el portfolio profesional',
-    description: 'Conoce mi experiencia en desarrollo frontend moderno, integración de IA y construcción de productos escalables.'
+    title: 'Explore le portfolio professionnel',
+    description: 'Découvrez mon expérience en développement frontend moderne, intégration IA et construction de produits scalables.'
   },
   {
     step: '02',
-    title: 'Interactúa con la demo funcional',
-    description: 'Prueba el sistema de IA en tiempo real: envía mensajes y observa el flujo completo Browser → API → IA.'
+    title: 'Interagissez avec la démo fonctionnelle',
+    description: 'Testez le système IA en temps réel : envoyez des messages et observez le flux complet Browser → API → IA.'
   },
   {
     step: '03',
-    title: 'Revisa la arquitectura técnica',
-    description: 'Entiende las decisiones técnicas, patrones de diseño y estrategias de despliegue implementadas.'
+    title: 'Revoyez l’architecture technique',
+    description: 'Comprenez les décisions techniques, les patterns de conception et les stratégies de déploiement appliquées.'
   }
 ]
 
@@ -57,11 +57,11 @@ export default function HomePage() {
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Portfolio Profesional - Desarrollador Frontend</span>
-          <h1>Sistema de Agentes IA</h1>
+          <span className="hero-badge">Portefeuille professionnel - Développeur Frontend</span>
+          <h1>Système d’agents IA</h1>
           <p>
-            UNV-HMND es una aplicación Next.js de nivel producción que demuestra pensamiento de producto,
-            orquestación de APIs internas y ejecución frontend consciente de producción en un recorrido claro.
+            UNV-HMND est une application Next.js niveau production démontrant une pensée produit,
+            une orchestration d’APIs internes et une exécution frontend prête pour la production.
           </p>
 
           <div className="tag-row">
@@ -74,47 +74,47 @@ export default function HomePage() {
 
           <div className="hero-actions">
             <Link className="primary-button" href="/demo">
-              Probar Demo Interactiva
+              Tester la démo interactive
             </Link>
             <Link className="secondary-button" href="/about">
-              Ver Arquitectura
+              Voir l’architecture
             </Link>
             <Link className="secondary-button" href="/portfolio">
-              Explorar Portfolio
+              Explorer le portfolio
             </Link>
             <Link className="secondary-button" href="/gallery">
-              Ver Galería
+              Voir la galerie
             </Link>
             <Link className="secondary-button" href="/download">
-              Descargar CV
+              Télécharger le CV
             </Link>
           </div>
         </div>
 
         <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">Lo que demuestra este proyecto</p>
-          <h2>Browser → Next.js → API Interna → Servicios IA</h2>
+          <p className="result-eyebrow">Ce que ce projet démontre</p>
+          <h2>Browser → Next.js → API interne → Services IA</h2>
           <p className="meta-text">
-            La experiencia está construida para comunicar cómo un ingeniero frontend piensa sobre UX de producto,
-            límites de servidor tipados, despliegue en producción y flujos orientados a IA.
+            L’expérience est construite pour communiquer comment un ingénieur frontend raisonne sur l’UX produit,
+            les limites serveur typées, le déploiement en production et les flux orientés IA.
           </p>
 
           <div className="metrics-grid">
             <article className="metric-card">
-              <strong className="metric-value">Demo funcional</strong>
-              <span className="metric-label">Flujo completo de petición y respuesta</span>
+              <strong className="metric-value">Démo fonctionnelle</strong>
+              <span className="metric-label">Flux complet requête/réponse</span>
             </article>
             <article className="metric-card">
-              <strong className="metric-value">Stack tipado</strong>
-              <span className="metric-label">TypeScript estricto en UI y rutas</span>
+              <strong className="metric-value">Stack typée</strong>
+              <span className="metric-label">TypeScript strict en UI et routes</span>
             </article>
             <article className="metric-card">
-              <strong className="metric-value">UI desplegable</strong>
-              <span className="metric-label">Configuración monorepo lista para Vercel</span>
+              <strong className="metric-value">UI déployable</strong>
+              <span className="metric-label">Configuration monorepo prête pour Vercel</span>
             </article>
             <article className="metric-card">
-              <strong className="metric-value">Historia clara del sistema</strong>
-              <span className="metric-label">Fácil de explicar en entrevistas técnicas</span>
+              <strong className="metric-value">Histoire système claire</strong>
+              <span className="metric-label">Facile à expliquer en entretiens techniques</span>
             </article>
           </div>
         </aside>
@@ -122,11 +122,11 @@ export default function HomePage() {
 
       <section className="section-block">
         <div className="section-head">
-          <p className="result-eyebrow">Señales de Contratación</p>
-          <h2 className="section-title">Lo que un reclutador o manager técnico puede entender rápidamente</h2>
+          <p className="result-eyebrow">Signaux de recrutement</p>
+          <h2 className="section-title">Ce qu’un recruteur ou un manager tech peut comprendre rapidement</h2>
           <p>
-            El objetivo no es solo verse pulido. El objetivo es hacer visible el juicio técnico en el
-            primer scroll: estructura, intención, confiabilidad y claridad del sistema.
+            L’objectif n’est pas seulement d’avoir un rendu soigné. L’objectif est de rendre visible le jugement technique
+            dès le premier scroll : structure, intention, fiabilité et clarté du système.
           </p>
         </div>
 
@@ -143,11 +143,11 @@ export default function HomePage() {
 
       <section className="section-block">
         <div className="section-head">
-          <p className="result-eyebrow">Recorrido</p>
-          <h2 className="section-title">Una historia de producto corta con un payoff técnico claro</h2>
+          <p className="result-eyebrow">Parcours</p>
+          <h2 className="section-title">Une histoire produit courte avec un payoff technique clair</h2>
           <p>
-            Cada página tiene un trabajo: orientar al espectador, probar que la demo funciona, y hacer la arquitectura
-            más fácil de confiar.
+            Chaque page a une mission : orienter le visiteur, prouver que la démo fonctionne, et rendre l’architecture
+            plus facile à faire confiance.
           </p>
         </div>
 
@@ -165,20 +165,20 @@ export default function HomePage() {
       <section className="section-block">
         <article className="story-card">
           <div>
-            <p className="result-eyebrow">Próximo paso</p>
-            <h2 className="section-title">Ve directamente a la parte que prueba que el sistema funciona</h2>
+            <p className="result-eyebrow">Prochaine étape</p>
+            <h2 className="section-title">Allez directement à la partie qui prouve que le système fonctionne</h2>
             <p>
-              Abre la demo para validar el flujo de ejecución, luego usa la página de arquitectura para revisar las
-              decisiones técnicas detrás de ella.
+              Ouvrez la démo pour valider le flux d’exécution, puis utilisez la page d’architecture pour examiner
+              les décisions techniques.
             </p>
           </div>
 
           <div className="story-card__actions">
             <Link className="primary-button" href="/demo">
-              Ejecutar Demo
+              Exécuter démo
             </Link>
             <Link className="secondary-button" href="/about">
-              Leer Arquitectura
+              Lire l’architecture
             </Link>
           </div>
         </article>

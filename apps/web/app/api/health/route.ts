@@ -1,52 +1,92 @@
 import { NextResponse } from 'next/server'
-import { forwardJson, getBackendRuntimeInfo, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
-export const dynamic = 'force-dynamic'
+const DEFAULT_LOCAL_API_BASE_URL = 'http://localhost:3000'
 
-export async function GET() {
-  const runtimeInfo = getBackendRuntimeInfo()
+type RuntimeMode = 'local' | 'external' | 'missing'
 
-  try {
-    const { status, payload } = await forwardJson('/api/health', {
-      method: 'GET'
-    })
+function getApiBaseUrl(): string | null {
+  const externalBaseUrl = process.env.UNV_API_BASE_URL?.trim()
 
-    const service =
-      typeof payload === 'object' &&
-      payload !== null &&
-      'service' in payload &&
-      typeof (payload as { service?: unknown }).service === 'string'
-        ? (payload as { service: string }).service
-        : 'unv-hmnd-api'
+  if (externalBaseUrl && externalBaseUrl.length > 0) {
+    return externalBaseUrl.replace(/\/+$/, '')
+  }
 
+  return DEFAULT_LOCAL_API_BASE_URL
+}
+
+function getRuntimeMode(): RuntimeMode {
+  const externalBaseUrl = process.env.UNV_API_BASE_URL?.trim()
+
+  if (externalBaseUrl && externalBaseUrl.length > 0) {
+    return 'external'
+  }
+
+  return 'local'
+}
+
+export async function GET(): Promise<NextResponse> {
+  const backend = getApiBaseUrl()
+
+  if (!backend) {
     return NextResponse.json(
       {
-        status: 'ok',
-        service,
-        configured: runtimeInfo.configured,
-        mode: runtimeInfo.mode,
-        backend: runtimeInfo.mode === 'local' ? runtimeInfo.baseUrl : null
+        status: 'error',
+        configured: false,
+        service: 'api-server',
+        mode: 'missing',
+        backend: null,
+        error: 'UNV_API_BASE_URL is not configured.'
       },
-      { status }
+      { status: 500 }
     )
+  }
+
+  try {
+    const response = await fetch(`${backend}/health`, {
+      method: 'OPTIONS',
+      cache: 'no-store'
+    })
+
+    const backendAvailable =
+      response.status < 500 || response.status === 404 || response.status === 405
+
+    if (!backendAvailable) {
+      return NextResponse.json(
+        {
+          status: 'error',
+          configured: getRuntimeMode() === 'external',
+          service: 'api-server',
+          mode: getRuntimeMode(),
+          backend,
+          error: `Node API is reachable but returned status ${response.status}.`
+        },
+        { status: 502 }
+      )
+    }
+
+    return NextResponse.json({
+      status: 'ok',
+      configured: getRuntimeMode() === 'external',
+      service: 'api-server',
+      mode: getRuntimeMode(),
+      backend
+    })
   } catch (error) {
-    const errorMessage =
-      error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR
-        ? 'UNV_API_BASE_URL is required in production to reach the external Node API.'
-        : error instanceof Error
-          ? error.message
-          : 'Backend health check failed.'
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Unable to reach the Node API from Next.js.'
 
     return NextResponse.json(
       {
         status: 'error',
-        service: runtimeInfo.service,
-        configured: runtimeInfo.configured,
-        mode: runtimeInfo.mode,
-        backend: runtimeInfo.mode === 'local' ? runtimeInfo.baseUrl : null,
-        error: errorMessage
+        configured: getRuntimeMode() === 'external',
+        service: 'api-server',
+        mode: getRuntimeMode(),
+        backend,
+        error: message
       },
-      { status: runtimeInfo.mode === 'missing' ? 503 : 502 }
+      { status: 502 }
     )
   }
 }

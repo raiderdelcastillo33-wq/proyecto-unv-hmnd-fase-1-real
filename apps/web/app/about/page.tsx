@@ -1,59 +1,59 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Arquitectura Técnica - Portfolio Frontend Developer',
-  description: 'Resumen técnico de la arquitectura del Sistema de Agentes IA, decisiones de entrega y estrategia de despliegue.'
+  title: 'Architecture Technique - Portfolio Développeur Frontend',
+  description: 'Résumé technique de l’architecture du Système d’Agents IA, décisions de delivery et stratégie de déploiement.'
 }
 
 const principles = [
   {
-    title: 'Fundamento App Router',
-    description: 'Páginas, layouts y rutas de servidor están organizadas en una estructura Next.js moderna que se mantiene legible conforme el proyecto crece.'
+    title: 'App Router comme base',
+    description: 'Pages, layouts et routes serveur sont organisés dans une structure Next.js moderne et lisible qui évolue avec le projet.'
   },
   {
-    title: 'Proxy de API interna',
-    description: 'El browser habla primero con Next.js, y Next retransmite peticiones al backend a través de rutas internas controladas.'
+    title: 'Proxy d’API interne',
+    description: 'Le navigateur communique d’abord avec Next.js ; Next retransmet les requêtes vers le backend via des routes internes.'
   },
   {
-    title: 'Ruta de despliegue monorepo',
-    description: 'El frontend vive en `apps/web`, con un path de build seguro para producción y configuración amigable con Vercel.'
+    title: 'Chemin de déploiement monorepo',
+    description: 'Le frontend réside dans `apps/web`, avec un pipeline de build sécurisé en production et une config Vercel-friendly.'
   }
 ]
 
 const stack = [
   'Next.js 15',
   'React 19',
-  'TypeScript estricto',
+  'TypeScript strict',
   'App Router',
-  'Rutas servidor internas',
-  'Setup monorepo Vercel-ready'
+  'Routes serveur internes',
+  'Setup monorepo prêt pour Vercel'
 ]
 
 const delivery = [
-  'Página landing con narrativa clara de contratación',
-  'Demo funcional vía `/demo`',
-  'Activos visuales del portfolio',
-  'Superficie de entrega de CV',
-  'Documentación lista para despliegue',
-  'Repositorio público limpio para exportar'
+  'Page d’accueil avec narration claire pour recrutement',
+  'Démo fonctionnelle via `/demo`',
+  'Actifs visuels du portfolio',
+  'Surface de présentation du CV',
+  'Documentation prête à déployer',
+  'Repo public propre pour export'
 ]
 
 export default function AboutPage() {
   return (
     <main className="page-shell">
       <section className="page-intro">
-        <span className="status-pill status-pill--success">Resumen Técnico</span>
-        <h1>Arquitectura del Sistema</h1>
+        <span className="status-pill status-pill--success">Résumé Technique</span>
+        <h1>Architecture du Système</h1>
         <p>
-          UNV-HMND está estructurado para demostrar ejecución frontend pulida, integración backend realista y un path de despliegue limpio
-          dentro de una configuración monorepo.
+          UNV-HMND est structuré pour démontrer une exécution frontend soignée, une intégration backend réaliste
+          et un chemin de déploiement propre dans une configuration monorepo.
         </p>
       </section>
 
       <section className="grid-3">
         {principles.map((item) => (
           <article className="info-card" key={item.title}>
-            <p className="result-eyebrow">Principle</p>
+            <p className="result-eyebrow">Principe</p>
             <h2>{item.title}</h2>
             <p>{item.description}</p>
           </article>
@@ -63,26 +63,25 @@ export default function AboutPage() {
       <section className="workspace">
         <article className="panel">
           <div className="panel-heading">
-            <p className="result-eyebrow">Execution Flow</p>
+            <p className="result-eyebrow">Flux d’exécution</p>
             <h2>Browser → Next.js → API Node</h2>
             <p>
-              The frontend does not depend on direct browser calls to the backend service. Interactive
-              pages go through Next.js server routes so the system remains more robust, more deployable,
-              and easier to expose publicly.
+              Le frontend ne dépend pas d’appels directs du navigateur vers le service backend. Les pages interactives
+              passent par des routes serveur Next.js, ce qui rend le système plus robuste, déployable et publicisable.
             </p>
           </div>
 
           <div className="response-meta">
-            <span className="info-chip">Public UI</span>
-            <span className="info-chip">Internal routing</span>
-            <span className="info-chip">Vercel ready</span>
+            <span className="info-chip">UI publique</span>
+            <span className="info-chip">Routage interne</span>
+            <span className="info-chip">Prêt pour Vercel</span>
           </div>
         </article>
 
         <article className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Stack</p>
-            <h2>Technologies</h2>
+            <h2>Technos</h2>
           </div>
 
           <ul className="bullet-list bullet-list--dense">
@@ -96,8 +95,8 @@ export default function AboutPage() {
       <section className="workspace">
         <article className="panel">
           <div className="panel-heading">
-            <p className="result-eyebrow">Public Deliverables</p>
-            <h2>Recruiter-facing version</h2>
+            <p className="result-eyebrow">Livrables publics</p>
+            <h2>Version pour recruteur</h2>
           </div>
 
           <ul className="bullet-list bullet-list--dense">
@@ -109,17 +108,17 @@ export default function AboutPage() {
 
         <article className="panel">
           <div className="panel-heading">
-            <p className="result-eyebrow">Deployment</p>
+            <p className="result-eyebrow">Déploiement</p>
             <h2>Production</h2>
             <p>
-              The frontend is prepared for Vercel deployment with `apps/web` as the project root. `UNV_API_BASE_URL`
-              is optional and only needed when you want to point the app to an external backend.
+              Le frontend est prêt à être déployé sur Vercel avec `apps/web` comme racine de projet. `UNV_API_BASE_URL`
+              est optionnel et sert uniquement si vous pointez l’app vers un backend externe.
             </p>
           </div>
 
           <div className="response-meta">
-            <span className="info-chip">Root Directory: apps/web</span>
-            <span className="info-chip">Build: next build</span>
+            <span className="info-chip">Répertoire racine : apps/web</span>
+            <span className="info-chip">Build : next build</span>
           </div>
         </article>
       </section>

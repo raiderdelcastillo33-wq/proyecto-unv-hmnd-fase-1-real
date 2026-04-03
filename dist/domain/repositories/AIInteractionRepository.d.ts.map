@@ -1,1 +1,0 @@
-{"version":3,"file":"AIInteractionRepository.d.ts","sourceRoot":"","sources":["../../../src/domain/repositories/AIInteractionRepository.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,2BAA2B,CAAA;AAEzD,MAAM,WAAW,uBAAuB;IACtC,MAAM,CAAC,WAAW,EAAE,aAAa,GAAG,OAAO,CAAC,aAAa,CAAC,CAAA;IAC1D,UAAU,CAAC,MAAM,EAAE,MAAM,GAAG,OAAO,CAAC,aAAa,EAAE,CAAC,CAAA;CACrD"}

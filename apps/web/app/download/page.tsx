@@ -3,14 +3,14 @@ import Link from 'next/link'
 const downloadItems = [
   {
     title: 'Curriculum Vitae',
-    description: 'CV profesional con experiencia en desarrollo frontend, integración de IA y arquitectura de sistemas.',
+    description: 'CV professionnel avec expérience en développement frontend, intégration IA et architecture de systèmes.',
     href: '/cv/raider-cv.pdf',
     filename: 'Raider-del-Castillo-CV.pdf',
     icon: '📄'
   },
   {
-    title: 'Proyecto Completo',
-    description: 'Código fuente del portfolio completo con arquitectura Next.js, backend Node.js y integración IA.',
+    title: 'Projet Complet',
+    description: 'Code source du portfolio complet avec architecture Next.js, backend Node.js et intégration IA.',
     href: 'https://github.com/tu-usuario/proyecto-unv-hmnd',
     external: true,
     icon: '💻'
@@ -21,11 +21,11 @@ export default function DownloadPage() {
   return (
     <main className="page-shell">
       <section className="page-intro">
-        <span className="status-pill status-pill--success">Descargas Disponibles</span>
-        <h1>Materiales Profesionales</h1>
+        <span className="status-pill status-pill--success">Téléchargements disponibles</span>
+        <h1>Ressources professionnelles</h1>
         <p>
-          Descarga mi CV actualizado y accede al código fuente completo del proyecto.
-          Todo el material está preparado para evaluación técnica y reclutamiento.
+          Téléchargez mon CV à jour et accédez au code source complet du projet.
+          Tout le contenu est préparé pour une évaluation technique et le recrutement.
         </p>
       </section>
 
@@ -66,20 +66,20 @@ export default function DownloadPage() {
       <section className="section-block">
         <article className="story-card">
           <div>
-            <p className="result-eyebrow">¿Te interesa el proyecto?</p>
-            <h2 className="section-title">Explora más contenido técnico</h2>
+            <p className="result-eyebrow">Intéressé par le projet ?</p>
+            <h2 className="section-title">Explorez plus de contenu technique</h2>
             <p>
-              Revisa la arquitectura del sistema, prueba la demo interactiva o
-              explora los activos visuales del portfolio.
+              Consultez l’architecture du système, testez la démo interactive ou
+              explorez les actifs visuels du portfolio.
             </p>
           </div>
 
           <div className="story-card__actions">
             <Link className="primary-button" href="/demo">
-              Probar Demo
+              Tester la démo
             </Link>
             <Link className="secondary-button" href="/about">
-              Ver Arquitectura
+              Voir l’architecture
             </Link>
           </div>
         </article>

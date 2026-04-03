@@ -114,7 +114,7 @@ const server = createServer(async (request, response) => {
     return
   }
 
-  if (request.url === '/api/health' && request.method === 'GET') {
+  if (request.url === '/health' && request.method === 'GET') {
     sendJson(response, 200, {
       status: 'ok',
       service: 'api-server'

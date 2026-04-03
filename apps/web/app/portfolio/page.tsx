@@ -2,43 +2,43 @@ import Image from 'next/image'
 
 const portfolioHighlights = [
   {
-    kicker: 'Comunicación visual',
-    title: 'Diagramas de sistema que apoyan la propuesta',
-    description: 'Los activos del portfolio no son decorativos. Ayudan a explicar el flujo de peticiones, intención de UI y estructura modular del sistema.'
+    kicker: 'Communication visuelle',
+    title: 'Diagrammes systèmes soutenant la proposition',
+    description: 'Les éléments du portfolio ne sont pas décoratifs : ils expliquent le flux des requêtes, l’intention UI et la structure modulaire du système.'
   },
   {
-    kicker: 'Enmarcado profesional',
-    title: 'Activos alineados con la historia del producto',
-    description: 'Cada visual apoya la misma narrativa usada en la landing, demo y páginas de arquitectura.'
+    kicker: 'Cadre professionnel',
+    title: 'Actifs alignés sur l’histoire du produit',
+    description: 'Chaque visuel renforce la même narration utilisée sur la landing, la démo et les pages d’architecture.'
   },
   {
-    kicker: 'Preparación para entrevistas',
-    title: 'Fácil de presentar en pantalla',
-    description: 'La página está optimizada para permitir que un reclutador o entrevistador escanee los visuales sin necesitar contexto extra.'
+    kicker: 'Préparation à l’entretien',
+    title: 'Facile à présenter à l’écran',
+    description: 'La page est optimisée pour qu’un recruteur ou un interviewer puisse scanner les visuels sans contexte supplémentaire.'
   }
 ]
 
 const portfolioItems = [
   {
     src: '/images/architecture-flux.svg',
-    title: 'Flujo de Aplicación',
-    description: 'Una visualización concisa de la cadena de ejecución Browser → Next.js → API Node.',
-    impact: 'Útil para explicar por qué el frontend confía en rutas internas en lugar de llamadas directas browser-to-backend.',
-    tags: ['Diseño de flujo', 'API interna', 'Explicación del sistema']
+    title: 'Flux de l’application',
+    description: 'Une visualisation concise de la chaîne d’exécution Browser → Next.js → API Node.',
+    impact: 'Utile pour expliquer pourquoi le frontend utilise des routes internes plutôt que des appels directs browser-to-backend.',
+    tags: ['Conception de flux', 'API interne', 'Explication système']
   },
   {
     src: '/images/interface-agent.svg',
-    title: 'Interfaz de Demo',
-    description: 'Una superficie de interfaz orientada a reclutadores enfocada en claridad, confianza y comprensión rápida.',
-    impact: 'Muestra el proyecto como una superficie de producto, no solo como muestra de código.',
-    tags: ['UI/UX', 'Superficie de demo', 'Pensamiento de producto']
+    title: 'Interface de démo',
+    description: 'Une interface orientée recruteurs axée sur la clarté, la confiance et la compréhension rapide.',
+    impact: 'Montre le projet comme un produit fini, pas seulement une démo technique.',
+    tags: ['UI/UX', 'Surface de démo', 'Pensée produit']
   },
   {
     src: '/images/systeme-modulaire.svg',
-    title: 'Sistema Modular',
-    description: 'Un activo visual centrado en extensibilidad y límites claros del sistema.',
-    impact: 'Apoya conversaciones sobre mantenibilidad, layering y escala futura.',
-    tags: ['Arquitectura', 'Modularidad', 'Escalabilidad']
+    title: 'Système modulaire',
+    description: 'Un élément visuel centré sur l’extensibilité et les limites claires du système.',
+    impact: 'Soutient les discussions sur la maintenabilité, le layering et l’extension future.',
+    tags: ['Architecture', 'Modularité', 'Scalabilité']
   }
 ]
 
@@ -46,11 +46,11 @@ export default function PortfolioPage() {
   return (
     <main className="page-shell">
       <section className="page-intro">
-        <span className="status-pill status-pill--pending">Activos del Portfolio</span>
-        <h1>Portfolio Profesional</h1>
+        <span className="status-pill status-pill--pending">Atouts du portfolio</span>
+        <h1>Portefeuille professionnel</h1>
         <p>
-          Una capa visual diseñada para ayudar a reclutadores e entrevistadores a entender la historia del producto,
-          el flujo del sistema y la intención de ingeniería detrás de UNV-HMND.
+          Une couche visuelle conçue pour aider les recruteurs et interviewers à comprendre l’histoire du produit,
+          le flux système et l’intention d’ingénierie derrière UNV-HMND.
         </p>
       </section>
 
@@ -74,7 +74,7 @@ export default function PortfolioPage() {
             <div className="gallery-copy">
               <div className="gallery-title-row">
                 <h2>{item.title}</h2>
-                <span className="status-pill status-pill--pending">Activo local</span>
+                <span className="status-pill status-pill--pending">Actif local</span>
               </div>
               <p>{item.description}</p>
               <p className="gallery-impact">{item.impact}</p>

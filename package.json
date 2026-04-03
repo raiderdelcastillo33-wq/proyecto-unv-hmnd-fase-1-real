@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev": "concurrently -k -n API,WEB -c green,blue \"npm run dev:api\" \"npm run dev:web\"",
     "dev:api": "ts-node src/api/server.ts",
     "dev:web": "cd apps/web && npm run dev",
     "build": "npm --prefix apps/web run build",

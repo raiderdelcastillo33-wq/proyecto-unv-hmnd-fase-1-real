@@ -20,27 +20,27 @@ type RunResult = {
 
 const flowHighlights = [
   {
-    title: 'Petición del browser',
-    description: 'El usuario envía un mensaje desde un componente cliente con validación de input y manejo asíncrono de estados.'
+    title: 'Requête du navigateur',
+    description: 'L’utilisateur envoie un message depuis un composant client avec validation d’entrée et gestion asynchrone des états.'
   },
   {
-    title: 'Ruta interna Next.js',
-    description: 'El formulario publica a `/api/v1/run`, manteniendo el browser aislado de URLs de backend y detalles de despliegue.'
+    title: 'Route interne Next.js',
+    description: 'Le formulaire publie vers `/api/v1/run`, gardant le navigateur isolé des URLs backend et des détails de déploiement.'
   },
   {
-    title: 'Respuesta API Node',
-    description: 'La petición es retransmitida a la capa Node y la respuesta final se renderiza de vuelta en la UI.'
+    title: 'Réponse API Node',
+    description: 'La requête est relayée vers la couche Node et la réponse finale est rendue dans l’interface.'
   }
 ]
 
-const proofPoints = ['Manejo tipado de peticiones', 'Visibilidad de estado de runtime', 'Mensajes fallback seguros para producción']
+const proofPoints = ['Gestion typée des requêtes', 'Visibilité de l’état runtime', 'Messages de fallback sûrs en production']
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Unknown error'
+  return error instanceof Error ? error.message : 'Erreur inconnue'
 }
 
 async function readJson(response: Response): Promise<unknown> {
@@ -116,31 +116,31 @@ function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pen
   if (runtime.status === 'checking') {
     return {
       tone: 'pending',
-      label: 'Checking backend...',
-      message: 'Validating the Node API connection before running the demo.'
+      label: 'Vérification du backend...',
+      message: 'Validation de la connexion à l’API Node avant de lancer la démo.'
     }
   }
 
   if (runtime.status === 'ok' && runtime.mode === 'external') {
     return {
       tone: 'success',
-      label: 'External backend ready',
-      message: 'Using a configured external Node API.'
+      label: 'Backend externe prêt',
+      message: 'Utilisation d’une API Node externe configurée.'
     }
   }
 
   if (runtime.status === 'ok') {
     return {
       tone: 'success',
-      label: 'Local backend ready',
-      message: `Using local Node API at ${runtime.backend}. Run npm run dev from the repo root.`
+      label: 'Backend local prêt',
+      message: `Utilisation de l’API Node locale sur ${runtime.backend}. Exécutez npm run dev à la racine du repository.`
     }
   }
 
   return {
     tone: 'error',
-    label: 'Backend action required',
-    message: runtime.error ?? 'Set UNV_API_BASE_URL in Vercel to connect the demo with the external Node API.'
+    label: 'Action backend requise',
+    message: runtime.error ?? 'Définissez UNV_API_BASE_URL dans Vercel pour connecter la démo à un backend Node externe.'
   }
 }
 
@@ -220,10 +220,10 @@ export default function DemoPage() {
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
           <span className={`status-pill status-pill--${runtimePresentation.tone}`}>{runtimePresentation.label}</span>
-          <h1>Demo Interactiva del Sistema</h1>
+          <h1>Démo interactive du système</h1>
           <p>
-            Un reclutador puede usar esta página para validar el flujo exacto del producto: envío de mensaje,
-            enrutamiento interno, ejecución backend y renderizado de respuesta en la UI.
+            Un recruteur peut utiliser cette page pour valider le flux exact du produit : envoi de message,
+            routage interne, exécution backend et rendu de la réponse dans l’UI.
           </p>
 
           <div className="tag-row">
@@ -245,29 +245,29 @@ export default function DemoPage() {
           </div>
 
           <div className="code-explanation">
-            <h3>¿Cómo funciona el sistema?</h3>
+            <h3>Comment fonctionne le système ?</h3>
             <div className="code-blocks">
               <div className="code-block">
-                <h4>1. Validación Frontend</h4>
-                <pre><code>{`// Validación de input antes del envío
+                <h4>1. Validation Frontend</h4>
+                <pre><code>{`// Validation de l’entrée avant envoi
 if (input.length < 5) {
-  setError('Mínimo 5 caracteres requeridos');
+  setError('Au moins 5 caractères requis');
   return;
 }`}</code></pre>
               </div>
 
               <div className="code-block">
-                <h4>2. Petición a API Interna</h4>
-                <pre><code>{`// Next.js maneja la ruta /api/v1/run
+                <h4>2. Requête vers API interne</h4>
+                <pre><code>{`// Next.js gère la route /api/v1/run
 POST /api/v1/run
 {
-  "input": "mensaje del usuario"
+  "input": "message de l’utilisateur"
 }`}</code></pre>
               </div>
 
               <div className="code-block">
-                <h4>3. Procesamiento Backend</h4>
-                <pre><code>{`// Node.js API procesa la solicitud
+                <h4>3. Traitement Backend</h4>
+                <pre><code>{`// API Node.js traite la requête
 const result = await aiProvider.generate({
   feature: 'assistant',
   prompt: input
@@ -275,37 +275,36 @@ const result = await aiProvider.generate({
               </div>
 
               <div className="code-block">
-                <h4>4. Respuesta Tipada</h4>
-                <pre><code>{`// Respuesta estructurada
+                <h4>4. Réponse typée</h4>
+                <pre><code>{`// Réponse structurée
 {
   "success": true,
   "data": {
     "id": "interaction-123",
-    "response": "Respuesta de IA..."
+    "response": "Réponse IA..."
   }
 }`}</code></pre>
               </div>
             </div>
 
             <p className="code-summary">
-              <strong>Arquitectura clave:</strong> Separación clara entre UI (React), rutas API (Next.js) y servicios backend (Node.js).
-              Cada capa tiene responsabilidades bien definidas con validación tipada en TypeScript.
+              <strong>Architecture clé :</strong> Séparation claire entre UI (React), routes API (Next.js) et services backend (Node.js).
+              Chaque couche a des responsabilités bien définies avec validation typée en TypeScript.
             </p>
           </div>
         </div>
-
         <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">Estado del backend</p>
+          <p className="result-eyebrow">État du backend</p>
           <h2>{runtime.service}</h2>
           <p className="meta-text">{runtimePresentation.message}</p>
 
           <div className="response-meta">
-            <span className="info-chip">Modo {runtime.mode}</span>
-            <span className="info-chip">{runtime.configured ? 'Entorno configurado' : 'Por defecto o entorno faltante'}</span>
+            <span className="info-chip">Mode {runtime.mode}</span>
+            <span className="info-chip">{runtime.configured ? 'Environnement configuré' : 'Par défaut ou environnement manquant'}</span>
           </div>
 
           <button className="secondary-button" onClick={() => void refreshRuntime()} type="button">
-            Refrescar Backend
+            Actualiser le backend
           </button>
         </aside>
       </section>
@@ -313,19 +312,19 @@ const result = await aiProvider.generate({
       <section className="workspace">
         <form className="panel" onSubmit={handleSubmit}>
           <div className="panel-heading">
-            <p className="result-eyebrow">Petición</p>
-            <h2>Enviar un mensaje</h2>
-            <p>Usa el formulario para verificar el flujo Browser → Next.js → API Node con una respuesta real.</p>
+            <p className="result-eyebrow">Requête</p>
+            <h2>Envoyer un message</h2>
+            <p>Utilisez le formulaire pour vérifier le flux Browser → Next.js → API Node avec une réponse réelle.</p>
           </div>
 
           <label className="field-label" htmlFor="demo-input">
-            Mensaje
+            Message
           </label>
           <textarea
             id="demo-input"
             className="prompt-input"
             onChange={(event) => setInput(event.target.value)}
-            placeholder="Describe qué quieres que procese el backend de demo..."
+            placeholder="Décrivez ce que vous souhaitez que le backend de démo traite..."
             value={input}
           />
 
@@ -333,38 +332,38 @@ const result = await aiProvider.generate({
 
           <div className="actions">
             <button className="primary-button" disabled={isSubmitDisabled} type="submit">
-              {loading ? 'Enviando...' : 'Ejecutar Demo'}
+              {loading ? 'Envoi...' : 'Exécuter la démo'}
             </button>
-            <span className="meta-text">Cliente → /api/v1/run → API Node</span>
+            <span className="meta-text">Client → /api/v1/run → API Node</span>
           </div>
         </form>
 
         <aside className="panel">
           <div className="panel-heading">
-            <p className="result-eyebrow">Salida</p>
-            <h2>Respuesta</h2>
-            <p>Salida del servidor renderizada directamente desde la respuesta de la ruta interna.</p>
+            <p className="result-eyebrow">Sortie</p>
+            <h2>Réponse</h2>
+            <p>Sortie du serveur rendue directement depuis la réponse de la route interne.</p>
           </div>
 
           {loading ? (
             <section className="result-state">
-              <p className="result-eyebrow">Procesando</p>
-              <h3>Esperando al backend</h3>
-              <p>La petición se está moviendo a través de Next.js y hacia la API Node.</p>
+              <p className="result-eyebrow">Traitement</p>
+              <h3>En attente du backend</h3>
+              <p>La requête passe par Next.js vers l’API Node.</p>
             </section>
           ) : result ? (
             <section className="result-state">
-              <p className="result-eyebrow">Respuesta recibida</p>
+              <p className="result-eyebrow">Réponse reçue</p>
               <h3>{result.response}</h3>
               <div className="response-meta">
-                <span className="info-chip">Interacción {result.id}</span>
+                <span className="info-chip">Interaction {result.id}</span>
               </div>
             </section>
           ) : (
             <section className="result-state">
-              <p className="result-eyebrow">Esperando</p>
-              <h3>Tu respuesta aparecerá aquí</h3>
-              <p>Comienza enviando un mensaje a través del formulario de demo.</p>
+              <p className="result-eyebrow">En attente</p>
+              <h3>Votre réponse apparaîtra ici</h3>
+              <p>Commencez par envoyer un message via le formulaire de démo.</p>
             </section>
           )}
         </aside>
