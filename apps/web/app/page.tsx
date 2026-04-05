@@ -183,7 +183,9 @@ export default function HomePage() {
             </Link>   
           </div>
           <div style={{ marginTop: "40px", borderTop: "1px solid #333", paddingTop: "30px" }}>
-            <DisqusComments url="https://localhost:3001" identifier="home-page" />
+           {typeof window !== "undefined" && (
+  <DisqusComments url="https://TU-DOMINIO.vercel.app" identifier="home-page" />
+)}
 </div>
         </article>
       </section>
