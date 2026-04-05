@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import DisqusComments from "../components/DisqusComments"
 
 export const metadata: Metadata = {
   title: 'Raider del Castillo - Développeur Frontend & Intégration IA',
@@ -179,8 +180,11 @@ export default function HomePage() {
             </Link>
             <Link className="secondary-button" href="/about">
               Lire l’architecture
-            </Link>
+            </Link>   
           </div>
+          <div style={{ marginTop: "40px", borderTop: "1px solid #333", paddingTop: "30px" }}>
+            <DisqusComments url="https://localhost:3001" identifier="home-page" />
+</div>
         </article>
       </section>
     </main>
