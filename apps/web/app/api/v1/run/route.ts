@@ -1,62 +1,103 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { forwardJson, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
-const DEFAULT_LOCAL_API_BASE_URL = 'http://localhost:3000'
-
-function getApiBaseUrl(): string {
-  const externalBaseUrl = process.env.UNV_API_BASE_URL?.trim()
-
-  if (externalBaseUrl && externalBaseUrl.length > 0) {
-    return externalBaseUrl.replace(/\/+$/, '')
-  }
-
-  return DEFAULT_LOCAL_API_BASE_URL
+const BACKEND_URL_MISSING_RESPONSE = {
+  success: false,
+  error: 'UNV_API_BASE_URL is required in production to connect the demo with the Node API.',
+  code: 'BACKEND_URL_MISSING',
+  mode: 'missing' as const
 }
 
-async function readBackendJson(response: Response): Promise<unknown> {
-  const text = await response.text()
-
-  if (text.trim().length === 0) {
-    return null
+function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): number {
+  if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
+    return upstreamStatus
   }
 
-  try {
-    return JSON.parse(text)
-  } catch {
-    throw new Error('The backend response is not valid JSON.')
+  const responsePayload = payload as {
+    success?: unknown
+    error?: { code?: unknown }
   }
+
+  if (responsePayload.success === true) {
+    return upstreamStatus
+  }
+
+  const errorCode = responsePayload.error?.code
+
+  switch (errorCode) {
+    case 'VALIDATION_ERROR':
+      return 400
+    case 'NOT_FOUND':
+      return 404
+    case 'CONFLICT':
+      return 409
+    case 'UNAUTHORIZED':
+      return 401
+    case 'FORBIDDEN':
+      return 403
+    case 'INFRASTRUCTURE_ERROR':
+      return 503
+    default:
+      return upstreamStatus >= 400 ? upstreamStatus : 500
+  }
+}
+
+function validateRunBody(body: unknown): { ok: true; input: string } | { ok: false; error: string } {
+  if (typeof body !== 'object' || body === null) {
+    return { ok: false, error: 'Please enter a message before sending the demo request.' }
+  }
+
+  const input = (body as { input?: unknown }).input
+
+  if (typeof input !== 'string') {
+    return { ok: false, error: 'Please enter a message before sending the demo request.' }
+  }
+
+  const trimmed = input.trim()
+
+  if (!trimmed) {
+    return { ok: false, error: 'Please enter a message before sending the demo request.' }
+  }
+
+  if (trimmed.length < 5) {
+    return { ok: false, error: 'Please enter at least 5 characters before sending the demo request.' }
+  }
+
+  return { ok: true, input: trimmed }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {
-    const body = await request.json()
-    const apiBaseUrl = getApiBaseUrl()
+  let body: unknown
 
-    const backendResponse = await fetch(`${apiBaseUrl}/api/v1/run`, {
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ success: false, error: 'Invalid JSON body.' }, { status: 400 })
+  }
+
+  const validation = validateRunBody(body)
+
+  if (!validation.ok) {
+    return NextResponse.json({ success: false, error: validation.error }, { status: 400 })
+  }
+
+  try {
+    const { status, payload } = await forwardJson('/api/v1/run', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      cache: 'no-store',
-      body: JSON.stringify(body)
+      body: JSON.stringify({ input: validation.input })
     })
 
-    const payload = await readBackendJson(backendResponse)
+    const responseStatus = mapPayloadToHttpStatus(status, payload)
 
-    if (!backendResponse.ok) {
-      return NextResponse.json(
-        payload ?? {
-          success: false,
-          error: {
-            code: 'UPSTREAM_ERROR',
-            message: `Node API responded with status ${backendResponse.status}.`
-          }
-        },
-        { status: backendResponse.status }
-      )
+    return NextResponse.json(payload, { status: responseStatus })
+  } catch (error) {
+    if (error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR) {
+      return NextResponse.json(BACKEND_URL_MISSING_RESPONSE, { status: 503 })
     }
 
-    return NextResponse.json(payload, { status: backendResponse.status })
-  } catch (error) {
     const message =
       error instanceof Error
         ? error.message

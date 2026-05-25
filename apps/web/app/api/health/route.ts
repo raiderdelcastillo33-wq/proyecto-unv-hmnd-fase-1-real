@@ -1,64 +1,29 @@
 import { NextResponse } from 'next/server'
+import { forwardJson, getBackendRuntimeInfo } from '@/lib/backend'
 
-const DEFAULT_LOCAL_API_BASE_URL = 'http://localhost:3000'
-
-type RuntimeMode = 'local' | 'external' | 'missing'
-
-function getApiBaseUrl(): string | null {
-  const externalBaseUrl = process.env.UNV_API_BASE_URL?.trim()
-
-  if (externalBaseUrl && externalBaseUrl.length > 0) {
-    return externalBaseUrl.replace(/\/+$/, '')
-  }
-
-  return DEFAULT_LOCAL_API_BASE_URL
-}
-
-function getRuntimeMode(): RuntimeMode {
-  const externalBaseUrl = process.env.UNV_API_BASE_URL?.trim()
-
-  if (externalBaseUrl && externalBaseUrl.length > 0) {
-    return 'external'
-  }
-
-  return 'local'
-}
+const MISSING_BACKEND_HEALTH_ERROR =
+  'UNV_API_BASE_URL is required in production to reach the external Node API.'
 
 export async function GET(): Promise<NextResponse> {
-  const backend = getApiBaseUrl()
+  const runtime = getBackendRuntimeInfo()
 
-  if (!backend) {
-    return NextResponse.json(
-      {
-        status: 'error',
-        configured: false,
-        service: 'api-server',
-        mode: 'missing',
-        backend: null,
-        error: 'UNV_API_BASE_URL is not configured.'
-      },
-      { status: 500 }
-    )
+  if (runtime.mode === 'missing') {
+    return NextResponse.json({ error: MISSING_BACKEND_HEALTH_ERROR }, { status: 503 })
   }
 
   try {
-    const response = await fetch(`${backend}/health`, {
-      method: 'OPTIONS',
-      cache: 'no-store'
-    })
-
-    const backendAvailable =
-      response.status < 500 || response.status === 404 || response.status === 405
+    const { status } = await forwardJson('/health', { method: 'GET' })
+    const backendAvailable = status < 500 || status === 404 || status === 405
 
     if (!backendAvailable) {
       return NextResponse.json(
         {
           status: 'error',
-          configured: getRuntimeMode() === 'external',
-          service: 'api-server',
-          mode: getRuntimeMode(),
-          backend,
-          error: `Node API is reachable but returned status ${response.status}.`
+          configured: runtime.configured,
+          service: runtime.service,
+          mode: runtime.mode,
+          backend: runtime.baseUrl,
+          error: `Node API is reachable but returned status ${status}.`
         },
         { status: 502 }
       )
@@ -66,24 +31,22 @@ export async function GET(): Promise<NextResponse> {
 
     return NextResponse.json({
       status: 'ok',
-      configured: getRuntimeMode() === 'external',
-      service: 'api-server',
-      mode: getRuntimeMode(),
-      backend
+      configured: runtime.configured,
+      service: runtime.service,
+      mode: runtime.mode,
+      backend: runtime.baseUrl
     })
   } catch (error) {
     const message =
-      error instanceof Error
-        ? error.message
-        : 'Unable to reach the Node API from Next.js.'
+      error instanceof Error ? error.message : 'Unable to reach the Node API from Next.js.'
 
     return NextResponse.json(
       {
         status: 'error',
-        configured: getRuntimeMode() === 'external',
-        service: 'api-server',
-        mode: getRuntimeMode(),
-        backend,
+        configured: runtime.configured,
+        service: runtime.service,
+        mode: runtime.mode,
+        backend: runtime.baseUrl,
         error: message
       },
       { status: 502 }
