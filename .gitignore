@@ -138,4 +138,23 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vercel
+.vercel/
+**/.vercel/
 .public-repo/
+
+# --- Phase 1: repository hygiene ---
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# Finder/iCloud duplicate copies (e.g. "file 2.ts")
+* 2.*
+* 3.*
+
+# Next.js compiler cache
+.swc/
+**/.swc/
+
+# Empty workspace placeholders
+practica/
+pwd/
