@@ -18,6 +18,14 @@ type RunResult = {
   response: string
 }
 
+const agentOptions = [
+  { id: 'tutor', label: 'Tutor' },
+  { id: 'mentor', label: 'Mentor' },
+  { id: 'architect', label: 'Architect' },
+  { id: 'course-generator', label: 'Course generator' },
+  { id: 'cuba-education-assistant', label: 'Cuba education assistant' }
+] as const
+
 const flowHighlights = [
   {
     title: 'Requête du navigateur',
@@ -154,6 +162,7 @@ const INITIAL_RUNTIME: RuntimeState = {
 
 export default function DemoPage() {
   const [input, setInput] = useState('')
+  const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [runtime, setRuntime] = useState<RuntimeState>(INITIAL_RUNTIME)
@@ -200,7 +209,10 @@ export default function DemoPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ input: trimmedInput })
+        body: JSON.stringify({
+          input: trimmedInput,
+          agentId: selectedAgentId
+        })
       })
 
       setResult(parseRunResult(payload))
@@ -320,6 +332,22 @@ const result = await aiProvider.generate({
           <label className="field-label" htmlFor="demo-input">
             Message
           </label>
+          <label className="field-label" htmlFor="agent-select">
+            Agent
+          </label>
+          <select
+            className="select-input"
+            id="agent-select"
+            onChange={(event) => setSelectedAgentId(event.target.value as typeof selectedAgentId)}
+            value={selectedAgentId}
+          >
+            {agentOptions.map((agent) => (
+              <option key={agent.id} value={agent.id}>
+                {agent.label}
+              </option>
+            ))}
+          </select>
+
           <textarea
             id="demo-input"
             className="prompt-input"

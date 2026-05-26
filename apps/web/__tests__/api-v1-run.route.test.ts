@@ -64,6 +64,63 @@ describe('POST /api/v1/run', () => {
     )
   })
 
+  it('forwards optional agentId when provided', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-agent',
+          response: 'Agent response'
+        }
+      }
+    })
+
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello agent flow',
+          agentId: 'architect'
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    expect(JSON.parse(forwardedInit.body as string)).toEqual({
+      input: 'hello agent flow',
+      agentId: 'architect'
+    })
+  })
+
+  it('keeps compatibility when agentId is not provided or is not a string', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-basic',
+          response: 'Basic response'
+        }
+      }
+    })
+
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello basic flow',
+          agentId: 123
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    expect(JSON.parse(forwardedInit.body as string)).toEqual({
+      input: 'hello basic flow'
+    })
+  })
+
   it('rejects invalid JSON bodies', async () => {
     const response = await POST(createJsonRequest('{') as never)
     const payload = await response.json()

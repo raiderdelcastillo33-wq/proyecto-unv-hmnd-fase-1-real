@@ -7,6 +7,7 @@ import { AIInteractionRepository } from '../../src/domain/repositories/AIInterac
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
 import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
+import { AIController } from '../../src/interfaces/http/controllers/AIController'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
 import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
@@ -142,6 +143,47 @@ export function mockTests(): TestCase[] {
 
         assert.equal(provider.calls.length, 1)
         assert.equal(provider.calls[0]?.agent?.id, 'architect')
+      }
+    },
+    {
+      name: 'Agents: AIController.run acepta agentId opcional con fallback seguro',
+      run: async () => {
+        const userId = 'demo-user'
+        const userRepo = new FakeUserRepository([
+          {
+            id: userId,
+            email: 'demo@example.com',
+            displayName: 'Demo User',
+            role: 'student',
+            level: 'beginner',
+            goals: ['demo'],
+            createdAt: new Date()
+          }
+        ])
+        const interactions = new FakeInteractionRepository()
+        const provider = new SpyAIProvider({
+          output: 'respuesta controller',
+          estimatedCostUsd: 0.1,
+          model: 'fake-model'
+        })
+        const useCase = new AskAIAssistantUseCase(userRepo, provider, interactions)
+        const controller = new AIController(useCase)
+
+        await controller.run({
+          input: 'Necesito revisar una arquitectura de backend',
+          agentId: 'architect'
+        })
+        await controller.run({
+          input: 'Necesito ayuda general con mi aprendizaje',
+          agentId: 'agente-invalido'
+        })
+        await controller.run({
+          input: 'Necesito ayuda sin agente explicito'
+        })
+
+        assert.equal(provider.calls[0]?.agent?.id, 'architect')
+        assert.equal(provider.calls[1]?.agent?.id, 'tutor')
+        assert.equal(provider.calls[2]?.agent?.id, 'tutor')
       }
     },
     {

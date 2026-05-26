@@ -42,12 +42,13 @@ function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): numbe
   }
 }
 
-function validateRunBody(body: unknown): { ok: true; input: string } | { ok: false; error: string } {
+function validateRunBody(body: unknown): { ok: true; input: string; agentId?: string } | { ok: false; error: string } {
   if (typeof body !== 'object' || body === null) {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
   }
 
   const input = (body as { input?: unknown }).input
+  const agentId = (body as { agentId?: unknown }).agentId
 
   if (typeof input !== 'string') {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
@@ -61,6 +62,10 @@ function validateRunBody(body: unknown): { ok: true; input: string } | { ok: fal
 
   if (trimmed.length < 5) {
     return { ok: false, error: 'Please enter at least 5 characters before sending the demo request.' }
+  }
+
+  if (typeof agentId === 'string') {
+    return { ok: true, input: trimmed, agentId }
   }
 
   return { ok: true, input: trimmed }
@@ -87,7 +92,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ input: validation.input })
+      body: JSON.stringify(
+        validation.agentId
+          ? {
+              input: validation.input,
+              agentId: validation.agentId
+            }
+          : { input: validation.input }
+      )
     })
 
     const responseStatus = mapPayloadToHttpStatus(status, payload)

@@ -1,5 +1,6 @@
 import { AskAssistantInput } from '../../../application/dto/AIDTO'
 import { AskAIAssistantUseCase } from '../../../application/use-cases/AskAIAssistantUseCase'
+import { AgentRegistry } from '../../../domain/agents/AgentRegistry'
 import { DEMO_USER_ID } from '../../../shared/demoUser'
 import { ValidationError } from '../../../shared/errors/AppError'
 import { ApiResponse } from '../../../shared/types/ApiResponse'
@@ -21,19 +22,29 @@ export class AIController {
     })
   }
 
-  async run(input: { input: string }): Promise<ApiResponse<{ id: string; response: string }>> {
+  async run(input: { input: string; agentId?: unknown }): Promise<ApiResponse<{ id: string; response: string }>> {
     return handleController(async () => {
       ensureString(input.input, 'input')
 
       const prompt = input.input.trim()
       ensureMinLength(prompt, 5, 'input')
       this.ensureMaxLength(prompt, 'input')
+      const agentId = typeof input.agentId === 'string' ? AgentRegistry.resolve(input.agentId).id : undefined
 
-      const interaction = await this.askAIAssistantUseCase.execute({
+      const request = {
         userId: DEMO_USER_ID,
         feature: 'assistant',
         prompt
-      })
+      } as const
+
+      const interaction = await this.askAIAssistantUseCase.execute(
+        agentId
+          ? {
+              ...request,
+              agentId
+            }
+          : request
+      )
 
       return { id: interaction.id, response: interaction.response }
     })

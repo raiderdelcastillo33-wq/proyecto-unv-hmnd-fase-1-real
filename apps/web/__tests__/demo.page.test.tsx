@@ -44,6 +44,7 @@ describe('DemoPage', () => {
     render(<DemoPage />)
 
     expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+    expect(screen.getByLabelText('Agent')).toHaveValue('tutor')
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
@@ -62,7 +63,60 @@ describe('DemoPage', () => {
       2,
       '/api/v1/run',
       expect.objectContaining({
-        method: 'POST'
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello demo flow',
+          agentId: 'tutor'
+        })
+      })
+    )
+  })
+
+  it('sends the selected agentId with the demo request', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-agent',
+          response: 'Architect response'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Agent'), {
+      target: { value: 'architect' }
+    })
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'hello architect flow' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('Architect response')).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/v1/run',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello architect flow',
+          agentId: 'architect'
+        })
       })
     )
   })
