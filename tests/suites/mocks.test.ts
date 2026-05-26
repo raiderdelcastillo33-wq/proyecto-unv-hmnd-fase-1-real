@@ -104,12 +104,31 @@ export function mockTests(): TestCase[] {
       run: async () => {
         assert.equal(AgentRegistry.defaultAgent().id, 'tutor')
         assert.equal(AgentRegistry.resolve('architect').id, 'architect')
+        assert.equal(AgentRegistry.resolve('architect-agent').id, 'architect-agent')
+        assert.equal(AgentRegistry.resolve('coder-agent').id, 'coder-agent')
+        assert.equal(AgentRegistry.resolve('reviewer-agent').id, 'reviewer-agent')
+        assert.equal(AgentRegistry.resolve('debugger-agent').id, 'debugger-agent')
+        assert.equal(AgentRegistry.resolve('tutor-agent').id, 'tutor-agent')
+        assert.equal(AgentRegistry.resolve('operator-agent').id, 'operator-agent')
         assert.equal(AgentRegistry.resolve('agente-inexistente').id, 'tutor')
-        assert.equal(AgentRegistry.list().length, 5)
+        assert.equal(AgentRegistry.list().length, 11)
         assert.deepEqual(
           AgentRegistry.list().map((agent) => agent.id),
-          ['tutor', 'mentor', 'architect', 'course-generator', 'cuba-education-assistant']
+          [
+            'tutor',
+            'mentor',
+            'architect',
+            'course-generator',
+            'cuba-education-assistant',
+            'architect-agent',
+            'coder-agent',
+            'reviewer-agent',
+            'debugger-agent',
+            'tutor-agent',
+            'operator-agent'
+          ]
         )
+        assert.match(AgentRegistry.resolve('operator-agent').systemInstructions, /Never execute/)
       }
     },
     {

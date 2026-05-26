@@ -6,6 +6,12 @@ export type AgentId =
   | 'architect'
   | 'course-generator'
   | 'cuba-education-assistant'
+  | 'architect-agent'
+  | 'coder-agent'
+  | 'reviewer-agent'
+  | 'debugger-agent'
+  | 'tutor-agent'
+  | 'operator-agent'
 
 export interface AgentProfile {
   id: AgentId
