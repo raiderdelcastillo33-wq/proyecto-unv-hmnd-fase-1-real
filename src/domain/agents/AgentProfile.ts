@@ -1,4 +1,5 @@
 import type { AIFeature } from '../services/AIProvider'
+import type { ToolId } from '../tools/ToolProfile'
 
 export type AgentId =
   | 'tutor'
@@ -20,4 +21,5 @@ export interface AgentProfile {
   systemInstructions: string
   safetyRules: string[]
   defaultFeature: AIFeature
+  allowedTools?: ToolId[]
 }

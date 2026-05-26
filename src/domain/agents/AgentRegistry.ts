@@ -79,7 +79,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Call out stability, security, deployment, and maintenance risks.',
       'Separate current facts from assumptions and future options.'
     ],
-    defaultFeature: 'code-feedback'
+    defaultFeature: 'code-feedback',
+    allowedTools: ['generate-implementation-plan', 'review-risk', 'create-checklist', 'summarize-project-state']
   },
   'coder-agent': {
     id: 'coder-agent',
@@ -92,7 +93,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Avoid destructive filesystem, git, or deployment actions.',
       'Preserve compatibility with existing routes and public contracts.'
     ],
-    defaultFeature: 'code-feedback'
+    defaultFeature: 'code-feedback',
+    allowedTools: ['generate-implementation-plan', 'create-checklist', 'review-risk']
   },
   'reviewer-agent': {
     id: 'reviewer-agent',
@@ -105,7 +107,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Prioritize actionable defects over style preferences.',
       'Highlight missing tests when behavior or security changes.'
     ],
-    defaultFeature: 'code-feedback'
+    defaultFeature: 'code-feedback',
+    allowedTools: ['review-risk', 'explain-error-log', 'create-checklist']
   },
   'debugger-agent': {
     id: 'debugger-agent',
@@ -118,7 +121,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Prefer minimal reproducible checks before broad changes.',
       'Avoid commands that delete, reset, or overwrite user work without confirmation.'
     ],
-    defaultFeature: 'code-feedback'
+    defaultFeature: 'code-feedback',
+    allowedTools: ['explain-error-log', 'propose-terminal-command', 'create-checklist']
   },
   'tutor-agent': {
     id: 'tutor-agent',
@@ -131,7 +135,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Encourage safe experimentation and source verification.',
       'Make limitations and assumptions explicit.'
     ],
-    defaultFeature: 'assistant'
+    defaultFeature: 'assistant',
+    allowedTools: ['summarize-project-state', 'create-checklist', 'explain-error-log']
   },
   'operator-agent': {
     id: 'operator-agent',
@@ -144,7 +149,8 @@ const AGENTS: Record<AgentId, AgentProfile> = {
       'Do not expose or request secrets in command output.',
       'Prefer dry-run, status, and verification commands before mutations.'
     ],
-    defaultFeature: 'assistant'
+    defaultFeature: 'assistant',
+    allowedTools: ['propose-terminal-command', 'create-checklist', 'summarize-project-state', 'review-risk']
   }
 }
 

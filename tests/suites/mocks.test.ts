@@ -7,6 +7,7 @@ import { AIInteractionRepository } from '../../src/domain/repositories/AIInterac
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
 import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
+import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
 import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
@@ -129,6 +130,34 @@ export function mockTests(): TestCase[] {
           ]
         )
         assert.match(AgentRegistry.resolve('operator-agent').systemInstructions, /Never execute/)
+      }
+    },
+    {
+      name: 'Tools: ToolRegistry lista, resuelve y valida permisos por agente',
+      run: async () => {
+        const tools = ToolRegistry.list()
+        const operator = AgentRegistry.resolve('operator-agent')
+        const tutor = AgentRegistry.resolve('tutor-agent')
+
+        assert.equal(tools.length, 6)
+        assert.deepEqual(
+          tools.map((tool) => tool.id),
+          [
+            'summarize-project-state',
+            'propose-terminal-command',
+            'explain-error-log',
+            'generate-implementation-plan',
+            'review-risk',
+            'create-checklist'
+          ]
+        )
+        assert.equal(ToolRegistry.resolve('review-risk')?.id, 'review-risk')
+        assert.equal(ToolRegistry.resolve('tool-invalida'), null)
+        assert.equal(ToolRegistry.isAllowedForAgent(operator, 'propose-terminal-command'), true)
+        assert.equal(ToolRegistry.isAllowedForAgent(tutor, 'propose-terminal-command'), false)
+        assert.equal(ToolRegistry.isAllowedForAgent(operator, 'tool-invalida'), false)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresHumanApproval, true)
+        assert.equal('executed' in ToolRegistry.resolve('propose-terminal-command')!, false)
       }
     },
     {
