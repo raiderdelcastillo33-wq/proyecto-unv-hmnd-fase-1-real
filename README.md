@@ -13,9 +13,9 @@ Está diseñado para demostrar:
 ## Lo que incluye el proyecto
 
 - `Página principal`: superficie de portfolio orientada a reclutadores
-- `Página de demo`: UI interactiva que envía mensajes y renderiza respuestas del backend
+- `Página de demo`: laboratorio IA con selector multiagente, historial local, memoria corta por sesión y respuesta simulada tipo typing
 - `Rutas internas Next.js`: capa API segura para frontend bajo `apps/web/app/api`
-- `API Node`: runtime backend servido desde `src/api/server.ts`
+- `API Node`: runtime backend servido desde `src/api/server.ts`, preparado para cloud hosting con `PORT`
 - `Características IA`: tareas respaldadas por IA expuestas a través de `/api/v1/run`
 
 ## Stack Tecnológico
@@ -76,7 +76,8 @@ Notas:
 - `OPENAI_API_KEY` nunca debe exponerse al frontend; solo debe existir en el entorno server-side cuando se quiera usar IA real
 - `OPENAI_MODEL` es opcional y por defecto es `gpt-4o-mini`
 - `UNV_API_BASE_URL` es opcional en desarrollo local porque la app puede usar la API Node local
-- `UNV_API_BASE_URL` es requerida en producción cuando `/api/v1/run` necesita alcanzar una API Node externa
+- `UNV_API_BASE_URL` es opcional para la demo en Vercel: si falta, `/api/v1/run` usa un fallback demo seguro desde Next.js
+- `UNV_API_BASE_URL` es necesaria cuando la demo debe usar un backend Node real externo
 
 Archivo de referencia:
 
@@ -88,11 +89,12 @@ apps/web/.env.example
 
 1. Iniciar el stack completo con `npm run dev`
 2. Abrir `http://localhost:3001/demo`
-3. Ingresar un mensaje con al menos 5 caracteres
-4. Enviar el formulario
-5. La UI llamará a la ruta interna Next.js `/api/v1/run`
-6. Esa ruta reenvía la petición a la API Node
-7. La respuesta del backend se renderiza de vuelta en la UI de la demo
+3. Elegir un agente público del selector
+4. Ingresar un mensaje con al menos 5 caracteres
+5. Enviar el formulario
+6. La UI llamará a la ruta interna Next.js `/api/v1/run`
+7. Esa ruta reenvía la petición a la API Node si existe `UNV_API_BASE_URL`, o usa fallback demo seguro si no existe backend externo
+8. La conversación se renderiza en historial local con una simulación ligera de typing
 
 ## Resumen de API
 
@@ -102,13 +104,32 @@ Propósito:
 
 - accepts the demo form input
 - validates the payload
-- forwards the request to the Node API
+- forwards the request to the Node API when configured
+- returns a safe demo fallback when no external backend is configured
 - normalizes backend failures into UI-safe responses
 
 Behavior:
 
 - local development: uses the local backend by default
-- production: requires `UNV_API_BASE_URL` to reach the external Node API
+- production without `UNV_API_BASE_URL`: returns a clear demo fallback response from Next.js
+- production with `UNV_API_BASE_URL`: reaches the external Node API
+
+Request shape:
+
+```json
+{
+  "input": "hello demo flow",
+  "agentId": "tutor-agent",
+  "context": "User: previous message\nAssistant: previous response"
+}
+```
+
+Limits:
+
+- `input` must contain at least 5 characters
+- local conversation history is limited to 12 messages
+- short session memory uses the last 6 messages
+- `context` is limited to 2,000 characters across frontend, Next.js route, and backend controller
 
 ### `/api/ai/run`
 
@@ -134,13 +155,30 @@ El contrato separa `feature` y `agent`:
 
 Agentes actuales:
 
-- `tutor`
-- `mentor`
-- `architect`
-- `course-generator`
-- `cuba-education-assistant`
+- `architect-agent`
+- `coder-agent`
+- `reviewer-agent`
+- `debugger-agent`
+- `tutor-agent`
+- `operator-agent`
+
+Compatibility agents still exist internally for earlier flows:
+
+- `tutor`, `mentor`, `architect`, `course-generator`, `cuba-education-assistant`
 
 La implementación actual usa Chat Completions API. La arquitectura queda preparada para migrar a Responses API más adelante sin hacer obligatoria la clave de OpenAI ni romper el fallback local.
+
+## AI Lab Behavior
+
+The `/demo` page currently behaves as a lightweight AI lab:
+
+- multi-agent selector with public labels only
+- local in-memory conversation history
+- short session memory sent as bounded `context`
+- typing simulation after a full response is received
+- safe Vercel fallback when no external Node backend is configured
+
+There is no database, authentication, persistent memory, localStorage, or real streaming in the current implementation.
 
 ## Project Structure
 
@@ -183,8 +221,8 @@ root
    ├─ portfolio
    ├─ demo
    │  └─ POST /api/v1/run
-   │     └─ Node API
-   │        └─ backend response
+   │     ├─ Node API when UNV_API_BASE_URL is configured
+   │     └─ safe demo fallback on Vercel when backend is missing
    └─ POST /api/ai/run
       └─ OpenAI Chat Completions API
 ```
@@ -224,22 +262,24 @@ Production environment variables:
 ```bash
 OPENAI_API_KEY=your_openai_api_key # optional for backend fallback mode
 OPENAI_MODEL=gpt-4o-mini
-UNV_API_BASE_URL=https://your-node-api.example.com
+UNV_API_BASE_URL=https://your-node-api.example.com # optional for demo fallback mode
 ```
 
 Important:
 
 - `apps/web` is the project Vercel should build
-- `/api/v1/run` needs a public Node API URL in production
+- `/api/v1/run` works without a public Node API through a safe demo fallback
+- `/api/v1/run` uses a real backend when `UNV_API_BASE_URL` points to a public Node API
 - backend AI routes can fallback safely to `MockAIProvider` when `OPENAI_API_KEY` is not configured
 - `/api/ai/run` is a Next.js server route and needs `OPENAI_API_KEY` only when that direct OpenAI path is used
 
 ## Production Notes
 
 - The frontend can be deployed on Vercel
-- The external Node API should be deployed separately
+- The external Node API can be deployed separately when real backend execution is needed
 - The demo remains stable in local development through internal routing and fallback logic
-- The production setup should explicitly define `UNV_API_BASE_URL`
+- The production demo remains usable without `UNV_API_BASE_URL` through safe fallback mode
+- A real production backend should define `UNV_API_BASE_URL`
 - Defining `OPENAI_API_KEY` enables real OpenAI responses; omitting it keeps the backend stable through mock fallback
 
 ## Documentation

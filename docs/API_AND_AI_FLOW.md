@@ -3,6 +3,7 @@
 This document explains the main execution paths in UNV-HMND:
 
 - `Demo flow`: Browser -> Next.js -> `/api/v1/run` -> Node API
+- `Demo fallback flow`: Browser -> Next.js -> `/api/v1/run` -> safe demo response when no external backend is configured
 - `Backend AI flow`: Node API -> `AIController` -> `AskAIAssistantUseCase` -> `AIProvider`
 - `Next.js AI flow`: Browser -> Next.js -> `/api/ai/run` -> OpenAI
 
@@ -25,7 +26,9 @@ Purpose:
 
 ```json
 {
-  "input": "hello demo flow"
+  "input": "hello demo flow",
+  "agentId": "tutor-agent",
+  "context": "User: previous message\nAssistant: previous response"
 }
 ```
 
@@ -35,6 +38,11 @@ Purpose:
 - `input` must be a string
 - `input` cannot be empty
 - `input` must contain at least 5 characters
+- `agentId` is optional
+- invalid or unknown agent IDs fall back safely to the default backend agent
+- `context` is optional
+- non-string `context` is ignored
+- long `context` is trimmed to 2,000 characters
 
 ### Success Response
 
@@ -68,16 +76,25 @@ Input too short:
 }
 ```
 
-Missing production backend URL:
+Missing production backend URL now returns a safe demo fallback instead of a hard failure:
 
 ```json
 {
-  "success": false,
-  "error": "UNV_API_BASE_URL is required in production to connect the demo with the Node API.",
-  "code": "BACKEND_URL_MISSING",
-  "mode": "missing"
+  "success": true,
+  "data": {
+    "id": "demo-fallback-123",
+    "response": "Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel..."
+  },
+  "meta": {
+    "mode": "demo-fallback",
+    "reason": "UNV_API_BASE_URL is not configured for an external Node API.",
+    "agentId": "tutor-agent",
+    "contextReceived": true
+  }
 }
 ```
+
+The fallback does not reflect the full context back to the client.
 
 ## 2. Demo Flow
 
@@ -104,10 +121,27 @@ Browser
 
 1. The page checks backend status through `/api/health`
 2. The user writes a message
-3. The client validates the input
-4. The form posts to `/api/v1/run`
-5. The response is parsed and rendered in the result panel
-6. Controlled failures are shown as user-safe error messages
+3. The user selects a public agent
+4. The client validates the input
+5. The client stores local conversation messages in memory
+6. The client builds short session memory from recent messages
+7. The form posts to `/api/v1/run`
+8. The response is parsed and rendered in the conversation panel
+9. The assistant response is revealed with frontend typing simulation
+10. Controlled failures are shown as user-safe error messages
+
+### Demo Lab State
+
+The `/demo` page currently includes:
+
+- public multi-agent selector
+- local in-memory conversation history
+- maximum 12 local conversation messages
+- short session memory built from the last 6 messages
+- maximum 2,000 context characters
+- frontend typing simulation after a full response is received
+
+The current implementation does not include persistence, authentication, localStorage, database storage, semantic memory, or real streaming.
 
 ## 3. Backend Routing
 
@@ -129,8 +163,9 @@ Behavior by environment:
   - default backend is `http://127.0.0.1:3000`
   - `UNV_API_BASE_URL` is optional
 - production:
-  - `UNV_API_BASE_URL` is required for `/api/v1/run`
-  - if missing, the route returns a controlled `503`
+  - without `UNV_API_BASE_URL`, `/api/v1/run` returns a safe demo fallback from Next.js
+  - with `UNV_API_BASE_URL`, `/api/v1/run` reaches the external Node API
+  - the Node API is cloud-ready and uses `process.env.PORT` when provided by a hosting platform
 
 ## 4. Backend AI Flow
 
@@ -210,6 +245,18 @@ POST /api/v1/ai/ask
 
 `/api/v1/run` is the demo-safe route used by the frontend proxy.
 
+It supports:
+
+```json
+{
+  "input": "Help me plan the next engineering phase",
+  "agentId": "architect-agent",
+  "context": "User: previous message\nAssistant: previous response"
+}
+```
+
+`context` is bounded to 2,000 characters before reaching the use case.
+
 `/api/v1/ai/ask` supports the domain-level AI request shape:
 
 ```json
@@ -227,12 +274,40 @@ Supported backend features:
 - `prompt-improver`
 - `code-feedback`
 
+### Agent Registry
+
+The backend keeps reusable agent profiles in:
+
+```text
+src/domain/agents/AgentRegistry.ts
+```
+
+The current internal multi-agent profiles are:
+
+- `architect-agent`
+- `coder-agent`
+- `reviewer-agent`
+- `debugger-agent`
+- `tutor-agent`
+- `operator-agent`
+
+Compatibility agents also remain available:
+
+- `tutor`
+- `mentor`
+- `architect`
+- `course-generator`
+- `cuba-education-assistant`
+
+The public frontend selector uses only public IDs and labels. It does not expose `systemInstructions`.
+
 ### Cost And Risk Notes
 
 - Real OpenAI usage may create API costs.
 - The API key must remain server-side only.
 - The fallback provider protects the product experience from upstream outages.
 - The current implementation favors stability over surfacing raw provider errors to users.
+- Short session memory increases payload size and future token usage when real AI is enabled.
 - Future phases should add structured logging, cost tracking, and rate limiting before broad public usage.
 
 ## 5. Next.js AI Flow
@@ -317,7 +392,8 @@ UNV-HMND
 │  ├─ portfolio
 │  ├─ demo
 │  │  └─ /api/v1/run
-│  │     └─ src/api/server.ts
+│  │     ├─ src/api/server.ts when backend URL is configured
+│  │     └─ safe demo fallback when backend URL is missing
 │  └─ /api/ai/run
 │     └─ OpenAI Chat Completions API
 └─ src
@@ -340,6 +416,6 @@ For Vercel:
 - define `UNV_API_BASE_URL` if the demo should talk to an external Node API
 - define `OPENAI_API_KEY` in the external Node API environment if backend `/api/v1/ai/ask` should use real OpenAI responses
 
-Without `UNV_API_BASE_URL`, the production demo route cannot reach the external backend and will return a controlled error instead of crashing the UI.
+Without `UNV_API_BASE_URL`, the production demo remains usable through a safe demo fallback response. This makes the Vercel demo stable even before a public Node backend exists.
 
 Without `OPENAI_API_KEY`, backend AI routes can still operate through `MockAIProvider`. This is intentional for local development, demos, and safe fallback behavior.
