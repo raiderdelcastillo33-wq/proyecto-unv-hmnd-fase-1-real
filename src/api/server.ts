@@ -48,7 +48,7 @@ export function getBodyReadErrorResponse(error: unknown): { statusCode: number; 
   return null
 }
 
-function getAllowedOrigins(): Set<string> {
+export function getAllowedOrigins(): Set<string> {
   const configuredOrigins = process.env.UNV_ALLOWED_ORIGINS
     ?.split(',')
     .map((origin) => origin.trim())
@@ -57,16 +57,30 @@ function getAllowedOrigins(): Set<string> {
   return new Set(configuredOrigins && configuredOrigins.length > 0 ? configuredOrigins : ['http://localhost:3001'])
 }
 
-function setCorsHeaders(request: IncomingMessage, response: ServerResponse): void {
-  const origin = request.headers.origin
+export function isAllowedOrigin(origin: string | undefined): origin is string {
+  return typeof origin === 'string' && getAllowedOrigins().has(origin)
+}
 
-  if (origin && getAllowedOrigins().has(origin)) {
-    response.setHeader('Access-Control-Allow-Origin', origin)
-    response.setHeader('Vary', 'Origin')
+export function getCorsHeaders(origin: string | undefined): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
   }
 
-  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  if (isAllowedOrigin(origin)) {
+    headers['Access-Control-Allow-Origin'] = origin
+    headers.Vary = 'Origin'
+  }
+
+  return headers
+}
+
+function setCorsHeaders(request: IncomingMessage, response: ServerResponse): void {
+  const headers = getCorsHeaders(request.headers.origin)
+
+  for (const [header, value] of Object.entries(headers)) {
+    response.setHeader(header, value)
+  }
 }
 
 function sendJson(response: ServerResponse, statusCode: number, payload: unknown): void {

@@ -21,7 +21,29 @@ function isProductionEnvironment(): boolean {
 
 function getConfiguredBackendBaseUrl(): string | null {
   const configuredBaseUrl = process.env.UNV_API_BASE_URL?.trim()
-  return configuredBaseUrl ? normalizeBaseUrl(configuredBaseUrl) : null
+  return configuredBaseUrl ? getSafeBackendBaseUrl(configuredBaseUrl) : null
+}
+
+function isLocalBackendUrl(url: URL): boolean {
+  return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+}
+
+function getSafeBackendBaseUrl(value: string): string | null {
+  try {
+    const url = new URL(value)
+
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      return null
+    }
+
+    if (isProductionEnvironment() && url.protocol !== 'https:' && !isLocalBackendUrl(url)) {
+      return null
+    }
+
+    return normalizeBaseUrl(url.toString())
+  } catch {
+    return null
+  }
 }
 
 export function getBackendRuntimeInfo(): BackendRuntimeInfo {

@@ -1,7 +1,13 @@
 import assert from 'node:assert'
 import { IncomingMessage } from 'node:http'
 import { ApplicationContainer } from '../../src/app/ApplicationContainer'
-import { getBodyReadErrorResponse, getHealthPayload, MAX_REQUEST_BODY_BYTES, readBody } from '../../src/api/server'
+import {
+  getBodyReadErrorResponse,
+  getCorsHeaders,
+  getHealthPayload,
+  MAX_REQUEST_BODY_BYTES,
+  readBody
+} from '../../src/api/server'
 import { MAX_AI_INPUT_CHARS } from '../../src/interfaces/http/controllers/AIController'
 import { ApiResponse } from '../../src/shared/types/ApiResponse'
 import { ensureFailure, ensureSuccess } from '../helpers/apiAssertions'
@@ -13,6 +19,26 @@ function createRequestFromBody(body: string): IncomingMessage {
       yield Buffer.from(body)
     }
   } as IncomingMessage
+}
+
+async function withEnv<T>(key: string, value: string | undefined, operation: () => Promise<T>): Promise<T> {
+  const previous = process.env[key]
+
+  if (value === undefined) {
+    delete process.env[key]
+  } else {
+    process.env[key] = value
+  }
+
+  try {
+    return await operation()
+  } finally {
+    if (previous === undefined) {
+      delete process.env[key]
+    } else {
+      process.env[key] = previous
+    }
+  }
 }
 
 export function errorHandlingTests(): TestCase[] {
@@ -148,6 +174,22 @@ export function errorHandlingTests(): TestCase[] {
         assert.equal(serialized.includes('OPENAI_API_KEY'), false)
         assert.equal(serialized.includes('sk-'), false)
         assert.equal(serialized.includes('token'), false)
+      }
+    },
+    {
+      name: 'Seguridad API: CORS permite origin configurado y no refleja origin no permitido',
+      run: async () => {
+        await withEnv('UNV_ALLOWED_ORIGINS', 'http://localhost:3001,https://app.unv-hmnd.example', async () => {
+          const allowedHeaders = getCorsHeaders('http://localhost:3001')
+          const blockedHeaders = getCorsHeaders('https://evil.example')
+
+          assert.equal(allowedHeaders['Access-Control-Allow-Origin'], 'http://localhost:3001')
+          assert.equal(allowedHeaders.Vary, 'Origin')
+          assert.equal(allowedHeaders['Access-Control-Allow-Methods'], 'GET,POST,OPTIONS')
+          assert.equal(allowedHeaders['Access-Control-Allow-Headers'], 'Content-Type')
+          assert.equal(blockedHeaders['Access-Control-Allow-Origin'], undefined)
+          assert.equal(blockedHeaders.Vary, undefined)
+        })
       }
     },
     {
