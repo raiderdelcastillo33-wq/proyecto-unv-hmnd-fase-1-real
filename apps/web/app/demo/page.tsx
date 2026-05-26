@@ -225,7 +225,7 @@ export default function DemoPage() {
   }
 
   const runtimePresentation = getRuntimePresentation(runtime)
-  const isSubmitDisabled = loading || (runtime.status === 'error' && runtime.mode === 'missing')
+  const isSubmitDisabled = loading
 
   return (
     <main className="page-shell">

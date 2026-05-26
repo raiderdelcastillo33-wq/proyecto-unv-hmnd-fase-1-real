@@ -147,7 +147,7 @@ describe('DemoPage', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it('shows a controlled runtime error and disables the submit button when backend config is missing', async () => {
+  it('shows a controlled runtime warning but keeps submit enabled when backend config is missing', async () => {
     const fetchMock = global.fetch as jest.Mock
 
     fetchMock.mockResolvedValueOnce(
@@ -163,7 +163,56 @@ describe('DemoPage', () => {
 
     expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
     expect(screen.getByText('UNV_API_BASE_URL is required in production to reach the external Node API.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).not.toBeDisabled()
+  })
+
+  it('renders the safe demo fallback response when backend config is missing', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse(
+        {
+          error: 'UNV_API_BASE_URL is required in production to reach the external Node API.'
+        },
+        503
+      )
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'demo-fallback-1',
+          response: 'Mode demo/fallback actif: aucun backend Node externe nest configure.'
+        },
+        meta: {
+          mode: 'demo-fallback',
+          agentId: 'tutor'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'hello fallback flow' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('Mode demo/fallback actif: aucun backend Node externe nest configure.')).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/v1/run',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello fallback flow',
+          agentId: 'tutor'
+        })
+      })
+    )
   })
 
   it('renders a controlled submit error when /api/v1/run fails', async () => {

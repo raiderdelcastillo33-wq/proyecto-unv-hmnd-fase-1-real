@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { forwardJson, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
-const BACKEND_URL_MISSING_RESPONSE = {
-  success: false,
-  error: 'UNV_API_BASE_URL is required in production to connect the demo with the Node API.',
-  code: 'BACKEND_URL_MISSING',
-  mode: 'missing' as const
-}
-
 function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): number {
   if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
     return upstreamStatus
@@ -71,6 +64,23 @@ function validateRunBody(body: unknown): { ok: true; input: string; agentId?: st
   return { ok: true, input: trimmed }
 }
 
+function createDemoFallbackPayload(validation: { input: string; agentId?: string }) {
+  const agentLabel = validation.agentId ?? 'tutor'
+
+  return {
+    success: true,
+    data: {
+      id: `demo-fallback-${Date.now()}`,
+      response: `Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel. Votre message a ete traite de facon sure par la route Next.js locale avec l'agent ${agentLabel}.`
+    },
+    meta: {
+      mode: 'demo-fallback',
+      reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
+      agentId: agentLabel
+    }
+  }
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: unknown
 
@@ -107,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(payload, { status: responseStatus })
   } catch (error) {
     if (error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR) {
-      return NextResponse.json(BACKEND_URL_MISSING_RESPONSE, { status: 503 })
+      return NextResponse.json(createDemoFallbackPayload(validation), { status: 200 })
     }
 
     const message =
