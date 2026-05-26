@@ -190,19 +190,26 @@ export function mockTests(): TestCase[] {
 
         await controller.run({
           input: 'Necesito revisar una arquitectura de backend',
-          agentId: 'architect'
+          agentId: 'architect',
+          context: 'User: contexto previo'
         })
         await controller.run({
           input: 'Necesito ayuda general con mi aprendizaje',
-          agentId: 'agente-invalido'
+          agentId: 'agente-invalido',
+          context: 123
         })
         await controller.run({
-          input: 'Necesito ayuda sin agente explicito'
+          input: 'Necesito ayuda sin agente explicito',
+          context: `${'a'.repeat(2100)}tail`
         })
 
         assert.equal(provider.calls[0]?.agent?.id, 'architect')
+        assert.equal(provider.calls[0]?.context, 'User: contexto previo')
         assert.equal(provider.calls[1]?.agent?.id, 'tutor')
+        assert.equal(provider.calls[1]?.context, undefined)
         assert.equal(provider.calls[2]?.agent?.id, 'tutor')
+        assert.equal(provider.calls[2]?.context?.length, 2000)
+        assert.equal(provider.calls[2]?.context?.endsWith('tail'), true)
       }
     },
     {

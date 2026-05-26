@@ -8,6 +8,7 @@ import { ensureMinLength, ensureString } from '../../../shared/utils/validators'
 import { handleController } from './ControllerHandler'
 
 export const MAX_AI_INPUT_CHARS = 5_000
+export const MAX_AI_CONTEXT_CHARS = 2_000
 
 export class AIController {
   constructor(private readonly askAIAssistantUseCase: AskAIAssistantUseCase) {}
@@ -22,7 +23,7 @@ export class AIController {
     })
   }
 
-  async run(input: { input: string; agentId?: unknown }): Promise<ApiResponse<{ id: string; response: string }>> {
+  async run(input: { input: string; agentId?: unknown; context?: unknown }): Promise<ApiResponse<{ id: string; response: string }>> {
     return handleController(async () => {
       ensureString(input.input, 'input')
 
@@ -30,6 +31,7 @@ export class AIController {
       ensureMinLength(prompt, 5, 'input')
       this.ensureMaxLength(prompt, 'input')
       const agentId = typeof input.agentId === 'string' ? AgentRegistry.resolve(input.agentId).id : undefined
+      const context = this.normalizeContext(input.context)
 
       const request = {
         userId: DEMO_USER_ID,
@@ -41,9 +43,13 @@ export class AIController {
         agentId
           ? {
               ...request,
-              agentId
+              agentId,
+              ...(context ? { context } : {})
             }
-          : request
+          : {
+              ...request,
+              ...(context ? { context } : {})
+            }
       )
 
       return { id: interaction.id, response: interaction.response }
@@ -56,5 +62,15 @@ export class AIController {
         [field]: 'too_long'
       })
     }
+  }
+
+  private normalizeContext(context: unknown): string | undefined {
+    if (typeof context !== 'string') {
+      return undefined
+    }
+
+    const trimmed = context.trim()
+
+    return trimmed ? trimmed.slice(-MAX_AI_CONTEXT_CHARS) : undefined
   }
 }

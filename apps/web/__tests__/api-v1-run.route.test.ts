@@ -93,6 +93,37 @@ describe('POST /api/v1/run', () => {
     })
   })
 
+  it('forwards optional context when provided and limits long context', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-context',
+          response: 'Context response'
+        }
+      }
+    })
+
+    const longContext = `${'a'.repeat(2100)}safe-tail`
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello context flow',
+          agentId: 'reviewer-agent',
+          context: longContext
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    const body = JSON.parse(forwardedInit.body as string) as { context: string }
+
+    expect(body.context.length).toBe(2000)
+    expect(body.context.endsWith('safe-tail')).toBe(true)
+  })
+
   it('keeps compatibility when agentId is not provided or is not a string', async () => {
     mockedForwardJson.mockResolvedValue({
       status: 200,
@@ -109,7 +140,8 @@ describe('POST /api/v1/run', () => {
       createJsonRequest(
         JSON.stringify({
           input: 'hello basic flow',
-          agentId: 123
+          agentId: 123,
+          context: 123
         })
       ) as never
     )
@@ -192,7 +224,8 @@ describe('POST /api/v1/run', () => {
     expect(payload.meta).toEqual({
       mode: 'demo-fallback',
       reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
-      agentId: 'tutor'
+      agentId: 'tutor',
+      contextReceived: false
     })
     expect(JSON.stringify(payload)).not.toContain('OPENAI_API_KEY')
   })
@@ -210,7 +243,8 @@ describe('POST /api/v1/run', () => {
       createJsonRequest(
         JSON.stringify({
           input: 'hello fallback agent flow',
-          agentId: 'architect'
+          agentId: 'architect',
+          context: 'User: sensitive context that should not be reflected'
         })
       ) as never
     )
@@ -220,5 +254,7 @@ describe('POST /api/v1/run', () => {
     expect(payload.success).toBe(true)
     expect(payload.data.response).toContain('agent architect')
     expect(payload.meta.agentId).toBe('architect')
+    expect(payload.meta.contextReceived).toBe(true)
+    expect(JSON.stringify(payload)).not.toContain('sensitive context')
   })
 })

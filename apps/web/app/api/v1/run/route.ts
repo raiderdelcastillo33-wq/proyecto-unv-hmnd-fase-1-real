@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { forwardJson, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
+const MAX_CONTEXT_CHARS = 2_000
+
 function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): number {
   if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
     return upstreamStatus
@@ -35,13 +37,24 @@ function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): numbe
   }
 }
 
-function validateRunBody(body: unknown): { ok: true; input: string; agentId?: string } | { ok: false; error: string } {
+function normalizeContext(context: unknown): string | undefined {
+  if (typeof context !== 'string') {
+    return undefined
+  }
+
+  const trimmed = context.trim()
+
+  return trimmed ? trimmed.slice(-MAX_CONTEXT_CHARS) : undefined
+}
+
+function validateRunBody(body: unknown): { ok: true; input: string; agentId?: string; context?: string } | { ok: false; error: string } {
   if (typeof body !== 'object' || body === null) {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
   }
 
   const input = (body as { input?: unknown }).input
   const agentId = (body as { agentId?: unknown }).agentId
+  const context = normalizeContext((body as { context?: unknown }).context)
 
   if (typeof input !== 'string') {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
@@ -57,14 +70,15 @@ function validateRunBody(body: unknown): { ok: true; input: string; agentId?: st
     return { ok: false, error: 'Please enter at least 5 characters before sending the demo request.' }
   }
 
-  if (typeof agentId === 'string') {
-    return { ok: true, input: trimmed, agentId }
+  return {
+    ok: true,
+    input: trimmed,
+    ...(typeof agentId === 'string' ? { agentId } : {}),
+    ...(context ? { context } : {})
   }
-
-  return { ok: true, input: trimmed }
 }
 
-function createDemoFallbackPayload(validation: { input: string; agentId?: string }) {
+function createDemoFallbackPayload(validation: { input: string; agentId?: string; context?: string }) {
   const agentLabel = validation.agentId ?? 'tutor'
 
   return {
@@ -76,7 +90,8 @@ function createDemoFallbackPayload(validation: { input: string; agentId?: string
     meta: {
       mode: 'demo-fallback',
       reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
-      agentId: agentLabel
+      agentId: agentLabel,
+      contextReceived: Boolean(validation.context)
     }
   }
 }
@@ -106,9 +121,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         validation.agentId
           ? {
               input: validation.input,
-              agentId: validation.agentId
+              agentId: validation.agentId,
+              ...(validation.context ? { context: validation.context } : {})
             }
-          : { input: validation.input }
+          : {
+              input: validation.input,
+              ...(validation.context ? { context: validation.context } : {})
+            }
       )
     })
 

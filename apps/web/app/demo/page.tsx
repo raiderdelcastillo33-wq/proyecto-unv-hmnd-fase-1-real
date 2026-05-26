@@ -28,6 +28,8 @@ const agentOptions = [
 ] as const
 
 const MAX_CONVERSATION_MESSAGES = 12
+const MAX_CONTEXT_MESSAGES = 6
+const MAX_CONTEXT_CHARS = 2_000
 
 type ConversationMessage = {
   id: string
@@ -175,6 +177,20 @@ function appendConversationMessage(messages: ConversationMessage[], message: Con
   return [...messages, message].slice(-MAX_CONVERSATION_MESSAGES)
 }
 
+function buildConversationContext(messages: ConversationMessage[]): string | undefined {
+  const context = messages
+    .slice(-MAX_CONTEXT_MESSAGES)
+    .map((message) => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.content}`)
+    .join('\n')
+    .trim()
+
+  if (!context) {
+    return undefined
+  }
+
+  return context.slice(-MAX_CONTEXT_CHARS)
+}
+
 export default function DemoPage() {
   const [input, setInput] = useState('')
   const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor-agent')
@@ -225,6 +241,7 @@ export default function DemoPage() {
       createdAt: new Date().toISOString()
     }
     setConversation((messages) => appendConversationMessage(messages, userMessage))
+    const context = buildConversationContext(conversation)
 
     try {
       const payload = await requestJson<unknown>('/api/v1/run', {
@@ -234,7 +251,8 @@ export default function DemoPage() {
         },
         body: JSON.stringify({
           input: trimmedInput,
-          agentId: selectedAgentId
+          agentId: selectedAgentId,
+          ...(context ? { context } : {})
         })
       })
 

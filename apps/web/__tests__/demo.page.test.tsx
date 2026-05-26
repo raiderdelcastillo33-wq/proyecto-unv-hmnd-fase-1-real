@@ -115,6 +115,64 @@ describe('DemoPage', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
+  it('sends short session memory from previous local messages on the second request', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-memory-1',
+          response: 'First assistant response'
+        }
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-memory-2',
+          response: 'Second assistant response'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'first memory prompt' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    expect(await screen.findByText('First assistant response')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'second memory prompt' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    expect(await screen.findByText('Second assistant response')).toBeInTheDocument()
+
+    const secondRun = fetchMock.mock.calls[2]?.[1] as RequestInit
+    const body = JSON.parse(secondRun.body as string) as { input: string; context?: string }
+
+    expect(body.input).toBe('second memory prompt')
+    expect(body.context).toContain('User: first memory prompt')
+    expect(body.context).toContain('Assistant: First assistant response')
+    expect(body.context).not.toContain('second memory prompt')
+  })
+
   it('sends the selected agentId with the demo request', async () => {
     const fetchMock = global.fetch as jest.Mock
 
