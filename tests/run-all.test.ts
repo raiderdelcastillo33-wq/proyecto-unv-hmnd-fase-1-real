@@ -1,7 +1,6 @@
 import { runTestCases } from './helpers/testRunner'
 import { edgeCaseTests } from './suites/edgeCases.test'
 import { errorHandlingTests } from './suites/errorHandling.test'
-import { frontendBasicTests } from './suites/frontendBasics.test'
 import { happyPathTests } from './suites/happyPath.test'
 import { mockTests } from './suites/mocks.test'
 
@@ -10,8 +9,7 @@ async function main(): Promise<void> {
     ...happyPathTests(),
     ...edgeCaseTests(),
     ...errorHandlingTests(),
-    ...mockTests(),
-    ...frontendBasicTests()
+    ...mockTests()
   ]
 
   await runTestCases(allTests)

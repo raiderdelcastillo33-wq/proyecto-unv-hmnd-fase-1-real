@@ -43,12 +43,12 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('Local backend ready')).toBeInTheDocument()
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Run Demo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
     expect(await screen.findByText('Hello from the mocked backend')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenNthCalledWith(
@@ -82,12 +82,12 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('Local backend ready')).toBeInTheDocument()
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'test' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Run Demo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
     expect(await screen.findByText('Please enter at least 5 characters before sending the demo request.')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(1)
@@ -107,9 +107,9 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('Backend action required')).toBeInTheDocument()
+    expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
     expect(screen.getByText('UNV_API_BASE_URL is required in production to reach the external Node API.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Run Demo' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).toBeDisabled()
   })
 
   it('renders a controlled submit error when /api/v1/run fails', async () => {
@@ -136,12 +136,12 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('External backend ready')).toBeInTheDocument()
+    expect(await screen.findByText('Backend externe prêt')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Run Demo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
     await waitFor(() => {
       expect(screen.getByText('UNV_API_BASE_URL is required in production to connect the demo with the Node API.')).toBeInTheDocument()
