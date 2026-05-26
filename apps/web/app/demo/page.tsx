@@ -27,6 +27,16 @@ const agentOptions = [
   { id: 'operator-agent', label: 'Operator', description: 'Coordinates lab tasks and prepares safe operational commands.' }
 ] as const
 
+const MAX_CONVERSATION_MESSAGES = 12
+
+type ConversationMessage = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  agentId: (typeof agentOptions)[number]['id']
+  createdAt: string
+}
+
 const flowHighlights = [
   {
     title: 'Requête du navigateur',
@@ -161,13 +171,17 @@ const INITIAL_RUNTIME: RuntimeState = {
   backend: null
 }
 
+function appendConversationMessage(messages: ConversationMessage[], message: ConversationMessage): ConversationMessage[] {
+  return [...messages, message].slice(-MAX_CONVERSATION_MESSAGES)
+}
+
 export default function DemoPage() {
   const [input, setInput] = useState('')
   const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor-agent')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [runtime, setRuntime] = useState<RuntimeState>(INITIAL_RUNTIME)
-  const [result, setResult] = useState<RunResult | null>(null)
+  const [conversation, setConversation] = useState<ConversationMessage[]>([])
 
   async function refreshRuntime(): Promise<void> {
     setRuntime((current) => ({ ...current, status: 'checking', error: undefined }))
@@ -203,6 +217,14 @@ export default function DemoPage() {
 
     setLoading(true)
     setError(null)
+    const userMessage: ConversationMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: trimmedInput,
+      agentId: selectedAgentId,
+      createdAt: new Date().toISOString()
+    }
+    setConversation((messages) => appendConversationMessage(messages, userMessage))
 
     try {
       const payload = await requestJson<unknown>('/api/v1/run', {
@@ -216,9 +238,16 @@ export default function DemoPage() {
         })
       })
 
-      setResult(parseRunResult(payload))
+      const parsedResult = parseRunResult(payload)
+      const assistantMessage: ConversationMessage = {
+        id: parsedResult.id,
+        role: 'assistant',
+        content: parsedResult.response,
+        agentId: selectedAgentId,
+        createdAt: new Date().toISOString()
+      }
+      setConversation((messages) => appendConversationMessage(messages, assistantMessage))
     } catch (currentError) {
-      setResult(null)
       setError(getErrorMessage(currentError))
     } finally {
       setLoading(false)
@@ -372,8 +401,8 @@ const result = await aiProvider.generate({
         <aside className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Sortie</p>
-            <h2>Réponse</h2>
-            <p>Sortie du serveur rendue directement depuis la réponse de la route interne.</p>
+            <h2>Conversation</h2>
+            <p>Historique local de la session courante, sans base de données ni persistance.</p>
           </div>
 
           {loading ? (
@@ -382,14 +411,25 @@ const result = await aiProvider.generate({
               <h3>En attente du backend</h3>
               <p>La requête passe par Next.js vers l’API Node.</p>
             </section>
-          ) : result ? (
-            <section className="result-state">
-              <p className="result-eyebrow">Réponse reçue</p>
-              <h3>{result.response}</h3>
-              <div className="response-meta">
-                <span className="info-chip">Interaction {result.id}</span>
+          ) : conversation.length > 0 ? (
+            <>
+              {conversation.map((message) => (
+                <section className="result-state" key={message.id}>
+                  <p className="result-eyebrow">{message.role === 'user' ? 'Utilisateur' : 'Assistant'}</p>
+                  <h3>{message.content}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">{message.agentId}</span>
+                    <span className="info-chip">{new Date(message.createdAt).toLocaleTimeString()}</span>
+                  </div>
+                </section>
+              ))}
+              <div className="actions">
+                <button className="secondary-button" onClick={() => setConversation([])} type="button">
+                  Limpiar
+                </button>
+                <span className="meta-text">Derniers {MAX_CONVERSATION_MESSAGES} messages en mémoire locale</span>
               </div>
-            </section>
+            </>
           ) : (
             <section className="result-state">
               <p className="result-eyebrow">En attente</p>

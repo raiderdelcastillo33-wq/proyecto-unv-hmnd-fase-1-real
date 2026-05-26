@@ -52,7 +52,9 @@ describe('DemoPage', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
+    expect(await screen.findByText('hello demo flow')).toBeInTheDocument()
     expect(await screen.findByText('Hello from the mocked backend')).toBeInTheDocument()
+    expect(screen.getByText('Derniers 12 messages en mémoire locale')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
       '/api/health',
@@ -71,6 +73,46 @@ describe('DemoPage', () => {
         })
       })
     )
+  })
+
+  it('clears the local conversation without calling the backend again', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-clear',
+          response: 'Response before clear'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'clear local history' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('Response before clear')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
+
+    expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
+    expect(screen.queryByText('Response before clear')).not.toBeInTheDocument()
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
   it('sends the selected agentId with the demo request', async () => {
@@ -147,6 +189,7 @@ describe('DemoPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
     expect(await screen.findByText('Please enter at least 5 characters before sending the demo request.')).toBeInTheDocument()
+    expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
@@ -204,6 +247,7 @@ describe('DemoPage', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
+    expect(await screen.findByText('hello fallback flow')).toBeInTheDocument()
     expect(await screen.findByText('Mode demo/fallback actif: aucun backend Node externe nest configure.')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,
@@ -252,5 +296,6 @@ describe('DemoPage', () => {
     await waitFor(() => {
       expect(screen.getByText('UNV_API_BASE_URL is required in production to connect the demo with the Node API.')).toBeInTheDocument()
     })
+    expect(screen.getAllByText('hello demo flow').length).toBeGreaterThan(0)
   })
 })
