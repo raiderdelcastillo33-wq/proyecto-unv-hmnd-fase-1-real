@@ -6,6 +6,8 @@ import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
+import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
+import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
 
 class FakeUserRepository implements UserRepository {
@@ -135,6 +137,77 @@ export function mockTests(): TestCase[] {
 
         assert.equal(failed, true)
         assert.equal(interactions.saved.length, 0)
+      }
+    },
+    {
+      name: 'Providers: FallbackAIProvider usa fallback cuando proveedor primario falla',
+      run: async () => {
+        const primary = new SpyAIProvider(
+          {
+            output: 'unused',
+            estimatedCostUsd: 0.1,
+            model: 'primary'
+          },
+          true
+        )
+        const fallback = new SpyAIProvider({
+          output: 'respuesta fallback',
+          estimatedCostUsd: 0,
+          model: 'mock'
+        })
+
+        const provider = new FallbackAIProvider(primary, fallback)
+        const result = await provider.generate({
+          feature: 'assistant',
+          prompt: 'Necesito ayuda con TypeScript'
+        })
+
+        assert.equal(primary.calls.length, 1)
+        assert.equal(fallback.calls.length, 1)
+        assert.equal(result.output, 'respuesta fallback')
+        assert.equal(result.model, 'mock')
+      }
+    },
+    {
+      name: 'Providers: OpenAIProvider normaliza respuesta exitosa',
+      run: async () => {
+        const calls: RequestInit[] = []
+        const fetchFn = (async (_url: string | URL | Request, init?: RequestInit) => {
+          calls.push(init ?? {})
+
+          return {
+            ok: true,
+            json: async () => ({
+              choices: [
+                {
+                  message: {
+                    content: '  respuesta openai  '
+                  }
+                }
+              ],
+              usage: {
+                total_tokens: 100
+              }
+            })
+          } as Response
+        }) as typeof fetch
+
+        const provider = new OpenAIProvider({
+          apiKey: 'test-key',
+          model: 'test-model',
+          fetchFn
+        })
+
+        const result = await provider.generate({
+          feature: 'code-feedback',
+          prompt: 'Revisa este componente'
+        })
+
+        assert.equal(result.output, 'respuesta openai')
+        assert.equal(result.model, 'test-model')
+        assert.equal(result.estimatedCostUsd, 0.000015)
+        assert.equal(calls.length, 1)
+        assert.equal((calls[0]?.headers as Record<string, string>).Authorization, 'Bearer test-key')
       }
     }
   ]

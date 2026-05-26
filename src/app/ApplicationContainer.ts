@@ -7,7 +7,10 @@ import { CreateLessonUseCase } from '../application/use-cases/CreateLessonUseCas
 import { CreateModuleUseCase } from '../application/use-cases/CreateModuleUseCase'
 import { ListLearningCatalogUseCase } from '../application/use-cases/ListLearningCatalogUseCase'
 import { RegisterUserUseCase } from '../application/use-cases/RegisterUserUseCase'
+import { AIProvider } from '../domain/services/AIProvider'
+import { FallbackAIProvider } from '../infrastructure/ai/FallbackAIProvider'
 import { MockAIProvider } from '../infrastructure/ai/MockAIProvider'
+import { OpenAIProvider } from '../infrastructure/ai/OpenAIProvider'
 import { InMemoryAIInteractionRepository } from '../infrastructure/in-memory/InMemoryAIInteractionRepository'
 import { InMemoryCourseRepository } from '../infrastructure/in-memory/InMemoryCourseRepository'
 import { InMemoryLearningRoomRepository } from '../infrastructure/in-memory/InMemoryLearningRoomRepository'
@@ -33,7 +36,7 @@ export class ApplicationContainer {
   private readonly resourceRepository = new InMemoryResourceRepository()
   private readonly interactionRepository = new InMemoryAIInteractionRepository()
 
-  private readonly aiProvider = new MockAIProvider()
+  private readonly aiProvider = this.createAIProvider()
 
   private readonly registerUserUseCase = new RegisterUserUseCase(this.userRepository)
   private readonly createCourseUseCase = new CreateCourseUseCase(this.courseRepository)
@@ -82,6 +85,29 @@ export class ApplicationContainer {
     this.progressController,
     this.aiController
   )
+
+  private createAIProvider(): AIProvider {
+    const mockProvider = new MockAIProvider()
+    const apiKey = process.env.OPENAI_API_KEY?.trim()
+
+    if (!apiKey) {
+      return mockProvider
+    }
+
+    const model = process.env.OPENAI_MODEL?.trim()
+
+    return new FallbackAIProvider(
+      new OpenAIProvider(
+        model
+          ? {
+              apiKey,
+              model
+            }
+          : { apiKey }
+      ),
+      mockProvider
+    )
+  }
 
   async seedBaseResources(): Promise<void> {
     const existingDemoUser = await this.userRepository.findByEmail(DEMO_USER.email)
