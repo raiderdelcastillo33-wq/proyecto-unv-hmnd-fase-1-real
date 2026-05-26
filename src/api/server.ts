@@ -75,6 +75,17 @@ export function getCorsHeaders(origin: string | undefined): Record<string, strin
   return headers
 }
 
+function getServerPort(): number {
+  const configuredPort = process.env.PORT?.trim()
+  const parsedPort = configuredPort ? Number(configuredPort) : API_PORT
+
+  return Number.isInteger(parsedPort) && parsedPort > 0 ? parsedPort : API_PORT
+}
+
+function getServerHost(): string {
+  return process.env.PORT ? '0.0.0.0' : '127.0.0.1'
+}
+
 function setCorsHeaders(request: IncomingMessage, response: ServerResponse): void {
   const headers = getCorsHeaders(request.headers.origin)
 
@@ -214,10 +225,12 @@ export function createApiServer(app = new ApplicationContainer()) {
 
 if (require.main === module) {
   const server = createApiServer()
+  const port = getServerPort()
+  const host = getServerHost()
 
   server.on('error', (error: NodeJS.ErrnoException) => {
     if (error.code === 'EADDRINUSE') {
-      console.error(`API server failed to start (EADDRINUSE): http://localhost:${API_PORT} is already in use.`)
+      console.error(`API server failed to start (EADDRINUSE): ${host}:${port} is already in use.`)
       process.exit(1)
     }
 
@@ -225,7 +238,7 @@ if (require.main === module) {
     process.exit(1)
   })
 
-  server.listen(API_PORT, '127.0.0.1', () => {
-    console.log(`API server ready at http://localhost:${API_PORT}`)
+  server.listen(port, host, () => {
+    console.log(`API server ready at http://${host}:${port}`)
   })
 }
