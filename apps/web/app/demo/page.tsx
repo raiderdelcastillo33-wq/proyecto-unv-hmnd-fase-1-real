@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 
 type RuntimeMode = 'local' | 'external' | 'missing'
 
@@ -30,6 +30,8 @@ const agentOptions = [
 const MAX_CONVERSATION_MESSAGES = 12
 const MAX_CONTEXT_MESSAGES = 6
 const MAX_CONTEXT_CHARS = 2_000
+const TYPING_CHUNK_SIZE = 8
+const TYPING_INTERVAL_MS = 20
 
 type ConversationMessage = {
   id: string
@@ -198,6 +200,19 @@ export default function DemoPage() {
   const [error, setError] = useState<string | null>(null)
   const [runtime, setRuntime] = useState<RuntimeState>(INITIAL_RUNTIME)
   const [conversation, setConversation] = useState<ConversationMessage[]>([])
+  const [typing, setTyping] = useState(false)
+  const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  function cancelTyping(updateState = true): void {
+    if (typingTimerRef.current) {
+      clearInterval(typingTimerRef.current)
+      typingTimerRef.current = null
+    }
+
+    if (updateState) {
+      setTyping(false)
+    }
+  }
 
   async function refreshRuntime(): Promise<void> {
     setRuntime((current) => ({ ...current, status: 'checking', error: undefined }))
@@ -219,10 +234,38 @@ export default function DemoPage() {
 
   useEffect(() => {
     void refreshRuntime()
+
+    return () => {
+      cancelTyping(false)
+    }
   }, [])
+
+  function revealAssistantMessage(message: ConversationMessage, fullText: string): void {
+    cancelTyping()
+    setTyping(true)
+
+    let visibleCharacters = 0
+    setConversation((messages) => appendConversationMessage(messages, { ...message, content: '' }))
+
+    typingTimerRef.current = setInterval(() => {
+      visibleCharacters = Math.min(visibleCharacters + TYPING_CHUNK_SIZE, fullText.length)
+      const nextContent = fullText.slice(0, visibleCharacters)
+
+      setConversation((messages) =>
+        messages.map((currentMessage) =>
+          currentMessage.id === message.id ? { ...currentMessage, content: nextContent } : currentMessage
+        )
+      )
+
+      if (visibleCharacters >= fullText.length) {
+        cancelTyping()
+      }
+    }, TYPING_INTERVAL_MS)
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
+    cancelTyping()
 
     const trimmedInput = input.trim()
 
@@ -260,11 +303,11 @@ export default function DemoPage() {
       const assistantMessage: ConversationMessage = {
         id: parsedResult.id,
         role: 'assistant',
-        content: parsedResult.response,
+        content: '',
         agentId: selectedAgentId,
         createdAt: new Date().toISOString()
       }
-      setConversation((messages) => appendConversationMessage(messages, assistantMessage))
+      revealAssistantMessage(assistantMessage, parsedResult.response)
     } catch (currentError) {
       setError(getErrorMessage(currentError))
     } finally {
@@ -273,7 +316,7 @@ export default function DemoPage() {
   }
 
   const runtimePresentation = getRuntimePresentation(runtime)
-  const isSubmitDisabled = loading
+  const isSubmitDisabled = loading || typing
   const selectedAgent = agentOptions.find((agent) => agent.id === selectedAgentId) ?? agentOptions[4]
 
   return (
@@ -423,7 +466,7 @@ const result = await aiProvider.generate({
             <p>Historique local de la session courante, sans base de données ni persistance.</p>
           </div>
 
-          {loading ? (
+          {loading && !typing ? (
             <section className="result-state">
               <p className="result-eyebrow">Traitement</p>
               <h3>En attente du backend</h3>
@@ -442,10 +485,19 @@ const result = await aiProvider.generate({
                 </section>
               ))}
               <div className="actions">
-                <button className="secondary-button" onClick={() => setConversation([])} type="button">
+                <button
+                  className="secondary-button"
+                  onClick={() => {
+                    cancelTyping()
+                    setConversation([])
+                  }}
+                  type="button"
+                >
                   Limpiar
                 </button>
-                <span className="meta-text">Derniers {MAX_CONVERSATION_MESSAGES} messages en mémoire locale</span>
+                <span className="meta-text">
+                  {typing ? 'Réponse en cours...' : `Derniers ${MAX_CONVERSATION_MESSAGES} messages en mémoire locale`}
+                </span>
               </div>
             </>
           ) : (

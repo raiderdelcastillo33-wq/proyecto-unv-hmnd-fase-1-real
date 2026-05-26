@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import DemoPage from '@/app/demo/page'
 
 function createJsonResponse(payload: unknown, status = 200): Response {
@@ -113,6 +113,54 @@ describe('DemoPage', () => {
     expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
     expect(screen.queryByText('Response before clear')).not.toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('cancels typing when the local conversation is cleared', async () => {
+    jest.useFakeTimers()
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-typing',
+          response: 'Typing response should not reappear after clearing the local conversation.'
+        }
+      })
+    )
+
+    try {
+      render(<DemoPage />)
+
+      expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+      fireEvent.change(screen.getByLabelText('Message'), {
+        target: { value: 'cancel typing flow' }
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+      expect(await screen.findByRole('button', { name: 'Limpiar' })).toBeInTheDocument()
+      fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
+
+      act(() => {
+        jest.advanceTimersByTime(1000)
+      })
+
+      expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
+      expect(screen.queryByText('Typing response should not reappear after clearing the local conversation.')).not.toBeInTheDocument()
+    } finally {
+      jest.useRealTimers()
+    }
   })
 
   it('sends short session memory from previous local messages on the second request', async () => {
