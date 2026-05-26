@@ -44,7 +44,8 @@ describe('DemoPage', () => {
     render(<DemoPage />)
 
     expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
-    expect(screen.getByLabelText('Agent')).toHaveValue('tutor')
+    expect(screen.getByLabelText('Agent')).toHaveValue('tutor-agent')
+    expect(screen.getByText('Explains technical ideas step by step for learning and practice.')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
@@ -66,7 +67,7 @@ describe('DemoPage', () => {
         method: 'POST',
         body: JSON.stringify({
           input: 'hello demo flow',
-          agentId: 'tutor'
+          agentId: 'tutor-agent'
         })
       })
     )
@@ -100,8 +101,10 @@ describe('DemoPage', () => {
     expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Agent'), {
-      target: { value: 'architect' }
+      target: { value: 'architect-agent' }
     })
+    expect(screen.getByText('Analyse architecture, risks, and phased technical decisions.')).toBeInTheDocument()
+
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello architect flow' }
     })
@@ -115,7 +118,7 @@ describe('DemoPage', () => {
         method: 'POST',
         body: JSON.stringify({
           input: 'hello architect flow',
-          agentId: 'architect'
+          agentId: 'architect-agent'
         })
       })
     )
@@ -209,7 +212,7 @@ describe('DemoPage', () => {
         method: 'POST',
         body: JSON.stringify({
           input: 'hello fallback flow',
-          agentId: 'tutor'
+          agentId: 'tutor-agent'
         })
       })
     )

@@ -19,11 +19,12 @@ type RunResult = {
 }
 
 const agentOptions = [
-  { id: 'tutor', label: 'Tutor' },
-  { id: 'mentor', label: 'Mentor' },
-  { id: 'architect', label: 'Architect' },
-  { id: 'course-generator', label: 'Course generator' },
-  { id: 'cuba-education-assistant', label: 'Cuba education assistant' }
+  { id: 'architect-agent', label: 'Architect', description: 'Analyse architecture, risks, and phased technical decisions.' },
+  { id: 'coder-agent', label: 'Coder', description: 'Prepares safe implementation steps and code-oriented guidance.' },
+  { id: 'reviewer-agent', label: 'Reviewer', description: 'Reviews bugs, security concerns, regressions, and missing tests.' },
+  { id: 'debugger-agent', label: 'Debugger', description: 'Investigates errors, logs, root causes, and verification steps.' },
+  { id: 'tutor-agent', label: 'Tutor', description: 'Explains technical ideas step by step for learning and practice.' },
+  { id: 'operator-agent', label: 'Operator', description: 'Coordinates lab tasks and prepares safe operational commands.' }
 ] as const
 
 const flowHighlights = [
@@ -162,7 +163,7 @@ const INITIAL_RUNTIME: RuntimeState = {
 
 export default function DemoPage() {
   const [input, setInput] = useState('')
-  const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor')
+  const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor-agent')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [runtime, setRuntime] = useState<RuntimeState>(INITIAL_RUNTIME)
@@ -226,6 +227,7 @@ export default function DemoPage() {
 
   const runtimePresentation = getRuntimePresentation(runtime)
   const isSubmitDisabled = loading
+  const selectedAgent = agentOptions.find((agent) => agent.id === selectedAgentId) ?? agentOptions[4]
 
   return (
     <main className="page-shell">
@@ -347,6 +349,7 @@ const result = await aiProvider.generate({
               </option>
             ))}
           </select>
+          <p className="meta-text">{selectedAgent.description}</p>
 
           <textarea
             id="demo-input"
