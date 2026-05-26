@@ -65,14 +65,15 @@ Demo:     http://localhost:3001/demo
 Crear `apps/web/.env.local` para desarrollo local:
 
 ```bash
-OPENAI_API_KEY=tu_clave_openai_api
+OPENAI_API_KEY=tu_clave_openai_api # opcional
 OPENAI_MODEL=gpt-4o-mini
 UNV_API_BASE_URL=http://127.0.0.1:3000
 ```
 
 Notas:
 
-- `OPENAI_API_KEY` es requerida para `/api/v1/run`
+- `OPENAI_API_KEY` es opcional para el backend Node. Si no existe, la aplicación usa `MockAIProvider` para mantener la demo estable sin clave externa
+- `OPENAI_API_KEY` nunca debe exponerse al frontend; solo debe existir en el entorno server-side cuando se quiera usar IA real
 - `OPENAI_MODEL` es opcional y por defecto es `gpt-4o-mini`
 - `UNV_API_BASE_URL` es opcional en desarrollo local porque la app puede usar la API Node local
 - `UNV_API_BASE_URL` es requerida en producción cuando `/api/v1/run` necesita alcanzar una API Node externa
@@ -115,7 +116,31 @@ Purpose:
 
 - executes AI tasks directly from the Next.js server layer
 - supports summary, translation, and idea generation
-- uses the OpenAI Responses API
+- currently uses the OpenAI Chat Completions API
+
+## AI Architecture
+
+UNV-HMND mantiene una capa IA backend desacoplada para que el sistema funcione con o sin proveedor externo:
+
+- `OpenAIProvider`: proveedor server-side para IA real usando `OPENAI_API_KEY` y Chat Completions API
+- `FallbackAIProvider`: envuelve el proveedor real y vuelve a una respuesta segura si OpenAI falla
+- `MockAIProvider`: proveedor local/test sin dependencias externas ni costos
+- `AgentRegistry`: catálogo tipado de agentes IA reutilizables
+
+El contrato separa `feature` y `agent`:
+
+- `feature`: tarea solicitada, como `assistant`, `prompt-improver` o `code-feedback`
+- `agent`: rol/persona/instrucciones que guían la respuesta
+
+Agentes actuales:
+
+- `tutor`
+- `mentor`
+- `architect`
+- `course-generator`
+- `cuba-education-assistant`
+
+La implementación actual usa Chat Completions API. La arquitectura queda preparada para migrar a Responses API más adelante sin hacer obligatoria la clave de OpenAI ni romper el fallback local.
 
 ## Project Structure
 
@@ -161,7 +186,7 @@ root
    │     └─ Node API
    │        └─ backend response
    └─ POST /api/ai/run
-      └─ OpenAI Responses API
+      └─ OpenAI Chat Completions API
 ```
 
 ## Build And Test
@@ -197,8 +222,8 @@ Vercel configuration:
 Production environment variables:
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-5-mini
+OPENAI_API_KEY=your_openai_api_key # optional for backend fallback mode
+OPENAI_MODEL=gpt-4o-mini
 UNV_API_BASE_URL=https://your-node-api.example.com
 ```
 
@@ -206,7 +231,8 @@ Important:
 
 - `apps/web` is the project Vercel should build
 - `/api/v1/run` needs a public Node API URL in production
-- `/api/ai/run` requires `OPENAI_API_KEY`
+- backend AI routes can fallback safely to `MockAIProvider` when `OPENAI_API_KEY` is not configured
+- `/api/ai/run` is a Next.js server route and needs `OPENAI_API_KEY` only when that direct OpenAI path is used
 
 ## Production Notes
 
@@ -214,6 +240,7 @@ Important:
 - The external Node API should be deployed separately
 - The demo remains stable in local development through internal routing and fallback logic
 - The production setup should explicitly define `UNV_API_BASE_URL`
+- Defining `OPENAI_API_KEY` enables real OpenAI responses; omitting it keeps the backend stable through mock fallback
 
 ## Documentation
 
