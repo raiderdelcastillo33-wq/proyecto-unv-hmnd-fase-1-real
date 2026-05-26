@@ -95,7 +95,26 @@ export class OpenAIProvider implements AIProvider {
   }
 
   private buildSystemInstructions(request: AIRequest): string {
-    switch (request.feature) {
+    const featureInstructions = this.buildFeatureInstructions(request.feature)
+
+    if (request.agent) {
+      const safetyRules = request.agent.safetyRules.map((rule) => `- ${rule}`).join('\n')
+
+      return [
+        request.agent.systemInstructions,
+        `Agent purpose: ${request.agent.purpose}`,
+        safetyRules ? `Safety rules:\n${safetyRules}` : '',
+        `Task mode: ${featureInstructions}`
+      ]
+        .filter(Boolean)
+        .join('\n\n')
+    }
+
+    return featureInstructions
+  }
+
+  private buildFeatureInstructions(feature: AIRequest['feature']): string {
+    switch (feature) {
       case 'prompt-improver':
         return 'Improve the user prompt with clarity, structure, constraints, and a concise rationale.'
       case 'code-feedback':

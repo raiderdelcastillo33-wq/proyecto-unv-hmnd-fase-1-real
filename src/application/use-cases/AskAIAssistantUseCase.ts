@@ -3,6 +3,7 @@ import { AIInteraction } from '../../domain/entities/AIInteraction'
 import { AIInteractionRepository } from '../../domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../domain/repositories/UserRepository'
 import { AIProvider } from '../../domain/services/AIProvider'
+import { AgentRegistry } from '../../domain/agents/AgentRegistry'
 import { NotFoundError } from '../../shared/errors/AppError'
 import { ensureMinLength, ensureString } from '../../shared/utils/validators'
 import { createId } from '../../shared/utils/id'
@@ -27,9 +28,11 @@ export class AskAIAssistantUseCase {
 
     ensureMinLength(normalizedPrompt, 5, 'prompt')
 
+    const agent = AgentRegistry.resolve(input.agentId)
     const requestPayload = {
       feature: input.feature,
-      prompt: normalizedPrompt
+      prompt: normalizedPrompt,
+      agent
     } as const
 
     const generated = await this.aiProvider.generate(

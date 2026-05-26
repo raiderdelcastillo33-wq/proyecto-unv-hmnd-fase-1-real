@@ -6,6 +6,7 @@ import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
+import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
 import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
@@ -92,8 +93,55 @@ export function mockTests(): TestCase[] {
 
         assert.equal(provider.calls.length, 1)
         assert.equal(provider.calls[0]?.prompt, 'Construye un plan de estudio de TypeScript')
+        assert.equal(provider.calls[0]?.agent?.id, 'tutor')
         assert.equal(result.response, 'respuesta mock')
         assert.equal(interactions.saved.length, 1)
+      }
+    },
+    {
+      name: 'Agents: AgentRegistry resuelve agentes y fallback default',
+      run: async () => {
+        assert.equal(AgentRegistry.defaultAgent().id, 'tutor')
+        assert.equal(AgentRegistry.resolve('architect').id, 'architect')
+        assert.equal(AgentRegistry.resolve('agente-inexistente').id, 'tutor')
+        assert.equal(AgentRegistry.list().length, 5)
+        assert.deepEqual(
+          AgentRegistry.list().map((agent) => agent.id),
+          ['tutor', 'mentor', 'architect', 'course-generator', 'cuba-education-assistant']
+        )
+      }
+    },
+    {
+      name: 'Agents: AskAIAssistantUseCase pasa agente explicito al proveedor',
+      run: async () => {
+        const userId = 'user-agent'
+        const userRepo = new FakeUserRepository([
+          {
+            id: userId,
+            email: 'agent@example.com',
+            displayName: 'Agent User',
+            role: 'student',
+            level: 'beginner',
+            goals: ['architecture'],
+            createdAt: new Date()
+          }
+        ])
+
+        const interactions = new FakeInteractionRepository()
+        const provider = new SpyAIProvider({
+          output: 'respuesta architect',
+          estimatedCostUsd: 0.2,
+          model: 'fake-model'
+        })
+
+        const useCase = new AskAIAssistantUseCase(userRepo, provider, interactions)
+        await useCase.execute({
+          ...createInput(userId),
+          agentId: 'architect'
+        })
+
+        assert.equal(provider.calls.length, 1)
+        assert.equal(provider.calls[0]?.agent?.id, 'architect')
       }
     },
     {
@@ -200,7 +248,8 @@ export function mockTests(): TestCase[] {
 
         const result = await provider.generate({
           feature: 'code-feedback',
-          prompt: 'Revisa este componente'
+          prompt: 'Revisa este componente',
+          agent: AgentRegistry.resolve('architect')
         })
 
         assert.equal(result.output, 'respuesta openai')
@@ -208,6 +257,11 @@ export function mockTests(): TestCase[] {
         assert.equal(result.estimatedCostUsd, 0.000015)
         assert.equal(calls.length, 1)
         assert.equal((calls[0]?.headers as Record<string, string>).Authorization, 'Bearer test-key')
+        const body = JSON.parse(calls[0]?.body as string) as {
+          messages: Array<{ role: string; content: string }>
+        }
+        assert.match(body.messages[0]?.content ?? '', /senior software architect/i)
+        assert.match(body.messages[0]?.content ?? '', /Task mode:/)
       }
     }
   ]
