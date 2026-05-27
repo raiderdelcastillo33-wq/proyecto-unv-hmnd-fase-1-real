@@ -3,6 +3,7 @@ import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssi
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
+import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
@@ -170,9 +171,31 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.memoryContextBlueprint.futureArchitecture.embeddings, 'placeholder-only')
         assert.ok(genio.memoryContextBlueprint.memoryCategories.includes('life-map'))
         assert.ok(genio.memoryContextBlueprint.retentionPolicies.includes('archived'))
+        assert.equal(genio.orchestrationBlueprint.id, 'strategic-multi-agent-orchestration-layer')
+        assert.ok(genio.orchestrationBlueprint.defaultFlow.coordinationPlan.participatingAgents.includes('coder-agent'))
+        assert.equal(genio.orchestrationBlueprint.simulationOnly, true)
+        assert.equal(genio.orchestrationBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
+      }
+    },
+    {
+      name: 'Orchestration: strategic multi-agent blueprint remains simulation only',
+      run: async () => {
+        const blueprint = STRATEGIC_ORCHESTRATION_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.supportedRoles.includes('planner'))
+        assert.ok(blueprint.supportedStages.includes('final-proposal'))
+        assert.ok(blueprint.defaultFlow.tasks.some((task) => task.assignedAgent === 'architect-agent'))
+        assert.ok(blueprint.defaultFlow.tasks.some((task) => task.assignedAgent === 'reviewer-agent'))
+        assert.ok(blueprint.defaultFlow.pipelineSteps.some((step) => step.stageId === 'validation'))
+        assert.equal(blueprint.defaultFlow.pipelineSteps.every((step) => step.actionExecuted === false), true)
+        assert.ok(blueprint.defaultFlow.coordinationPlan.policies.blockedActions.includes('terminal-execution'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('simulation-only')))
       }
     },
     {

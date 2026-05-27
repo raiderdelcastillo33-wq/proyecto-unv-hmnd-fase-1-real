@@ -14,6 +14,11 @@ export type AuditEventType =
   | 'context-created'
   | 'context-linked'
   | 'memory-classified'
+  | 'orchestration-created'
+  | 'orchestration-routed'
+  | 'task-delegated'
+  | 'pipeline-completed'
+  | 'governance-blocked'
 
 export interface AuditEvent {
   id: string

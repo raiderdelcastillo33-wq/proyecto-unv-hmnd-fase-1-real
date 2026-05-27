@@ -465,6 +465,25 @@ export default function LabPage() {
               </div>
             </section>
 
+            <section className="result-state">
+              <p className="result-eyebrow">Orchestration blueprint</p>
+              <h3>{governance.centralProfile.orchestrationBlueprint.label}</h3>
+              <p>{governance.centralProfile.orchestrationBlueprint.defaultFlow.objective}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.orchestrationBlueprint.status}</span>
+                <span className="info-chip">{governance.centralProfile.orchestrationBlueprint.defaultFlow.pipelineId}</span>
+                <span className="info-chip">No workers</span>
+                <span className="info-chip">Simulation only</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.orchestrationBlueprint.supportedRoles.map((role) => (
+                  <span className="tech-pill" key={role}>
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </section>
+
             <label className="field-label" htmlFor="lab-agent">
               Agent
             </label>
@@ -692,6 +711,17 @@ export default function LabPage() {
                     {governance.centralProfile.memoryContextBlueprint.contextWindows.map((window) => (
                       <span className="info-chip" key={window.id}>
                         {window.label}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Agent pipeline</p>
+                  <h3>{governance.centralProfile.orchestrationBlueprint.defaultFlow.orchestrationId}</h3>
+                  <div className="response-meta">
+                    {governance.centralProfile.orchestrationBlueprint.defaultFlow.pipelineSteps.map((step) => (
+                      <span className="info-chip" key={step.id}>
+                        {step.stageId}: {step.assignedAgent}
                       </span>
                     ))}
                   </div>

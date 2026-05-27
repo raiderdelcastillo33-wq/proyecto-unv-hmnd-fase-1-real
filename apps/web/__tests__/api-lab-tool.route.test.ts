@@ -140,6 +140,16 @@ describe('POST /api/lab/tool', () => {
       'No data is stored'
     )
     expect(payload.data.governance.centralProfile.memoryContextBlueprint.simulationOnly).toBe(true)
+    expect(payload.data.governance.centralProfile.orchestrationBlueprint.id).toBe(
+      'strategic-multi-agent-orchestration-layer'
+    )
+    expect(payload.data.governance.centralProfile.orchestrationBlueprint.defaultFlow.tasks).toEqual(
+      expect.arrayContaining([expect.objectContaining({ assignedAgent: 'architect-agent', actionExecuted: false })])
+    )
+    expect(payload.data.governance.centralProfile.orchestrationBlueprint.defaultFlow.pipelineSteps).toEqual(
+      expect.arrayContaining([expect.objectContaining({ stageId: 'review', assignedAgent: 'reviewer-agent' })])
+    )
+    expect(payload.data.governance.centralProfile.orchestrationBlueprint.simulationOnly).toBe(true)
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

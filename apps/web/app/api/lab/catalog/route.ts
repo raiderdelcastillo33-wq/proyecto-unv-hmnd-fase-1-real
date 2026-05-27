@@ -102,6 +102,53 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.memoryContextBlueprint.simulationOnly,
         actionExecuted: centralProfile.memoryContextBlueprint.actionExecuted
       },
+      orchestrationBlueprint: {
+        id: centralProfile.orchestrationBlueprint.id,
+        label: centralProfile.orchestrationBlueprint.label,
+        status: centralProfile.orchestrationBlueprint.status,
+        supportedRoles: centralProfile.orchestrationBlueprint.supportedRoles,
+        supportedStages: centralProfile.orchestrationBlueprint.supportedStages,
+        defaultFlow: {
+          orchestrationId: centralProfile.orchestrationBlueprint.defaultFlow.orchestrationId,
+          pipelineId: centralProfile.orchestrationBlueprint.defaultFlow.pipelineId,
+          objective: centralProfile.orchestrationBlueprint.defaultFlow.objective,
+          stages: centralProfile.orchestrationBlueprint.defaultFlow.stages,
+          tasks: centralProfile.orchestrationBlueprint.defaultFlow.tasks.map((task) => ({
+            id: task.id,
+            title: task.title,
+            role: task.role,
+            assignedAgent: task.assignedAgent,
+            priority: task.priority,
+            status: task.status,
+            estimatedComplexity: task.estimatedComplexity,
+            estimatedRisk: task.estimatedRisk,
+            simulationOnly: task.simulationOnly,
+            actionExecuted: task.actionExecuted
+          })),
+          pipelineSteps: centralProfile.orchestrationBlueprint.defaultFlow.pipelineSteps.map((step) => ({
+            id: step.id,
+            stageId: step.stageId,
+            assignedAgent: step.assignedAgent,
+            taskId: step.taskId,
+            estimatedRisk: step.estimatedRisk,
+            simulationOnly: step.simulationOnly,
+            actionExecuted: step.actionExecuted
+          })),
+          governanceCheckpoints: centralProfile.orchestrationBlueprint.defaultFlow.governanceCheckpoints,
+          futureReadiness: centralProfile.orchestrationBlueprint.defaultFlow.futureReadiness.map((item) => ({
+            id: item.id,
+            label: item.label,
+            status: 'metadata-only',
+            safetyBoundary: item.safetyBoundary,
+            simulationOnly: item.simulationOnly
+          })),
+          simulationOnly: centralProfile.orchestrationBlueprint.defaultFlow.simulationOnly,
+          actionExecuted: centralProfile.orchestrationBlueprint.defaultFlow.actionExecuted
+        },
+        governanceRules: centralProfile.orchestrationBlueprint.governanceRules,
+        simulationOnly: centralProfile.orchestrationBlueprint.simulationOnly,
+        actionExecuted: centralProfile.orchestrationBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,
