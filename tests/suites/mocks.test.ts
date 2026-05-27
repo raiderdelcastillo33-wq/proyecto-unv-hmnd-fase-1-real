@@ -10,6 +10,7 @@ import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
 import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
+import { LocalToolExecutor } from '../../src/infrastructure/tools/LocalToolExecutor'
 import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
 
@@ -158,6 +159,45 @@ export function mockTests(): TestCase[] {
         assert.equal(ToolRegistry.isAllowedForAgent(operator, 'tool-invalida'), false)
         assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresHumanApproval, true)
         assert.equal('executed' in ToolRegistry.resolve('propose-terminal-command')!, false)
+      }
+    },
+    {
+      name: 'Tools: LocalToolExecutor devuelve propuestas seguras sin ejecucion',
+      run: async () => {
+        const executor = new LocalToolExecutor()
+
+        const allowed = await executor.execute({
+          toolId: 'review-risk',
+          agentId: 'reviewer-agent',
+          input: 'Revisar cambio de seguridad en API'
+        })
+        const commandProposal = await executor.execute({
+          toolId: 'propose-terminal-command',
+          agentId: 'operator-agent',
+          input: 'Verificar build y tests'
+        })
+        const blocked = await executor.execute({
+          toolId: 'propose-terminal-command',
+          agentId: 'tutor-agent',
+          input: 'Quiero comandos'
+        })
+        const invalid = await executor.execute({
+          toolId: 'review-risk',
+          agentId: 'operator-agent',
+          input: '   '
+        })
+
+        assert.equal(allowed.toolId, 'review-risk')
+        assert.equal(allowed.commands, undefined)
+        assert.equal(commandProposal.requiresHumanApproval, true)
+        assert.ok(commandProposal.commands)
+        assert.equal(commandProposal.commands.every((command) => command.requiresConfirmation), true)
+        assert.equal(commandProposal.commands.every((command) => !('executed' in command)), true)
+        assert.equal(blocked.title, 'Tool not available')
+        assert.equal(blocked.commands, undefined)
+        assert.equal(blocked.requiresHumanApproval, true)
+        assert.equal(invalid.title, 'Input required')
+        assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid]).includes('executed'), false)
       }
     },
     {
