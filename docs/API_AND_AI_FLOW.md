@@ -301,6 +301,133 @@ Compatibility agents also remain available:
 
 The public frontend selector uses only public IDs and labels. It does not expose `systemInstructions`.
 
+## 5. Private AI Lab Flow
+
+UNV-HMND now includes an internal private AI lab core. This layer is not a public automation surface and does not execute real-world actions. It prepares the project for controlled, auditable agent operations.
+
+Proposal does not mean execution. The private lab currently generates structured, auditable proposals only.
+
+The private lab flow is:
+
+```text
+ToolRequest
+  -> ToolRegistry
+  -> ApprovalGate
+  -> LocalToolExecutor
+  -> InMemoryAuditLog
+  -> ToolResult
+```
+
+Core files:
+
+```text
+src/domain/tools/ToolProfile.ts
+src/domain/tools/ToolRegistry.ts
+src/domain/security/PermissionProfile.ts
+src/domain/security/ApprovalPolicy.ts
+src/domain/security/ApprovalGate.ts
+src/domain/audit/AuditEvent.ts
+src/infrastructure/tools/LocalToolExecutor.ts
+src/infrastructure/audit/InMemoryAuditLog.ts
+```
+
+### Tool Request And Result
+
+`ToolRequest` represents a request for a controlled tool proposal:
+
+```json
+{
+  "toolId": "review-risk",
+  "agentId": "reviewer-agent",
+  "input": "Review the risk of this planned API change",
+  "context": "Optional bounded context"
+}
+```
+
+`ToolResult` returns structured proposal data:
+
+```json
+{
+  "toolId": "review-risk",
+  "title": "Risk Review",
+  "summary": "Risk review proposal for: planned API change",
+  "requiresHumanApproval": false,
+  "riskLevel": "medium",
+  "approval": {
+    "decision": "safe",
+    "requiresHumanApproval": false,
+    "actionExecuted": false
+  }
+}
+```
+
+Tools can suggest plans, checklists, risk reviews, explanations, and conservative verification commands. They do not run commands, write files, read local folders, send emails, or access secrets.
+
+### Permission And Approval Model
+
+`ApprovalGate` evaluates an internal `ActionProposal` using `ApprovalPolicy`.
+
+Current decision classes:
+
+- `safe`: proposal is allowed as structured guidance
+- `requires-approval`: proposal is sensitive and needs explicit human approval before any future action layer could use it
+- `forbidden`: proposal is blocked by policy
+
+Current examples:
+
+- `create-checklist` -> `safe`
+- `review-risk` -> `safe`
+- `summarize-context` -> `safe`
+- `propose-command` -> `requires-approval`
+- `execute-command` -> `requires-approval`
+- `delete-file` -> `forbidden`
+- `send-email` -> `forbidden`
+- `read-secret` -> `forbidden`
+
+`LocalToolExecutor` always returns proposal metadata. `actionExecuted` is always `false`.
+
+### Audit Log
+
+`InMemoryAuditLog` records recent private lab events in memory:
+
+- `tool-requested`
+- `approval-evaluated`
+- `tool-result-created`
+- `tool-blocked`
+
+Current audit behavior:
+
+- keeps the latest 100 events
+- truncates `inputPreview` to 120 characters
+- applies basic redaction for obvious secret patterns such as `sk-`, `ghp_`, `token`, `OPENAI_API_KEY`, `password`, and `secret`
+- does not store full context
+- does not persist to disk
+- does not use browser localStorage
+- does not write to a database
+
+### Public Demo Vs Private Lab
+
+The public `/demo` page is a safe conversational showcase with multi-agent selection, local history, bounded context, typing simulation, and Vercel fallback mode.
+
+The private lab core is an internal backend/domain foundation for future controlled agent operations. It currently provides:
+
+- typed agents
+- typed tools
+- permission evaluation
+- approval metadata
+- in-memory audit events
+- structured proposals
+
+It does not currently provide:
+
+- real terminal access
+- filesystem access
+- Gmail or email integration
+- authentication
+- database persistence
+- SaaS multi-company management
+- automatic execution of agent decisions
+
 ### Cost And Risk Notes
 
 - Real OpenAI usage may create API costs.
@@ -309,8 +436,9 @@ The public frontend selector uses only public IDs and labels. It does not expose
 - The current implementation favors stability over surfacing raw provider errors to users.
 - Short session memory increases payload size and future token usage when real AI is enabled.
 - Future phases should add structured logging, cost tracking, and rate limiting before broad public usage.
+- Future private lab phases should add persistent audit storage, stronger redaction, owner access control, and explicit approval workflows before connecting any real external tool.
 
-## 5. Next.js AI Flow
+## 6. Next.js AI Flow
 
 The AI service lives in:
 
@@ -383,7 +511,7 @@ For backend `/api/v1/run` and `/api/v1/ai/ask`, `OPENAI_API_KEY` is optional bec
 }
 ```
 
-## 6. Visual Tree
+## 7. Visual Tree
 
 ```text
 UNV-HMND
@@ -406,7 +534,7 @@ UNV-HMND
          └─ FallbackAIProvider
 ```
 
-## 7. Vercel Notes
+## 8. Vercel Notes
 
 For Vercel:
 

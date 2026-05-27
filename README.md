@@ -180,6 +180,32 @@ The `/demo` page currently behaves as a lightweight AI lab:
 
 There is no database, authentication, persistent memory, localStorage, or real streaming in the current implementation.
 
+## Private AI Lab Core
+
+UNV-HMND also includes the first internal core for a private AI lab. This layer is separate from the public Vercel demo and is designed around human-in-the-loop safety.
+
+Current private lab building blocks:
+
+- `AgentRegistry`: typed catalog of reusable agent profiles
+- `ToolRegistry`: typed catalog of allowed proposal tools
+- `LocalToolExecutor`: deterministic executor that returns structured proposals only
+- `ApprovalGate`: evaluates proposed actions before they can be considered
+- `PermissionProfile`: defines permissions, risk levels, proposals, and approval results
+- `InMemoryAuditLog`: records recent tool and approval events in memory with basic redaction
+
+Proposal does not mean execution. The private lab currently generates structured, auditable proposals only.
+
+Security boundaries:
+
+- no real terminal execution
+- no filesystem operations
+- no Gmail or email integration
+- no authentication layer yet
+- no database or persistent audit storage yet
+- no secrets should be stored in audit previews
+
+The public demo focuses on the user-facing AI conversation. The private lab core focuses on future controlled agent operations, approval metadata, permissions, and auditability.
+
 ## Project Structure
 
 ```text
