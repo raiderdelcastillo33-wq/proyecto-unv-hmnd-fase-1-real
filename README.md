@@ -63,13 +63,18 @@ Limites:
 Primera experiencia MVP en `/lab`:
 
 - Organization Simulation Panel con dataset mock.
+- Guided Flow Timeline para explicar el valor en menos de dos minutos.
 - Chaos Detection Summary sobre archivos simulados.
 - GENIO Analysis Card para propuesta gobernada.
 - GENESIS Reflection Card como contextual mirror no invasivo.
 - Alignment Validation Card para claridad humana y no sobreautomatizacion.
-- Before / After Visualization.
+- Interactive Before / After Visualization.
+- Clarity Score Visualization.
+- Organization Impact Metrics.
+- GENIO Thinking State, GENESIS Reflection Feed y Alignment Status Indicator como estados visuales de simulacion.
 - Estimated Time Saved y claridad estimada.
 - Organization Proposal Checklist.
+- Safety indicators visibles: simulation mode, proposal-only, no filesystem access, no execution, no host scanning y no automation.
 
 Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
 

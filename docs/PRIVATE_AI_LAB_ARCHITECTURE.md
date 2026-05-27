@@ -63,11 +63,13 @@ Boundaries:
 Current MVP UI experience:
 
 - `/lab` includes an Organization Simulation Panel for the Humanity Guide OS Intelligent Organization MVP.
+- The experience includes a Guided Flow Timeline so a reviewer can understand the value in under two minutes.
 - The panel uses mock-only file metadata to show chaos signals, duplicate candidates, mixed priorities, and visual overload.
 - GENIO renders a governed organization strategy.
 - GÉNESIS renders reflection observations as a contextual mirror, without user scoring or behavioral surveillance.
 - The Human-Centered Alignment Layer renders checks for clarity, no overautomation, and safe limits.
-- The before/after visualization, estimated time saved, and checklist are proposal-only previews.
+- The interactive before/after toggle, clarity score visualization, impact metrics, estimated time saved, and checklist are proposal-only previews.
+- GENIO Thinking State, GENESIS Reflection Feed, Alignment Status Indicator, Simulation Badge System, and the no-filesystem safety indicator are UI states only.
 - No filesystem access, host scanning, file movement, file deletion, upload, indexing, or runtime execution exists.
 
 ## 2. GENIO Central Governance Layer
