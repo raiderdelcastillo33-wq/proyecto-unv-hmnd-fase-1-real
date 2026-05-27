@@ -122,6 +122,13 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.governance.centralProfile.hierarchyLevel).toBe('central')
     expect(payload.data.governance.centralProfile.simulationOnly).toBe(true)
     expect(payload.data.governance.centralProfile.actionExecuted).toBe(false)
+    expect(payload.data.governance.centralProfile.strategicVision.personalityTraits).toContain('strategic')
+    expect(payload.data.governance.centralProfile.strategicVision.predictionBoundaries).toContain(
+      'GENIO does not know the future.'
+    )
+    expect(payload.data.governance.centralProfile.strategicVision.futureEngines).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: 'predictive-simulation-engine', simulationOnly: true })])
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

@@ -31,6 +31,14 @@ export type PrivateLabFutureCapability = {
   simulationOnly: true
 }
 
+export type PrivateLabStrategicVision = {
+  inspirationStyle: string[]
+  personalityTraits: string[]
+  reasoningPrinciples: string[]
+  predictionBoundaries: string[]
+  futureEngines: PrivateLabFutureCapability[]
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -44,6 +52,7 @@ export type PrivateLabGenioProfile = {
   systemGoals: string[]
   capabilities: string[]
   futureCapabilities: PrivateLabFutureCapability[]
+  strategicVision: PrivateLabStrategicVision
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -83,7 +92,9 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
       'organize global context',
       'prioritize safe workflows',
       'prepare approval metadata',
-      'observe proposal-only activity'
+      'observe proposal-only activity',
+      'model probabilistic scenarios without claiming certainty',
+      'prepare strategic life maps for owner review'
     ],
     futureCapabilities: [
       {
@@ -106,8 +117,63 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
         status: 'metadata-only',
         safetyBoundary: 'No filesystem, terminal, email, SSH, or OS control adapter exists in this phase.',
         simulationOnly: true
+      },
+      {
+        id: 'predictive-simulation-engine',
+        label: 'Predictive Simulation Engine',
+        status: 'metadata-only',
+        safetyBoundary: 'Future forecasts must be probabilistic, evidence-based, and never presented as certainty.',
+        simulationOnly: true
+      },
+      {
+        id: 'strategic-planning-engine',
+        label: 'Strategic Planning Engine',
+        status: 'metadata-only',
+        safetyBoundary: 'Future strategy outputs remain proposals requiring owner review.',
+        simulationOnly: true
       }
     ],
+    strategicVision: {
+      inspirationStyle: [
+        'Wise strategic guide inspired by broad fantasy and anime archetypes, without copying any protected character or IP.',
+        'Calm observer that favors clarity, patience, and long-horizon reasoning.'
+      ],
+      personalityTraits: ['clear', 'strategic', 'emotionally controlled', 'empathetic', 'analytical', 'growth-oriented'],
+      reasoningPrinciples: [
+        'Use data, statistics, historical patterns, contextual reasoning, and simulations when estimating outcomes.',
+        'Express forecasts as probabilities, scenarios, assumptions, and risk ranges.',
+        'Preserve human control, transparency, auditability, and approval-first governance.'
+      ],
+      predictionBoundaries: [
+        'GENIO does not know the future.',
+        'GENIO does not guarantee outcomes.',
+        'GENIO does not use magic, supernatural claims, control, or omniscience.',
+        'GENIO must keep predictive features simulation-only, proposal-only, audit-first, and approval-required.'
+      ],
+      futureEngines: [
+        {
+          id: 'predictive-simulation-engine',
+          label: 'Predictive Simulation Engine',
+          status: 'metadata-only',
+          safetyBoundary: 'Probabilistic scenario modeling only; no certainty claims.',
+          simulationOnly: true
+        },
+        {
+          id: 'life-map-intelligence',
+          label: 'Life Map Intelligence',
+          status: 'metadata-only',
+          safetyBoundary: 'Future life maps remain strategic guidance under owner control.',
+          simulationOnly: true
+        },
+        {
+          id: 'financial-scenario-modeling',
+          label: 'Financial Scenario Modeling',
+          status: 'metadata-only',
+          safetyBoundary: 'Financial scenarios remain simulations; no transactions or guarantees.',
+          simulationOnly: true
+        }
+      ]
+    },
     lifeMapVision: [
       {
         id: 'life-map-agent',

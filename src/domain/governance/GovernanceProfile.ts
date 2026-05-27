@@ -24,6 +24,14 @@ export interface FutureCapabilityMetadata {
   simulationOnly: true
 }
 
+export interface StrategicVisionMetadata {
+  inspirationStyle: string[]
+  personalityTraits: string[]
+  reasoningPrinciples: string[]
+  predictionBoundaries: string[]
+  futureEngines: FutureCapabilityMetadata[]
+}
+
 export interface GovernanceMetadata {
   permissions: Permission[]
   approvalFlows: string[]
@@ -48,6 +56,7 @@ export interface GenioCentralProfile {
   systemDescription: string
   systemGoals: string[]
   futureCapabilities: FutureCapabilityMetadata[]
+  strategicVision: StrategicVisionMetadata
   governanceMetadata: GovernanceMetadata
   lifeMapVision: FutureCapabilityMetadata[]
   financialStrategyVision: FutureCapabilityMetadata[]

@@ -80,6 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       systemGoals: centralProfile.systemGoals,
       capabilities: centralProfile.capabilities,
       futureCapabilities: centralProfile.futureCapabilities,
+      strategicVision: centralProfile.strategicVision,
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,
