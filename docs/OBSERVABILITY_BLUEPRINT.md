@@ -129,6 +129,8 @@ Future observability must remain:
 
 GENIO must never use observability as a bypass around owner approval.
 
+Capability observations remain conceptual until a future controlled capability runtime exists. Future capability telemetry must track approval, lineage, risk, and blocked execution without collecting secrets or enabling execution by observation alone.
+
 ## Future Roadmap
 
 1. Observability blueprint metadata

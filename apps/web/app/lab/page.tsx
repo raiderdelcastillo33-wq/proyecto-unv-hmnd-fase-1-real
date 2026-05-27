@@ -486,6 +486,29 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">Capability blueprint</p>
+              <h3>{governance.centralProfile.capabilityBlueprint.label}</h3>
+              <p>{governance.centralProfile.capabilityBlueprint.executionLifecycle.executionBlockedReason}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.capabilityBlueprint.status}</span>
+                <span className="info-chip">
+                  {governance.centralProfile.capabilityBlueprint.executionLifecycle.approvalStatus}
+                </span>
+                <span className="info-chip">
+                  {governance.centralProfile.capabilityBlueprint.executionLifecycle.capabilityTraceId}
+                </span>
+                <span className="info-chip">Capability runtime: no</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.capabilityBlueprint.capabilityProfiles.map((capability) => (
+                  <span className="tech-pill" key={capability.id}>
+                    {capability.label}: {capability.riskLevel}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Memory blueprint</p>
               <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
               <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
@@ -780,6 +803,19 @@ export default function LabPage() {
                         {lineage.label}: {lineage.riskLevel}
                       </span>
                     ))}
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Problem solver preview</p>
+                  <h3>{governance.centralProfile.capabilityBlueprint.problemSolverAgentBlueprint.label}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">
+                      {governance.centralProfile.capabilityBlueprint.problemSolverAgentBlueprint.id}
+                    </span>
+                    <span className="info-chip">
+                      {governance.centralProfile.capabilityBlueprint.businessBuilderBlueprint.label}
+                    </span>
+                    <span className="info-chip">No autonomous execution</span>
                   </div>
                 </section>
                 <section className="result-state">

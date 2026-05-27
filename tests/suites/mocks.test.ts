@@ -3,6 +3,7 @@ import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssi
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
 import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterBlueprint'
 import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
+import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../../src/domain/capabilities/CapabilityBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
@@ -190,6 +191,9 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.observabilityBlueprint.auditTrace.traceId, 'trace-genio-blueprint')
         assert.equal(genio.observabilityBlueprint.auditPersistenceReadiness.persistentAudit, 'placeholder-only')
         assert.equal(genio.observabilityBlueprint.actionExecuted, false)
+        assert.equal(genio.capabilityBlueprint.id, 'controlled-practical-capability-blueprint')
+        assert.equal(genio.capabilityBlueprint.executionLifecycle.approvalStatus, 'blocked')
+        assert.equal(genio.capabilityBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
@@ -241,6 +245,34 @@ export function mockTests(): TestCase[] {
         assert.ok(blueprint.auditPersistenceReadiness.safetyBoundary.includes('No database'))
         assert.ok(blueprint.privacyPrinciples.some((principle) => principle.includes('invasive surveillance')))
         assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No OpenTelemetry')))
+      }
+    },
+    {
+      name: 'Capabilities: controlled practical blueprint blocks runtime execution',
+      run: async () => {
+        const blueprint = CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT
+        const terminal = blueprint.capabilityProfiles.find(
+          (capability) => capability.id === 'future-terminal-execution-capability'
+        )
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.categories.includes('terminal-execution-future'))
+        assert.ok(blueprint.riskLevels.includes('critical-risk'))
+        assert.ok(blueprint.boundaries.includes('forbidden'))
+        assert.equal(blueprint.executionLifecycle.capabilityTraceId, 'cap-trace-genio-blueprint')
+        assert.equal(blueprint.executionLifecycle.approvalStatus, 'blocked')
+        assert.equal(blueprint.executionLifecycle.actionExecuted, false)
+        assert.equal(terminal?.executionMode, 'blocked')
+        assert.equal(terminal?.riskLevel, 'critical-risk')
+        assert.ok(terminal?.boundaries.includes('forbidden'))
+        assert.equal(terminal?.simulation.actionExecuted, false)
+        assert.equal(blueprint.problemSolverAgentBlueprint.id, 'problem-solver-agent')
+        assert.ok(blueprint.problemSolverAgentBlueprint.hierarchy.includes('GENIO Central'))
+        assert.equal(blueprint.businessBuilderBlueprint.id, 'business-builder-blueprint')
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Capability blueprint != capability runtime')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal execution')))
       }
     },
     {

@@ -1,5 +1,6 @@
 import { CONTROLLED_ADAPTER_BLUEPRINT } from '../adapters/AdapterBlueprint'
 import { REAL_OWNER_AUTH_BLUEPRINT } from '../auth/AuthBlueprint'
+import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../capabilities/CapabilityBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../context/ContextBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../orchestration/OrchestrationBlueprint'
@@ -18,6 +19,7 @@ export const GENIO_CENTRAL_PROFILE: GenioCentralProfile = {
     'observe proposal-only activity',
     'prepare future owner authentication as metadata',
     'prepare persistent audit and observability as metadata',
+    'govern future practical capabilities as metadata',
     'simulate multi-agent orchestration flows',
     'govern future controlled adapters as metadata',
     'analyze patterns as simulation metadata',
@@ -176,6 +178,7 @@ export const GENIO_CENTRAL_PROFILE: GenioCentralProfile = {
   adapterBlueprint: CONTROLLED_ADAPTER_BLUEPRINT,
   authBlueprint: REAL_OWNER_AUTH_BLUEPRINT,
   observabilityBlueprint: PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT,
+  capabilityBlueprint: CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT,
   governanceMetadata: {
     permissions: ['create-checklist', 'summarize-context', 'review-risk', 'propose-command'],
     approvalFlows: ['safe', 'requires-approval', 'forbidden'],

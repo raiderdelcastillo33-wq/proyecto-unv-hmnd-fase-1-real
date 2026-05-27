@@ -231,6 +231,61 @@ export type PrivateLabObservabilityBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabCapabilityBlueprint = {
+  id: 'controlled-practical-capability-blueprint'
+  label: string
+  status: string
+  categories: string[]
+  riskLevels: string[]
+  boundaries: string[]
+  capabilityProfiles: Array<{
+    id: string
+    label: string
+    description: string
+    category: string
+    riskLevel: string
+    executionMode: string
+    boundaries: string[]
+    simulationOnly: true
+    actionExecuted: false
+  }>
+  executionLifecycle: {
+    capabilityRequestId: string
+    capabilityTraceId: string
+    requestedBy: string
+    governanceCheckpoint: string
+    approvalStatus: string
+    executionIntent: string
+    executionBlockedReason: string
+    riskEscalation: boolean
+    simulationState: string
+    simulationOnly: true
+    actionExecuted: false
+  }
+  problemSolverAgentBlueprint: {
+    id: string
+    label: string
+    hierarchy: string[]
+    objectives: string[]
+    boundaries: string[]
+    simulationOnly: true
+    actionExecuted: false
+  }
+  businessBuilderBlueprint: {
+    id: string
+    label: string
+    capabilities: string[]
+    boundaries: string[]
+    simulationOnly: true
+    actionExecuted: false
+  }
+  roadmap: string[]
+  governanceRules: string[]
+  nonCapabilities: string[]
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -250,6 +305,7 @@ export type PrivateLabGenioProfile = {
   adapterBlueprint: PrivateLabAdapterBlueprint
   authBlueprint: PrivateLabAuthBlueprint
   observabilityBlueprint: PrivateLabObservabilityBlueprint
+  capabilityBlueprint: PrivateLabCapabilityBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -832,6 +888,151 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
         'No persistent audit database.',
         'No OpenTelemetry runtime.',
         'No realtime monitoring, websocket telemetry, workers, queues, or background processing.'
+      ],
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    capabilityBlueprint: {
+      id: 'controlled-practical-capability-blueprint',
+      label: 'Controlled Practical Capability Blueprint',
+      status: 'metadata-only',
+      categories: [
+        'analysis',
+        'planning',
+        'drafting',
+        'documentation',
+        'simulation',
+        'filesystem-read-future',
+        'filesystem-write-future',
+        'terminal-read-future',
+        'terminal-execution-future',
+        'browser-future',
+        'finance-simulation',
+        'organization',
+        'orchestration',
+        'monitoring',
+        'company-management'
+      ],
+      riskLevels: ['low-risk', 'medium-risk', 'high-risk', 'critical-risk'],
+      boundaries: [
+        'read-only',
+        'draft-only',
+        'simulation-only',
+        'approval-required',
+        'forbidden',
+        'future-controlled-runtime'
+      ],
+      capabilityProfiles: [
+        {
+          id: 'safe-analysis-capability',
+          label: 'Safe Analysis Capability',
+          description: 'Analyze project state, risks, tradeoffs, and options as proposal metadata.',
+          category: 'analysis',
+          riskLevel: 'low-risk',
+          executionMode: 'proposal-only',
+          boundaries: ['simulation-only', 'approval-required'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'controlled-draft-capability',
+          label: 'Controlled Draft Capability',
+          description: 'Prepare drafts for documents, emails, roadmaps, or plans without sending or writing.',
+          category: 'drafting',
+          riskLevel: 'medium-risk',
+          executionMode: 'draft-only',
+          boundaries: ['draft-only', 'approval-required'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'future-terminal-execution-capability',
+          label: 'Future Terminal Execution Capability',
+          description: 'Future controlled terminal execution concept. Blocked in this phase.',
+          category: 'terminal-execution-future',
+          riskLevel: 'critical-risk',
+          executionMode: 'blocked',
+          boundaries: ['forbidden', 'approval-required', 'future-controlled-runtime'],
+          simulationOnly: true,
+          actionExecuted: false
+        }
+      ],
+      executionLifecycle: {
+        capabilityRequestId: 'cap-req-blueprint',
+        capabilityTraceId: 'cap-trace-genio-blueprint',
+        requestedBy: 'owner',
+        governanceCheckpoint: 'genio-capability-governance-checkpoint',
+        approvalStatus: 'blocked',
+        executionIntent: 'future-controlled-capability',
+        executionBlockedReason: 'Capability blueprint is not a capability runtime.',
+        riskEscalation: true,
+        simulationState: 'metadata-only',
+        simulationOnly: true,
+        actionExecuted: false
+      },
+      problemSolverAgentBlueprint: {
+        id: 'problem-solver-agent',
+        label: 'Problem Solver Agent',
+        hierarchy: ['Owner', 'GENIO Central', 'problem-solver-agent', 'specialist agents/tools'],
+        objectives: [
+          'resolve complex problems',
+          'analyze risks',
+          'investigate scenarios',
+          'build solution maps',
+          'propose strategies',
+          'analyze businesses',
+          'generate roadmaps',
+          'convert ideas into projects or apps'
+        ],
+        boundaries: [
+          'does not replace regulated professionals',
+          'does not act outside GENIO governance',
+          'does not execute real-world actions'
+        ],
+        simulationOnly: true,
+        actionExecuted: false
+      },
+      businessBuilderBlueprint: {
+        id: 'business-builder-blueprint',
+        label: 'Business Builder Blueprint',
+        capabilities: [
+          'app generation planning',
+          'website architecture planning',
+          'startup simulation',
+          'product opportunity analysis',
+          'monetization strategy',
+          'SaaS roadmap generation',
+          'production scaling strategy'
+        ],
+        boundaries: [
+          'conceptual and simulation-only',
+          'not financial, legal, or investment advice',
+          'no account creation, payments, deployment, or external execution'
+        ],
+        simulationOnly: true,
+        actionExecuted: false
+      },
+      roadmap: [
+        'Phase 1: Proposal-only',
+        'Phase 2: Read-only capabilities',
+        'Phase 3: Controlled draft generation',
+        'Phase 4: Sandboxed execution',
+        'Phase 5: Restricted local adapters',
+        'Phase 6: Human-supervised execution',
+        'Phase 7: Enterprise execution governance'
+      ],
+      governanceRules: [
+        'Proposal != Execution.',
+        'Capability blueprint != capability runtime.',
+        'Owner remains maximum authority.',
+        'All future capabilities are simulation-only by default, approval-required, risk-classified, and audit-first.'
+      ],
+      nonCapabilities: [
+        'No terminal execution.',
+        'No filesystem write.',
+        'No browser automation.',
+        'No external API execution.',
+        'No Gmail, trading, OS automation, self-modification, self-replication, or autonomous execution.'
       ],
       simulationOnly: true,
       actionExecuted: false

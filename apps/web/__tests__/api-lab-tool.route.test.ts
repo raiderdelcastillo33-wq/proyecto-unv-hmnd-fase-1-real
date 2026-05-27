@@ -212,6 +212,27 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.governance.centralProfile.observabilityBlueprint.nonCapabilities).toEqual(
       expect.arrayContaining([expect.stringContaining('No OpenTelemetry')])
     )
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.id).toBe(
+      'controlled-practical-capability-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.executionLifecycle.approvalStatus).toBe('blocked')
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.executionLifecycle.actionExecuted).toBe(false)
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.capabilityProfiles).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'future-terminal-execution-capability',
+          executionMode: 'blocked',
+          riskLevel: 'critical-risk',
+          actionExecuted: false
+        })
+      ])
+    )
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.problemSolverAgentBlueprint.id).toBe(
+      'problem-solver-agent'
+    )
+    expect(payload.data.governance.centralProfile.capabilityBlueprint.businessBuilderBlueprint.id).toBe(
+      'business-builder-blueprint'
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

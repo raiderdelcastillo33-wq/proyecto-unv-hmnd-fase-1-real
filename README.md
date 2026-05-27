@@ -12,6 +12,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - blueprints de memoria, orquestacion y adapters futuros
 - blueprint de autenticacion real futura del owner
 - blueprint de observabilidad y audit persistente futuro
+- blueprint de capacidades practicas controladas futuras
 
 La regla central del sistema es:
 
@@ -67,6 +68,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - registra audit events en memoria
 - permite aprobar/rechazar propuestas en modo simulation-only
 - muestra blueprint de observabilidad futura sin telemetria real
+- muestra blueprint de capacidades futuras sin runtime de ejecucion
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -247,6 +249,57 @@ No existe todavia DB de audit, OpenTelemetry real, cloud logging, Sentry, DataDo
 
 Observabilidad no significa vigilancia invasiva. Toda auditabilidad futura debe ser owner-controlled, privacy-aware, audit-first y compatible con approval flow.
 
+## Controlled Practical Capability Blueprint
+
+GENIO queda preparado para gobernar capacidades practicas futuras sin activar runtime real.
+
+Tipos preparados:
+
+- `CapabilityBlueprint`
+- `CapabilityProfile`
+- `CapabilityCategory`
+- `CapabilityRiskLevel`
+- `CapabilityExecutionMode`
+- `CapabilityBoundary`
+- `CapabilityConstraint`
+- `CapabilityApprovalPolicy`
+- `CapabilitySimulation`
+- `CapabilityCheckpoint`
+- `CapabilityIncidentRisk`
+
+Categorias futuras:
+
+- `analysis`
+- `planning`
+- `drafting`
+- `documentation`
+- `simulation`
+- `filesystem-read-future`
+- `filesystem-write-future`
+- `terminal-read-future`
+- `terminal-execution-future`
+- `browser-future`
+- `finance-simulation`
+- `organization`
+- `orchestration`
+- `monitoring`
+- `company-management`
+
+La fase prepara:
+
+- lifecycle de capacidad
+- classification de riesgo
+- boundaries de ejecucion
+- approval chain futura
+- problem-solver-agent blueprint
+- business-builder blueprint
+
+`problem-solver-agent` es conceptual. Puede preparar estrategias, mapas de solucion, roadmaps y analisis de negocios, pero no reemplaza profesionales regulados, no actua fuera de GENIO y no ejecuta acciones reales.
+
+`business-builder-blueprint` prepara planificacion de apps, websites, startups, monetizacion y SaaS roadmap solo como simulacion.
+
+No existe todavia runtime de capacidades, ejecucion terminal, filesystem write, browser automation, external API execution, Gmail real, trading, OS automation, self-modification, self-replication ni autonomia irrestricta.
+
 ## GENIO Strategic Vision Metadata
 
 GENIO esta descrito como una inteligencia estrategica calmada, analitica y orientada al crecimiento humano.
@@ -416,6 +469,7 @@ No existen todavia:
 - observabilidad real
 - audit persistente
 - tracing real
+- capability runtime real
 - memoria vectorial
 - embeddings reales
 - autonomous agents
@@ -516,6 +570,7 @@ Ruta privada server-side para catalogo seguro:
 - adapter blueprint
 - auth blueprint
 - observability blueprint
+- capability blueprint
 
 Requiere `OWNER_ACCESS_CODE`.
 
@@ -545,6 +600,7 @@ UNV-HMND/
 │  │  ├─ agents
 │  │  ├─ auth
 │  │  ├─ audit
+│  │  ├─ capabilities
 │  │  ├─ context
 │  │  ├─ governance
 │  │  ├─ observability
@@ -583,11 +639,14 @@ Fases completadas:
 - Master Production Architecture Blueprint
 - Real Owner Auth Blueprint
 - Persistent Audit & Observability Blueprint
+- Controlled Practical Capability Blueprint
 
 Roadmap futuro:
 
 - Real Owner Auth runtime
 - Persistent Audit Log
+- Read-only Capabilities
+- Controlled Draft Capabilities
 - Secure Storage / DB
 - Read-only File Preview Adapter
 - Controlled Draft Adapters
@@ -619,7 +678,7 @@ https://your-vercel-domain.example/lab
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
-- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, memory, orchestration y adapters
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, memory, orchestration y adapters
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
@@ -630,5 +689,6 @@ Validar:
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)
+- [Controlled Practical Capability Blueprint](docs/CAPABILITY_BLUEPRINT.md)
 - [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
 - [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)

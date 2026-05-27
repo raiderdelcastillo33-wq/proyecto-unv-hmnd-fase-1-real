@@ -232,6 +232,33 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.observabilityBlueprint.simulationOnly,
         actionExecuted: centralProfile.observabilityBlueprint.actionExecuted
       },
+      capabilityBlueprint: {
+        id: centralProfile.capabilityBlueprint.id,
+        label: centralProfile.capabilityBlueprint.label,
+        status: centralProfile.capabilityBlueprint.status,
+        categories: centralProfile.capabilityBlueprint.categories,
+        riskLevels: centralProfile.capabilityBlueprint.riskLevels,
+        boundaries: centralProfile.capabilityBlueprint.boundaries,
+        capabilityProfiles: centralProfile.capabilityBlueprint.capabilityProfiles.map((capability) => ({
+          id: capability.id,
+          label: capability.label,
+          description: capability.description,
+          category: capability.category,
+          riskLevel: capability.riskLevel,
+          executionMode: capability.executionMode,
+          boundaries: capability.boundaries,
+          simulationOnly: capability.simulationOnly,
+          actionExecuted: capability.actionExecuted
+        })),
+        executionLifecycle: centralProfile.capabilityBlueprint.executionLifecycle,
+        problemSolverAgentBlueprint: centralProfile.capabilityBlueprint.problemSolverAgentBlueprint,
+        businessBuilderBlueprint: centralProfile.capabilityBlueprint.businessBuilderBlueprint,
+        roadmap: centralProfile.capabilityBlueprint.roadmap,
+        governanceRules: centralProfile.capabilityBlueprint.governanceRules,
+        nonCapabilities: centralProfile.capabilityBlueprint.nonCapabilities,
+        simulationOnly: centralProfile.capabilityBlueprint.simulationOnly,
+        actionExecuted: centralProfile.capabilityBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

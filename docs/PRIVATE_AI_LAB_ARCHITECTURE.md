@@ -57,6 +57,7 @@ GENIO contains:
 - controlled adapter blueprint
 - real owner auth blueprint
 - persistent audit and observability blueprint
+- controlled practical capability blueprint
 
 GENIO is not a regular worker agent. It is the governance layer above the agent hierarchy.
 
@@ -207,7 +208,43 @@ Current boundaries:
 
 Observability does not mean invasive surveillance. Future monitoring must remain privacy-aware, owner-controlled, purpose-limited, and governed by approval flow.
 
-## 7. Strategic Vision Metadata
+## 7. Controlled Practical Capability Blueprint
+
+Source:
+
+```text
+src/domain/capabilities/CapabilityBlueprint.ts
+docs/CAPABILITY_BLUEPRINT.md
+```
+
+GENIO is prepared to describe practical future capabilities, classify risk, and route capability requests through governance metadata.
+
+Prepared concepts:
+
+- `CapabilityProfile`
+- `CapabilityCategory`
+- `CapabilityRiskLevel`
+- `CapabilityExecutionMode`
+- `CapabilityBoundary`
+- `CapabilityApprovalPolicy`
+- `CapabilitySimulation`
+- `CapabilityCheckpoint`
+- `CapabilityIncidentRisk`
+
+Prepared future categories include analysis, planning, drafting, documentation, simulation, filesystem read/write future, terminal read/execution future, browser future, finance simulation, organization, orchestration, monitoring, and company management.
+
+Current boundaries:
+
+- capability blueprint is not capability runtime
+- no terminal execution
+- no filesystem write
+- no browser automation
+- no external API execution
+- no Gmail, trading, OS automation, self-modification, self-replication, or autonomous execution
+
+The `problem-solver-agent` and `business-builder-blueprint` are metadata only. They can describe future strategy, roadmap, product, and solution-planning behavior, but they cannot execute real actions or replace regulated professionals.
+
+## 8. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -231,7 +268,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 8. Memory & Context Blueprint
+## 9. Memory & Context Blueprint
 
 Source:
 
@@ -275,7 +312,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 9. Strategic Multi-Agent Orchestration Layer
+## 10. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -305,7 +342,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 10. Controlled Adapter Blueprint
+## 11. Controlled Adapter Blueprint
 
 Source:
 
@@ -336,7 +373,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 11. Audit System
+## 12. Audit System
 
 Source:
 
@@ -364,7 +401,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 12. Current Non-Capabilities
+## 13. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -376,6 +413,8 @@ The system currently does not include:
 - persistent audit
 - real tracing
 - external observability
+- practical capability runtime
+- autonomous execution
 - vector memory
 - embeddings
 - semantic search
@@ -390,7 +429,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 13. Evolution Timeline
+## 14. Evolution Timeline
 
 Completed phases:
 
@@ -408,6 +447,7 @@ Completed phases:
 12. Master Production Architecture Blueprint
 13. Real Owner Auth Blueprint
 14. Persistent Audit & Observability Blueprint
+15. Controlled Practical Capability Blueprint
 
 Future roadmap:
 
@@ -420,9 +460,10 @@ Future roadmap:
 - company agents
 - SaaS tenant boundaries
 - reversible execution adapters
+- controlled practical capability runtime
 - operational monitoring
 
-## 14. Verification
+## 15. Verification
 
 Before closing a phase, run:
 
@@ -433,7 +474,7 @@ npm run build:api
 npm test
 ```
 
-## 15. Production Blueprint And Testing
+## 16. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 
@@ -442,6 +483,7 @@ docs/MASTER_PRODUCTION_ARCHITECTURE.md
 docs/PRODUCTION_TESTING_GUIDE.md
 docs/AUTH_BLUEPRINT.md
 docs/OBSERVABILITY_BLUEPRINT.md
+docs/CAPABILITY_BLUEPRINT.md
 ```
 
 These documents define:

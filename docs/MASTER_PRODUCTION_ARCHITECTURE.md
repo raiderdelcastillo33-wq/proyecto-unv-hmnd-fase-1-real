@@ -33,6 +33,7 @@ Current implemented architecture:
 - Controlled Adapter Blueprint
 - Real Owner Auth Blueprint
 - Persistent Audit & Observability Blueprint
+- Controlled Practical Capability Blueprint
 - AgentRegistry
 - ToolRegistry
 - ApprovalGate / ApprovalPolicy
@@ -49,6 +50,7 @@ Current guarantees:
 - no autonomous agents
 - no real authentication runtime
 - no persistent audit or real observability runtime
+- no practical capability runtime
 
 ## 2. What Does Not Exist Yet
 
@@ -72,6 +74,7 @@ The current system does not include:
 - company agents runtime
 - production monitoring
 - real tracing or external telemetry
+- unrestricted capability system
 - rate limiting
 - secrets management layer beyond environment variables
 
@@ -182,7 +185,40 @@ docs/OBSERVABILITY_BLUEPRINT.md
 src/domain/observability/ObservabilityBlueprint.ts
 ```
 
-## 7. Production Readiness Matrix
+## 7. Controlled Practical Capability Blueprint
+
+GENIO now has metadata for future practical capabilities without enabling execution.
+
+The blueprint prepares:
+
+- safe capability routing
+- capability risk levels
+- execution lifecycle metadata
+- approval chains
+- governance checkpoints
+- blocked execution status
+- problem-solver-agent metadata
+- business-builder metadata
+
+Current status:
+
+- proposal-only
+- simulation-only
+- no terminal execution
+- no filesystem write
+- no external API execution
+- no browser automation
+- no autonomous execution
+- no self-modifying or self-replicating behavior
+
+Detailed capability blueprint:
+
+```text
+docs/CAPABILITY_BLUEPRINT.md
+src/domain/capabilities/CapabilityBlueprint.ts
+```
+
+## 8. Production Readiness Matrix
 
 | Module | Current Status | Production Requirement | Risk Level | Next Step | Verification Method |
 | --- | --- | --- | --- | --- | --- |
@@ -194,6 +230,7 @@ src/domain/observability/ObservabilityBlueprint.ts
 | Memory blueprint | Typed metadata only | Secure owner-controlled storage and retrieval | High | Secure Storage / DB | Storage tests, privacy review |
 | Orchestration blueprint | Simulation-only pipeline metadata | Runtime scheduler only after auth/audit/storage | Critical | Keep simulation until prerequisites complete | Domain tests, architecture review |
 | Adapter blueprint | Metadata-only future adapters | Permission-scoped adapters with explicit approval | Critical | Start read-only file preview adapter | Adapter safety tests |
+| Capability blueprint | Metadata-only practical capability governance | Capability runtime only after auth, audit, sandbox, and owner approval | Critical | Read-only Capabilities | Capability safety tests |
 | Auth | OWNER_ACCESS_CODE temporary gate plus auth blueprint | Owner auth, sessions, CSRF/session hardening | Critical | Real Owner Auth runtime | Auth tests, security review |
 | DB/storage | Not implemented | Durable encrypted data store and migrations | High | Secure Storage / DB | Migration tests, backup plan |
 | User management | Not implemented | Users, roles, owner/admin boundaries | High | Role/Permission system | RBAC tests |
@@ -203,7 +240,7 @@ src/domain/observability/ObservabilityBlueprint.ts
 | Monitoring | Observability blueprint metadata only | Logs, error tracking, health checks, alerts | Medium | Persistent Audit & Observability runtime plan | Health endpoint, alert tests |
 | Security | Progressive boundaries documented | Threat model, auth, secrets, rate limits | Critical | Security hardening phase | Security checklist, review |
 
-## 8. Web Testing And Production Validation
+## 9. Web Testing And Production Validation
 
 Local URLs:
 
@@ -247,6 +284,7 @@ Validate `/lab`:
 - adapter blueprint is visible
 - auth blueprint is visible
 - observability blueprint is visible
+- capability blueprint is visible
 - approve/reject buttons update metadata only
 - no real execution happens
 
@@ -259,7 +297,7 @@ Browser DevTools:
   - `/api/lab/tool`
 - Response payloads should not expose secrets or `systemInstructions`
 
-## 9. Production Verification Checklist
+## 10. Production Verification Checklist
 
 Run before closing a production-readiness phase:
 
@@ -285,10 +323,11 @@ Manual checklist:
 - `OWNER_ACCESS_CODE` only exists server-side
 - no real execution adapters
 - no real telemetry or persistent audit storage
+- no capability runtime
 - no `systemInstructions` in public responses
 - no terminal/filesystem/Gmail/finance execution
 
-## 10. Future Roadmap By Phases
+## 11. Future Roadmap By Phases
 
 ### Phase 1: Production Architecture Blueprint
 
@@ -325,6 +364,13 @@ Manual checklist:
 - Prerequisites: auth, audit, permission scopes, file selection boundary
 - Verification: adapter tests, forbidden path tests, audit checks
 
+### Capability Track: Controlled Practical Capabilities
+
+- Objective: progress from proposal-only to read-only, draft-only, sandboxed, and human-supervised capabilities
+- Risk: critical
+- Prerequisites: real auth, persistent audit, sandbox boundaries, permission scopes, rollback strategy
+- Verification: capability safety tests, approval tests, audit lineage review
+
 ### Phase 6: Controlled Draft Adapters
 
 - Objective: draft-only email/document flows without sending or writing
@@ -360,7 +406,7 @@ Manual checklist:
 - Prerequisites: all previous phases, threat model, rollback strategy, monitoring
 - Verification: sandbox tests, approval tests, audit tests, rollback drills
 
-## 11. World Access Layer
+## 12. World Access Layer
 
 World Access Layer is the future controlled connection between GENIO and external tools.
 
@@ -393,7 +439,7 @@ Required future properties:
 - owner-controlled
 - never bypass owner approval
 
-## 12. Release Criteria For Future Production Phases
+## 13. Release Criteria For Future Production Phases
 
 A future phase is production-ready only when:
 
