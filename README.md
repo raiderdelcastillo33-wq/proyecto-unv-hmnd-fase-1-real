@@ -80,6 +80,17 @@ Primera experiencia MVP en `/lab`:
 - Safety indicators visibles: simulation mode, proposal-only, no filesystem access, no execution, no host scanning y no automation.
 - CTA final: `Simulation complete - no real action executed`.
 
+Presentation readiness:
+
+- Home como hub de walkthrough para recruiters.
+- Navegacion superior conectando `/`, `/demo`, `/lab` y arquitectura.
+- Mini onboarding visual: problema, seguridad y senales tecnicas.
+- Visual architecture summary con distincion entre capacidades actuales y blueprints futuros.
+- Seccion `Current capabilities vs Future blueprints` para evitar claims exagerados.
+- Project Highlights, Governance-first Architecture, Simulation-first Safety, Human-centered AI y Technical Stack visibles en la home.
+- Metadata SEO basica, manifest, icono de app y sitemap publico preparados para despliegue.
+- Responsive/focus polish para screenshots, video walkthrough y navegacion por teclado basica.
+
 Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
 
 ## Stack Tecnologico

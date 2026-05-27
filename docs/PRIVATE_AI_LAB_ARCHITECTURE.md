@@ -76,6 +76,15 @@ Current MVP UI experience:
 - The final CTA states `Simulation complete - no real action executed`.
 - No filesystem access, host scanning, file movement, file deletion, upload, indexing, or runtime execution exists.
 
+Presentation and navigation readiness:
+
+- `/` now works as a recruiter walkthrough hub for Humanity Guide OS.
+- Top navigation connects `/`, `/demo`, `/lab`, and architecture surfaces.
+- The home page includes mini onboarding, a visual architecture summary, and a current-vs-future capability split.
+- The presentation explicitly separates real current behavior from future blueprints to avoid overstating capabilities.
+- The showcase adds Project Highlights, Governance-first Architecture, Simulation-first Safety, Human-centered AI, Current MVP, Future Controlled Capabilities, Technical Stack, and Architecture Principles.
+- Basic deployment polish includes app metadata, manifest, icon, sitemap coverage, focus states, and mobile presentation constraints.
+
 ## 2. GENIO Central Governance Layer
 
 Source:

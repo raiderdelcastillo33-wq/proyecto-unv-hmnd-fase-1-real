@@ -86,6 +86,15 @@ textarea {
   font: inherit;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
 .site-shell {
   width: min(1200px, calc(100% - 32px));
   margin: 0 auto;
@@ -145,6 +154,12 @@ textarea {
   background: rgba(15, 23, 42, 0.82);
   border-color: rgba(105, 211, 255, 0.18);
   transform: translateY(-1px);
+}
+
+.nav-link[href="/lab"] {
+  color: var(--success);
+  background: rgba(116, 240, 186, 0.08);
+  border-color: rgba(116, 240, 186, 0.18);
 }
 
 .page-shell {
@@ -336,6 +351,15 @@ textarea {
   margin-top: 28px;
 }
 
+.presentation-band {
+  border: 1px solid rgba(105, 211, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.06), rgba(116, 240, 186, 0.03)),
+    rgba(8, 13, 22, 0.62);
+  border-radius: 28px;
+  padding: 24px;
+}
+
 .section-head {
   max-width: 760px;
   margin-bottom: 22px;
@@ -351,6 +375,128 @@ textarea {
 .section-head p:last-child {
   color: var(--muted);
   line-height: 1.75;
+}
+
+.onboarding-grid,
+.architecture-summary,
+.capability-split,
+.showcase-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.onboarding-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.onboarding-card,
+.architecture-summary__item,
+.capability-column,
+.showcase-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(7, 12, 19, 0.9);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.onboarding-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 190px;
+}
+
+.onboarding-card h3,
+.architecture-summary__item h3,
+.capability-column h3,
+.showcase-card h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.22rem;
+}
+
+.onboarding-card p,
+.architecture-summary__item p,
+.capability-column li,
+.showcase-card p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.showcase-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.showcase-grid--wide {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.showcase-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 180px;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.showcase-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(105, 211, 255, 0.22);
+}
+
+.showcase-card--wide {
+  min-height: 168px;
+}
+
+.architecture-summary {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.architecture-summary__item {
+  display: grid;
+  gap: 10px;
+}
+
+.architecture-summary__item span {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--success);
+  background: rgba(116, 240, 186, 0.08);
+  border: 1px solid rgba(116, 240, 186, 0.18);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.capability-split {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.capability-column ul {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capability-column li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.capability-column li::before {
+  content: '';
+  position: absolute;
+  top: 0.72em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--primary);
 }
 
 .panel-heading {
@@ -1428,6 +1574,11 @@ textarea {
   .workspace,
   .grid-3,
   .signal-grid,
+  .onboarding-grid,
+  .architecture-summary,
+  .capability-split,
+  .showcase-grid,
+  .showcase-grid--wide,
   .architecture-grid,
   .timeline-grid,
   .helper-grid,
@@ -1812,6 +1963,44 @@ textarea {
 }
 
 @media (max-width: 480px) {
+  .page-shell {
+    width: min(100% - 20px, 1200px);
+    padding-top: 28px;
+  }
+
+  .hero-copy,
+  .hero-card,
+  .panel,
+  .info-card,
+  .presentation-band,
+  .showcase-card,
+  .onboarding-card,
+  .architecture-summary__item,
+  .capability-column {
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  .hero-actions,
+  .story-card__actions {
+    width: 100%;
+  }
+
+  .hero-actions a,
+  .story-card__actions a,
+  .actions button {
+    width: 100%;
+  }
+
+  .site-nav {
+    width: 100%;
+  }
+
+  .nav-link {
+    padding: 9px 11px;
+    font-size: 0.9rem;
+  }
+
   .chat-widget {
     width: calc(100vw - 40px);
     height: calc(100vh - 140px);
