@@ -63,6 +63,9 @@ Limites:
 Primera experiencia MVP en `/lab`:
 
 - Organization Simulation Panel con dataset mock.
+- Hero de recruiter demo con elevator pitch tecnico/profesional.
+- Flujo `Problem -> Analysis -> Proposal -> Human Approval`.
+- Seccion `Why this matters` para explicar valor de producto rapidamente.
 - Guided Flow Timeline para explicar el valor en menos de dos minutos.
 - Chaos Detection Summary sobre archivos simulados.
 - GENIO Analysis Card para propuesta gobernada.
@@ -75,6 +78,7 @@ Primera experiencia MVP en `/lab`:
 - Estimated Time Saved y claridad estimada.
 - Organization Proposal Checklist.
 - Safety indicators visibles: simulation mode, proposal-only, no filesystem access, no execution, no host scanning y no automation.
+- CTA final: `Simulation complete - no real action executed`.
 
 Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
 

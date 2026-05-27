@@ -516,6 +516,116 @@ textarea {
   max-width: 360px;
 }
 
+.recruiter-pitch {
+  display: grid;
+  gap: 6px;
+  width: fit-content;
+  max-width: 720px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(105, 211, 255, 0.18);
+  background: rgba(105, 211, 255, 0.08);
+}
+
+.recruiter-pitch strong,
+.recruiter-flow__card h4,
+.why-matters h3,
+.simulation-complete h3 {
+  color: var(--text);
+}
+
+.recruiter-pitch span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.recruiter-flow,
+.why-matters,
+.simulation-complete {
+  display: grid;
+  gap: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.76);
+  padding: 18px;
+}
+
+.recruiter-flow__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.recruiter-flow__card {
+  display: grid;
+  gap: 9px;
+  min-height: 178px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(15, 23, 42, 0.68));
+  padding: 16px;
+}
+
+.recruiter-flow__card span {
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--primary);
+  border: 1px solid rgba(105, 211, 255, 0.18);
+  background: rgba(105, 211, 255, 0.08);
+  font-size: 0.72rem;
+}
+
+.recruiter-flow__card p {
+  margin: 0;
+  color: var(--success);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.recruiter-flow__card h4 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.12rem;
+}
+
+.recruiter-flow__card small {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.why-matters ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.why-matters li {
+  position: relative;
+  padding: 12px 12px 12px 36px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.11);
+  background: rgba(15, 23, 42, 0.58);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.why-matters li::before {
+  content: '';
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 5px rgba(116, 240, 186, 0.08);
+}
+
 .guided-flow {
   display: grid;
   gap: 16px;
@@ -909,6 +1019,23 @@ textarea {
   border-radius: inherit;
   background: linear-gradient(90deg, var(--primary), var(--success));
   animation: scoreFill 520ms ease both;
+}
+
+.simulation-complete {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, auto);
+  align-items: center;
+  border-color: rgba(116, 240, 186, 0.22);
+  background: linear-gradient(180deg, rgba(116, 240, 186, 0.11), rgba(8, 13, 22, 0.84));
+}
+
+.simulation-complete h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+}
+
+.simulation-complete p {
+  margin: 0;
 }
 
 @keyframes softReveal {
@@ -1305,12 +1432,14 @@ textarea {
   .timeline-grid,
   .helper-grid,
   .organization-hero,
+  .recruiter-flow__grid,
   .guided-flow__layout,
   .organization-metrics,
   .organization-card-grid,
   .organization-card-grid--three,
   .before-after-grid,
   .clarity-score,
+  .simulation-complete,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {

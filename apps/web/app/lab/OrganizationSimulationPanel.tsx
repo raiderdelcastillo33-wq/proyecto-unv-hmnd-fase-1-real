@@ -61,6 +61,39 @@ const guidedFlowSteps = [
   }
 ] as const
 
+const recruiterFlow = [
+  {
+    id: 'problem',
+    label: 'Problem',
+    title: 'Human workspaces drift into clutter',
+    description: 'Mixed priorities, duplicate files, and unclear categories slow down decisions.'
+  },
+  {
+    id: 'analysis',
+    label: 'Analysis',
+    title: 'GENIO converts chaos into a governed plan',
+    description: 'The system separates risk, urgency, and organization intent before suggesting changes.'
+  },
+  {
+    id: 'proposal',
+    label: 'Proposal',
+    title: 'The output is reviewable and reversible',
+    description: 'Users see groups, duplicate candidates, time estimates, and a checklist before any future action.'
+  },
+  {
+    id: 'approval',
+    label: 'Human Approval',
+    title: 'The Owner remains in control',
+    description: 'Approval records intent only. It does not execute filesystem, terminal, or automation actions.'
+  }
+] as const
+
+const whyThisMatters = [
+  'Shows practical AI value without pretending to access the user computer.',
+  'Demonstrates governance-first product thinking for sensitive future capabilities.',
+  'Turns abstract AI architecture into a recruiter-friendly workflow with measurable outcomes.'
+] as const
+
 export function OrganizationSimulationPanel({
   simulation = privateLabOrganizationSimulation
 }: OrganizationSimulationPanelProps) {
@@ -83,9 +116,19 @@ export function OrganizationSimulationPanel({
     <section className="organization-panel" aria-labelledby="organization-simulation-heading">
       <div className="organization-hero">
         <div className="panel-heading">
-          <p className="result-eyebrow">Organization Simulation Panel</p>
-          <h2 id="organization-simulation-heading">{simulation.label}</h2>
-          <p>{simulation.scenario}</p>
+          <p className="result-eyebrow">Recruiter demo</p>
+          <h2 id="organization-simulation-heading">Humanity Guide OS turns simulated clutter into a governed organization proposal.</h2>
+          <p>
+            A two-minute, proposal-only walkthrough showing how GENIO analyzes organization chaos, GENESIS reflects
+            context, and the Alignment Layer keeps the experience safe and human-controlled.
+          </p>
+          <div className="recruiter-pitch">
+            <strong>Elevator pitch</strong>
+            <span>
+              Responsible AI for personal organization: clear value, visible safety boundaries, and no real action
+              executed.
+            </span>
+          </div>
         </div>
 
         <div className="simulation-badge-system" aria-label="Simulation Badge System">
@@ -93,8 +136,38 @@ export function OrganizationSimulationPanel({
           <span className="info-chip">Simulation only</span>
           <span className="info-chip">Proposal-only</span>
           <span className="info-chip">No execution</span>
+          <span className="info-chip">actionExecuted: false</span>
         </div>
       </div>
+
+      <section className="recruiter-flow" aria-labelledby="recruiter-flow-heading">
+        <div className="organization-section__heading">
+          <p className="result-eyebrow">Problem {'->'} Analysis {'->'} Proposal {'->'} Human Approval</p>
+          <h3 id="recruiter-flow-heading">What this demo proves</h3>
+        </div>
+        <div className="recruiter-flow__grid">
+          {recruiterFlow.map((step, index) => (
+            <article className="recruiter-flow__card" key={step.id}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <p>{step.label}</p>
+              <h4>{step.title}</h4>
+              <small>{step.description}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="why-matters" aria-labelledby="why-this-matters-heading">
+        <div className="organization-section__heading">
+          <p className="result-eyebrow">Why this matters</p>
+          <h3 id="why-this-matters-heading">Professional value in plain language</h3>
+        </div>
+        <ul>
+          {whyThisMatters.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
 
       <section className="guided-flow" aria-labelledby="guided-flow-heading">
         <div className="organization-section__heading">
@@ -143,6 +216,8 @@ export function OrganizationSimulationPanel({
 
       <div className="safety-indicator" aria-label="No real filesystem access safety indicator">
         <strong>No real filesystem access</strong>
+        <span>simulation-only</span>
+        <span>proposal-only</span>
         <span>No host scanning</span>
         <span>No automation</span>
         <span>No file movement</span>
@@ -193,7 +268,7 @@ export function OrganizationSimulationPanel({
       <section className="organization-card-grid organization-card-grid--three">
         <article className="organization-card organization-card--accent">
           <p className="result-eyebrow">GENIO Analysis Card</p>
-          <h3>Governed organization strategy</h3>
+          <h3>GENIO analyzes priorities and risk</h3>
           <div className="thinking-state" aria-label="GENIO Thinking State">
             <span />
             <span />
@@ -207,7 +282,7 @@ export function OrganizationSimulationPanel({
 
         <article className="organization-card">
           <p className="result-eyebrow">GENESIS Reflection Card</p>
-          <h3>Contextual mirror</h3>
+          <h3>GENESIS observes contextual overload</h3>
           <div className="reflection-feed" aria-label="GENESIS Reflection Feed">
             {simulation.genesisReflections.map((reflection) => (
               <div className="organization-note" key={reflection.id}>
@@ -221,7 +296,7 @@ export function OrganizationSimulationPanel({
 
         <article className="organization-card">
           <p className="result-eyebrow">Alignment Validation Card</p>
-          <h3>Human-centered checks</h3>
+          <h3>Alignment protects human limits</h3>
           <div className="alignment-status" aria-label="Alignment Status Indicator">
             <span />
             Alignment Status Indicator: passed
@@ -349,6 +424,23 @@ export function OrganizationSimulationPanel({
           ))}
           <span className="info-chip">{simulation.proposal.timeRecoveryEstimate.caveat}</span>
           <span className="info-chip">{simulation.proposal.clarityEstimate.caveat}</span>
+        </div>
+      </section>
+
+      <section className="simulation-complete" aria-label="Simulation complete status">
+        <div>
+          <p className="result-eyebrow">Simulation complete</p>
+          <h3>Simulation complete - no real action executed</h3>
+          <p>
+            The demo produced a professional organization proposal while keeping the Owner in control. No filesystem,
+            terminal, host scan, runtime, or automation was used.
+          </p>
+        </div>
+        <div className="response-meta">
+          <span className="info-chip">simulation-only</span>
+          <span className="info-chip">owner-controlled</span>
+          <span className="info-chip">proposal-only</span>
+          <span className="info-chip">actionExecuted: false</span>
         </div>
       </section>
     </section>
