@@ -1,24 +1,25 @@
-# UNV-HMND - Portfolio Profesional Frontend Developer
+# UNV-HMND / Humanidad_Universo
 
-UNV-HMND es un proyecto de portfolio orientado a producción que combina un frontend Next.js App Router, una capa API interna, un backend Node.js y interacciones potenciadas por IA.
+UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura privada de IA llamada GENIO.
 
-Está diseñado para demostrar:
+El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Private AI Operating System:
 
-- Una página de portfolio pulida orientada a reclutadores
-- Un flujo de demo interactiva real
-- Enrutamiento API interno con Next.js
-- Orquestación backend en Node.js
-- Integraciones IA listas para desarrollo local y despliegue en Vercel
+- portfolio frontend para reclutadores
+- demo publica multiagente segura
+- backend Node.js desacoplado
+- Private AI Lab controlado por owner
+- GENIO como nucleo central de gobernanza
+- blueprints de memoria, orquestacion y adapters futuros
 
-## Lo que incluye el proyecto
+La regla central del sistema es:
 
-- `Página principal`: superficie de portfolio orientada a reclutadores
-- `Página de demo`: laboratorio IA con selector multiagente, historial local, memoria corta por sesión y respuesta simulada tipo typing
-- `Rutas internas Next.js`: capa API segura para frontend bajo `apps/web/app/api`
-- `API Node`: runtime backend servido desde `src/api/server.ts`, preparado para cloud hosting con `PORT`
-- `Características IA`: tareas respaldadas por IA expuestas a través de `/api/v1/run`
+```text
+Proposal != execution
+```
 
-## Stack Tecnológico
+GENIO puede analizar, organizar, priorizar, simular y proponer. GENIO no ejecuta acciones reales.
+
+## Stack Tecnologico
 
 - Next.js 15
 - React 19
@@ -28,15 +29,320 @@ Está diseñado para demostrar:
 - Jest + Testing Library
 - Vercel para despliegue frontend
 
-## Instalación Real
+Rutas principales:
 
-Instalar dependencias raíz:
+```text
+apps/web  Frontend Next.js
+src       Backend Node.js y dominio
+docs      Documentacion tecnica
+tests     Tests backend/dominio
+```
+
+## Superficies Del Sistema
+
+### Demo Publica `/demo`
+
+La demo publica es una experiencia segura de conversacion IA:
+
+- selector multiagente publico
+- historial local en memoria
+- memoria corta por sesion limitada
+- typing simulation
+- fallback seguro para Vercel
+- separacion frontend/backend
+
+No incluye base de datos, autenticacion, memoria persistente, localStorage persistente, streaming real ni ejecucion de acciones.
+
+### Private AI Lab `/lab`
+
+El Private AI Lab es una superficie privada para propuestas auditables:
+
+- requiere `OWNER_ACCESS_CODE`
+- muestra GENIO Central
+- lista agentes y tools desde catalogos tipados
+- genera `ToolResult` estructurado
+- muestra approval metadata
+- registra audit events en memoria
+- permite aprobar/rechazar propuestas en modo simulation-only
+
+`/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
+
+## GENIO Central Governance Layer
+
+GENIO es el perfil central de gobernanza del sistema. No es un agente comun; es la capa conceptual que coordina:
+
+- jerarquia multiagente
+- governance metadata
+- approval flow
+- observabilidad
+- riesgo
+- contexto global
+- blueprints futuros
+
+Jerarquia preparada:
+
+- `central`: GENIO
+- `supervisor`: architect/operator
+- `specialist`: coder/reviewer/debugger
+- `utility`: tutor y agentes de apoyo
+- `observer`: rol futuro de observabilidad
+
+El owner humano sigue siendo la autoridad maxima.
+
+## Agentes Actuales
+
+Agentes privados principales:
+
+- `architect-agent`
+- `coder-agent`
+- `reviewer-agent`
+- `debugger-agent`
+- `tutor-agent`
+- `operator-agent`
+
+Agentes de compatibilidad:
+
+- `tutor`
+- `mentor`
+- `architect`
+- `course-generator`
+- `cuba-education-assistant`
+
+El catalogo publico no expone `systemInstructions`.
+
+## Tools Y Proposal Mode
+
+Tools actuales:
+
+- `summarize-project-state`
+- `propose-terminal-command`
+- `explain-error-log`
+- `generate-implementation-plan`
+- `review-risk`
+- `create-checklist`
+
+Las tools producen propuestas, planes, checklists, explicaciones y comandos como texto. No ejecutan comandos ni modifican archivos.
+
+## Owner Approval Flow Minimal
+
+El flujo de aprobacion del owner es local, auditable y simulation-only.
+
+Estados:
+
+- `pending`
+- `approved`
+- `rejected`
+- `blocked`
+
+Regla:
+
+```text
+Approve != Execute
+```
+
+Aprobar una propuesta solo registra decision y metadata local. No ejecuta terminal, filesystem, email, adapters, workflows ni automatizaciones.
+
+Campos clave:
+
+- `proposalId`
+- `correlationId`
+- `sessionId`
+- `approvalStatus`
+- `reviewedBy`
+- `reviewTimestamp`
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+## GENIO Strategic Vision Metadata
+
+GENIO esta descrito como una inteligencia estrategica calmada, analitica y orientada al crecimiento humano.
+
+La vision prepara capacidades conceptuales futuras:
+
+- simulacion predictiva
+- razonamiento probabilistico
+- planificacion estrategica
+- analisis de oportunidades
+- mapas de vida
+- escenarios financieros simulados
+
+Limites explicitos:
+
+- GENIO no conoce el futuro
+- GENIO no garantiza resultados
+- GENIO no usa magia, omnisciencia ni control mental
+- GENIO no toma decisiones irreversibles
+- toda prediccion futura debe ser probabilistica, contextual y explicable
+
+## GENIO Memory & Context Blueprint
+
+La memoria futura esta preparada solo como metadata tipada.
+
+Categorias:
+
+- `technical`
+- `personal`
+- `strategic`
+- `project`
+- `learning`
+- `financial`
+- `journal`
+- `life-map`
+- `company`
+- `operational`
+
+Retencion preparada:
+
+- `short-term`
+- `mid-term`
+- `long-term`
+- `archived`
+
+Blueprints incluidos:
+
+- `ContextProfile`
+- `MemoryFragment`
+- `ContextWindow`
+- `LifeObjective`
+- `LifeRoadmap`
+- `Milestone`
+- `JournalEntry`
+- `Reflection`
+- `DailySummary`
+
+No existe todavia:
+
+- DB real
+- memoria vectorial
+- embeddings
+- semantic search
+- persistent memory
+- cloud sync
+- localStorage persistente
+
+## Strategic Multi-Agent Orchestration Layer
+
+GENIO tiene un blueprint de orquestacion multiagente simulation-only.
+
+Tipos preparados:
+
+- `OrchestrationFlow`
+- `AgentTask`
+- `TaskAssignment`
+- `CoordinationPlan`
+- `PipelineStep`
+- `DelegationRule`
+
+Pipeline conceptual:
+
+```text
+GENIO
+-> planner
+-> specialist
+-> reviewer
+-> validator
+-> final proposal
+```
+
+Esta capa no lanza procesos, jobs, workers, threads, queues ni agentes autonomos. Solo describe como se coordinaria una cadena futura bajo aprobacion humana.
+
+## Controlled Adapter Blueprint
+
+GENIO incluye un catalogo de adapters futuros, todos metadata-only.
+
+Adapters preparados:
+
+- `terminal-adapter`
+- `filesystem-adapter`
+- `file-preview-adapter`
+- `email-draft-adapter`
+- `finance-simulation-adapter`
+- `local-computer-adapter`
+- `document-organization-adapter`
+
+Cada adapter declara:
+
+- categoria
+- capacidades
+- riesgo
+- modo de ejecucion
+- aprobacion requerida
+- safety boundaries
+- acciones prohibidas
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+No existe adapter real todavia.
+
+## Seguridad
+
+Principios:
+
+- Proposal != Execution
+- Approve != Execute
+- audit-first
+- approval-required
+- owner-controlled
+- reversible architecture
+- progressive safety
+- no dangerous autonomy
+
+Eventos auditados en memoria incluyen:
+
+- `tool-requested`
+- `approval-evaluated`
+- `tool-result-created`
+- `tool-blocked`
+- `approval-requested`
+- `approval-approved`
+- `approval-rejected`
+- `context-created`
+- `context-linked`
+- `memory-classified`
+- `orchestration-created`
+- `orchestration-routed`
+- `task-delegated`
+- `pipeline-completed`
+- `governance-blocked`
+- `adapter-discovered`
+- `adapter-requested`
+- `adapter-blocked`
+- `adapter-simulated`
+
+El audit log actual es en memoria y aplica redaccion basica de secretos. No persiste en disco ni DB.
+
+## Limitaciones Actuales
+
+No existen todavia:
+
+- terminal real
+- filesystem real
+- DB real
+- auth real
+- memoria vectorial
+- embeddings reales
+- autonomous agents
+- real workflows
+- background jobs
+- queues/workers
+- Gmail integration
+- finance integrations reales
+- trading
+- banking
+- browser automation
+- OS automation
+- external execution adapters
+- SaaS multiempresa
+
+## Instalacion
+
+Instalar dependencias raiz:
 
 ```bash
 npm install
 ```
 
-Instalar dependencias del frontend:
+Instalar dependencias frontend:
 
 ```bash
 cd apps/web
@@ -44,9 +350,9 @@ npm install
 cd ../..
 ```
 
-## Ejecutar Localmente
+## Ejecucion Local
 
-Iniciar la API Node y la app Next.js juntas desde la raíz del repo:
+Iniciar API Node y frontend juntos:
 
 ```bash
 npm run dev
@@ -58,63 +364,32 @@ URLs locales:
 Frontend: http://localhost:3001
 API Node: http://localhost:3000
 Demo:     http://localhost:3001/demo
+Lab:      http://localhost:3001/lab
 ```
 
-## Variables de Entorno
+## Variables De Entorno
 
-Crear `apps/web/.env.local` para desarrollo local:
+Crear `apps/web/.env.local`:
 
 ```bash
 OPENAI_API_KEY=tu_clave_openai_api # opcional
 OPENAI_MODEL=gpt-4o-mini
 UNV_API_BASE_URL=http://127.0.0.1:3000
+OWNER_ACCESS_CODE=owner-local-code
 ```
 
 Notas:
 
-- `OPENAI_API_KEY` es opcional para el backend Node. Si no existe, la aplicación usa `MockAIProvider` para mantener la demo estable sin clave externa
-- `OPENAI_API_KEY` nunca debe exponerse al frontend; solo debe existir en el entorno server-side cuando se quiera usar IA real
-- `OPENAI_MODEL` es opcional y por defecto es `gpt-4o-mini`
-- `UNV_API_BASE_URL` es opcional en desarrollo local porque la app puede usar la API Node local
-- `UNV_API_BASE_URL` es opcional para la demo en Vercel: si falta, `/api/v1/run` usa un fallback demo seguro desde Next.js
-- `UNV_API_BASE_URL` es necesaria cuando la demo debe usar un backend Node real externo
+- `OPENAI_API_KEY` es opcional para backend Node gracias a `MockAIProvider`
+- `OPENAI_API_KEY` nunca debe exponerse al frontend
+- `UNV_API_BASE_URL` es opcional en Vercel porque `/api/v1/run` tiene fallback demo seguro
+- `OWNER_ACCESS_CODE` protege `/lab`, pero no sustituye una capa auth real
 
-Archivo de referencia:
-
-```text
-apps/web/.env.example
-```
-
-## Cómo Ejecutar la Demo
-
-1. Iniciar el stack completo con `npm run dev`
-2. Abrir `http://localhost:3001/demo`
-3. Elegir un agente público del selector
-4. Ingresar un mensaje con al menos 5 caracteres
-5. Enviar el formulario
-6. La UI llamará a la ruta interna Next.js `/api/v1/run`
-7. Esa ruta reenvía la petición a la API Node si existe `UNV_API_BASE_URL`, o usa fallback demo seguro si no existe backend externo
-8. La conversación se renderiza en historial local con una simulación ligera de typing
-
-## Resumen de API
+## API Principal
 
 ### `/api/v1/run`
 
-Propósito:
-
-- accepts the demo form input
-- validates the payload
-- forwards the request to the Node API when configured
-- returns a safe demo fallback when no external backend is configured
-- normalizes backend failures into UI-safe responses
-
-Behavior:
-
-- local development: uses the local backend by default
-- production without `UNV_API_BASE_URL`: returns a clear demo fallback response from Next.js
-- production with `UNV_API_BASE_URL`: reaches the external Node API
-
-Request shape:
+Ruta interna para la demo publica.
 
 ```json
 {
@@ -124,192 +399,100 @@ Request shape:
 }
 ```
 
-Limits:
+Limites:
 
-- `input` must contain at least 5 characters
-- local conversation history is limited to 12 messages
-- short session memory uses the last 6 messages
-- `context` is limited to 2,000 characters across frontend, Next.js route, and backend controller
+- `input` minimo 5 caracteres
+- historial local maximo 12 mensajes
+- memoria corta usa ultimos 6 mensajes
+- `context` maximo 2,000 caracteres
 
-### `/api/ai/run`
+### `/api/lab/catalog`
 
-Purpose:
+Ruta privada server-side para catalogo seguro:
 
-- executes AI tasks directly from the Next.js server layer
-- supports summary, translation, and idea generation
-- currently uses the OpenAI Chat Completions API
+- agentes privados
+- tools
+- GENIO governance metadata
+- memory blueprint
+- orchestration blueprint
+- adapter blueprint
 
-## AI Architecture
+Requiere `OWNER_ACCESS_CODE`.
 
-UNV-HMND mantiene una capa IA backend desacoplada para que el sistema funcione con o sin proveedor externo:
+### `/api/lab/tool`
 
-- `OpenAIProvider`: proveedor server-side para IA real usando `OPENAI_API_KEY` y Chat Completions API
-- `FallbackAIProvider`: envuelve el proveedor real y vuelve a una respuesta segura si OpenAI falla
-- `MockAIProvider`: proveedor local/test sin dependencias externas ni costos
-- `AgentRegistry`: catálogo tipado de agentes IA reutilizables
+Ruta privada server-side para generar propuestas auditables.
 
-El contrato separa `feature` y `agent`:
+Requiere `OWNER_ACCESS_CODE`.
 
-- `feature`: tarea solicitada, como `assistant`, `prompt-improver` o `code-feedback`
-- `agent`: rol/persona/instrucciones que guían la respuesta
-
-Agentes actuales:
-
-- `architect-agent`
-- `coder-agent`
-- `reviewer-agent`
-- `debugger-agent`
-- `tutor-agent`
-- `operator-agent`
-
-Compatibility agents still exist internally for earlier flows:
-
-- `tutor`, `mentor`, `architect`, `course-generator`, `cuba-education-assistant`
-
-La implementación actual usa Chat Completions API. La arquitectura queda preparada para migrar a Responses API más adelante sin hacer obligatoria la clave de OpenAI ni romper el fallback local.
-
-## AI Lab Behavior
-
-The `/demo` page currently behaves as a lightweight AI lab:
-
-- multi-agent selector with public labels only
-- local in-memory conversation history
-- short session memory sent as bounded `context`
-- typing simulation after a full response is received
-- safe Vercel fallback when no external Node backend is configured
-
-There is no database, authentication, persistent memory, localStorage, or real streaming in the current implementation.
-
-## Private AI Lab Core
-
-UNV-HMND also includes the first internal core for a private AI lab. This layer is separate from the public Vercel demo and is designed around human-in-the-loop safety.
-
-Current private lab building blocks:
-
-- `AgentRegistry`: typed catalog of reusable agent profiles
-- `ToolRegistry`: typed catalog of allowed proposal tools
-- `LocalToolExecutor`: deterministic executor that returns structured proposals only
-- `ApprovalGate`: evaluates proposed actions before they can be considered
-- `PermissionProfile`: defines permissions, risk levels, proposals, and approval results
-- `InMemoryAuditLog`: records recent tool and approval events in memory with basic redaction
-
-Proposal does not mean execution. The private lab currently generates structured, auditable proposals only.
-
-Security boundaries:
-
-- no real terminal execution
-- no filesystem operations
-- no Gmail or email integration
-- no authentication layer yet
-- no database or persistent audit storage yet
-- no secrets should be stored in audit previews
-
-The public demo focuses on the user-facing AI conversation. The private lab core focuses on future controlled agent operations, approval metadata, permissions, and auditability.
-
-## Project Structure
+## Estructura Del Proyecto
 
 ```text
 UNV-HMND/
-├─ apps/
-│  └─ web/
-│     ├─ app/
-│     │  ├─ page.tsx
-│     │  ├─ about/page.tsx
-│     │  ├─ portfolio/page.tsx
-│     │  ├─ demo/page.tsx
-│     │  └─ api/
-│     │     ├─ ai/run/route.ts
-│     │     ├─ health/route.ts
-│     │     └─ v1/run/route.ts
-│     ├─ lib/backend.ts
-│     ├─ services/ai.ts
-│     └─ package.json
-├─ docs/
-│  └─ API_AND_AI_FLOW.md
-├─ src/
-│  ├─ api/server.ts
-│  ├─ app/
-│  ├─ application/
-│  ├─ domain/
-│  ├─ infrastructure/
-│  └─ interfaces/
-├─ tests/
-├─ package.json
+├─ apps/web
+│  ├─ app
+│  │  ├─ demo
+│  │  ├─ lab
+│  │  └─ api
+│  ├─ lib
+│  └─ services
+├─ docs
+├─ src
+│  ├─ api
+│  ├─ application
+│  ├─ domain
+│  │  ├─ adapters
+│  │  ├─ agents
+│  │  ├─ audit
+│  │  ├─ context
+│  │  ├─ governance
+│  │  ├─ orchestration
+│  │  ├─ security
+│  │  └─ tools
+│  ├─ infrastructure
+│  └─ interfaces
+├─ tests
 └─ README.md
-```
-
-## Portfolio Flow Tree
-
-```text
-root
-└─ frontend (apps/web)
-   ├─ landing
-   ├─ portfolio
-   ├─ demo
-   │  └─ POST /api/v1/run
-   │     ├─ Node API when UNV_API_BASE_URL is configured
-   │     └─ safe demo fallback on Vercel when backend is missing
-   └─ POST /api/ai/run
-      └─ OpenAI Chat Completions API
 ```
 
 ## Build And Test
 
-Build the frontend:
-
 ```bash
-npm run build
-```
-
-Build the backend TypeScript:
-
-```bash
+npm --prefix apps/web run build
+npm --prefix apps/web run test
 npm run build:api
+npm test
 ```
 
-Run the web tests:
+## Evolucion Arquitectonica
 
-```bash
-npm run test:web
-```
+Fases completadas:
 
-## Deploy To Vercel
+- portfolio frontend y demo publica
+- multi-agent demo selector
+- private lab core
+- dynamic agent/tool catalog
+- GENIO Central Governance Layer
+- Owner Approval Flow Minimal
+- GENIO Strategic Vision Metadata
+- GENIO Memory & Context Blueprint
+- Strategic Multi-Agent Orchestration Layer
+- Controlled Adapter Blueprint
 
-Vercel configuration:
+Roadmap futuro:
 
-- `Framework Preset`: `Next.js`
-- `Root Directory`: `apps/web`
-- `Install Command`: `npm install`
-- `Build Command`: `npm run build`
-- `Output Directory`: leave default
+- auth real de owner
+- audit log persistente
+- storage seguro
+- memory retrieval con aprobacion
+- adapters read-only controlados
+- company agents
+- SaaS multiempresa
+- execution adapters reversibles y aprobados
 
-Production environment variables:
+La evolucion debe seguir siendo progresiva, auditable, reversible y controlada por el owner.
 
-```bash
-OPENAI_API_KEY=your_openai_api_key # optional for backend fallback mode
-OPENAI_MODEL=gpt-4o-mini
-UNV_API_BASE_URL=https://your-node-api.example.com # optional for demo fallback mode
-```
-
-Important:
-
-- `apps/web` is the project Vercel should build
-- `/api/v1/run` works without a public Node API through a safe demo fallback
-- `/api/v1/run` uses a real backend when `UNV_API_BASE_URL` points to a public Node API
-- backend AI routes can fallback safely to `MockAIProvider` when `OPENAI_API_KEY` is not configured
-- `/api/ai/run` is a Next.js server route and needs `OPENAI_API_KEY` only when that direct OpenAI path is used
-
-## Production Notes
-
-- The frontend can be deployed on Vercel
-- The external Node API can be deployed separately when real backend execution is needed
-- The demo remains stable in local development through internal routing and fallback logic
-- The production demo remains usable without `UNV_API_BASE_URL` through safe fallback mode
-- A real production backend should define `UNV_API_BASE_URL`
-- Defining `OPENAI_API_KEY` enables real OpenAI responses; omitting it keeps the backend stable through mock fallback
-
-## Documentation
-
-Detailed technical documentation:
+## Documentacion
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
+- [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)

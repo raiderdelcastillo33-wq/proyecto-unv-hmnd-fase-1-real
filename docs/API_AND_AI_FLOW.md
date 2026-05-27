@@ -1,196 +1,89 @@
 # API And AI Flow
 
-This document explains the main execution paths in UNV-HMND:
+This document describes the current API, AI, and Private AI Lab flows in UNV-HMND.
 
-- `Demo flow`: Browser -> Next.js -> `/api/v1/run` -> Node API
-- `Demo fallback flow`: Browser -> Next.js -> `/api/v1/run` -> safe demo response when no external backend is configured
-- `Backend AI flow`: Node API -> `AIController` -> `AskAIAssistantUseCase` -> `AIProvider`
-- `Next.js AI flow`: Browser -> Next.js -> `/api/ai/run` -> OpenAI
+The system has two separated surfaces:
 
-## 1. `/api/v1/run`
+- public demo: safe conversational showcase
+- private lab: owner-gated proposal, governance, approval, and blueprint surface
 
-File:
+Core rule:
 
 ```text
+Proposal != execution
+```
+
+## 1. Public Demo Flow
+
+Route:
+
+```text
+apps/web/app/demo/page.tsx
 apps/web/app/api/v1/run/route.ts
 ```
 
-Purpose:
+Flow:
 
-- receive the demo form payload from the browser
-- validate the input
-- forward the request to the backend Node API
-- convert backend failures into predictable frontend responses
+```text
+Browser /demo
+  -> POST /api/v1/run
+  -> Next.js route handler
+  -> backend proxy helper
+  -> Node API when UNV_API_BASE_URL is configured
+  -> safe demo fallback when no external backend is configured
+  -> UI renders local conversation state
+```
 
-### Request Shape
+Request:
 
 ```json
 {
-  "input": "hello demo flow",
+  "input": "Help me plan a TypeScript project",
   "agentId": "tutor-agent",
   "context": "User: previous message\nAssistant: previous response"
 }
 ```
 
-### Validation Rules
+Validation:
 
 - body must be valid JSON
-- `input` must be a string
-- `input` cannot be empty
-- `input` must contain at least 5 characters
+- `input` must be a string with at least 5 characters
 - `agentId` is optional
-- invalid or unknown agent IDs fall back safely to the default backend agent
+- unknown agent IDs fall back safely
 - `context` is optional
-- non-string `context` is ignored
-- long `context` is trimmed to 2,000 characters
+- `context` is capped at 2,000 characters
 
-### Success Response
+The demo UI keeps:
 
-```json
-{
-  "success": true,
-  "data": {
-    "id": "run-1",
-    "response": "Hello from the backend"
-  }
-}
-```
+- local in-memory history
+- maximum 12 local messages
+- short session memory from the last 6 messages
+- frontend typing simulation
+- safe Vercel fallback
 
-### Controlled Error Responses
+The demo does not include auth, DB, persistent memory, localStorage persistence, real streaming, filesystem, terminal, or external execution.
 
-Invalid JSON:
+## 2. Backend AI Flow
 
-```json
-{
-  "success": false,
-  "error": "Invalid JSON body."
-}
-```
-
-Input too short:
-
-```json
-{
-  "success": false,
-  "error": "Please enter at least 5 characters before sending the demo request."
-}
-```
-
-Missing production backend URL now returns a safe demo fallback instead of a hard failure:
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": "demo-fallback-123",
-    "response": "Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel..."
-  },
-  "meta": {
-    "mode": "demo-fallback",
-    "reason": "UNV_API_BASE_URL is not configured for an external Node API.",
-    "agentId": "tutor-agent",
-    "contextReceived": true
-  }
-}
-```
-
-The fallback does not reflect the full context back to the client.
-
-## 2. Demo Flow
-
-The interactive demo page lives in:
-
-```text
-apps/web/app/demo/page.tsx
-```
-
-Execution flow:
-
-```text
-Browser
-  -> /demo
-  -> POST /api/v1/run
-  -> Next.js route handler
-  -> backend proxy helper
-  -> Node API
-  -> JSON response
-  -> rendered UI state
-```
-
-### What Happens In The UI
-
-1. The page checks backend status through `/api/health`
-2. The user writes a message
-3. The user selects a public agent
-4. The client validates the input
-5. The client stores local conversation messages in memory
-6. The client builds short session memory from recent messages
-7. The form posts to `/api/v1/run`
-8. The response is parsed and rendered in the conversation panel
-9. The assistant response is revealed with frontend typing simulation
-10. Controlled failures are shown as user-safe error messages
-
-### Demo Lab State
-
-The `/demo` page currently includes:
-
-- public multi-agent selector
-- local in-memory conversation history
-- maximum 12 local conversation messages
-- short session memory built from the last 6 messages
-- maximum 2,000 context characters
-- frontend typing simulation after a full response is received
-
-The current implementation does not include persistence, authentication, localStorage, database storage, semantic memory, or real streaming.
-
-## 3. Backend Routing
-
-The Node API lives in:
+Backend entry:
 
 ```text
 src/api/server.ts
-```
-
-The frontend proxy logic lives in:
-
-```text
-apps/web/lib/backend.ts
-```
-
-Behavior by environment:
-
-- local development:
-  - default backend is `http://127.0.0.1:3000`
-  - `UNV_API_BASE_URL` is optional
-- production:
-  - without `UNV_API_BASE_URL`, `/api/v1/run` returns a safe demo fallback from Next.js
-  - with `UNV_API_BASE_URL`, `/api/v1/run` reaches the external Node API
-  - the Node API is cloud-ready and uses `process.env.PORT` when provided by a hosting platform
-
-## 4. Backend AI Flow
-
-The backend AI contract lives in:
-
-```text
-src/domain/services/AIProvider.ts
-```
-
-The current provider implementations live in:
-
-```text
-src/infrastructure/ai/MockAIProvider.ts
-src/infrastructure/ai/OpenAIProvider.ts
-src/infrastructure/ai/FallbackAIProvider.ts
-```
-
-The use case and controller live in:
-
-```text
-src/application/use-cases/AskAIAssistantUseCase.ts
+src/interfaces/http/routing/ApiV1Router.ts
 src/interfaces/http/controllers/AIController.ts
 ```
 
-Execution flow:
+Use case and provider:
+
+```text
+src/application/use-cases/AskAIAssistantUseCase.ts
+src/domain/services/AIProvider.ts
+src/infrastructure/ai/OpenAIProvider.ts
+src/infrastructure/ai/MockAIProvider.ts
+src/infrastructure/ai/FallbackAIProvider.ts
+```
+
+Flow:
 
 ```text
 Node API
@@ -202,71 +95,11 @@ Node API
   -> ApiResponse
 ```
 
-### Provider Strategy
+Provider behavior:
 
-The backend keeps AI access behind the `AIProvider` interface.
-
-- `MockAIProvider`: deterministic local/demo provider used when real AI is not configured.
-- `OpenAIProvider`: server-side provider that calls OpenAI when `OPENAI_API_KEY` is available.
-- `FallbackAIProvider`: wraps the real provider and falls back to `MockAIProvider` if OpenAI fails, times out, or returns an invalid response.
-
-This keeps the backend stable in local development, tests, and production demos.
-
-### Environment Behavior
-
-Without `OPENAI_API_KEY`:
-
-```text
-ApplicationContainer
-  -> MockAIProvider
-```
-
-With `OPENAI_API_KEY`:
-
-```text
-ApplicationContainer
-  -> FallbackAIProvider
-     ├─ OpenAIProvider
-     └─ MockAIProvider
-```
-
-`OPENAI_API_KEY` is optional for stability. It is required only when the backend should generate real OpenAI responses.
-
-`OPENAI_MODEL` is optional. If omitted, the backend provider uses its default model.
-
-### Backend AI Routes
-
-The backend exposes AI through existing API v1 routes:
-
-```text
-POST /api/v1/run
-POST /api/v1/ai/ask
-```
-
-`/api/v1/run` is the demo-safe route used by the frontend proxy.
-
-It supports:
-
-```json
-{
-  "input": "Help me plan the next engineering phase",
-  "agentId": "architect-agent",
-  "context": "User: previous message\nAssistant: previous response"
-}
-```
-
-`context` is bounded to 2,000 characters before reaching the use case.
-
-`/api/v1/ai/ask` supports the domain-level AI request shape:
-
-```json
-{
-  "userId": "user-1",
-  "feature": "assistant",
-  "prompt": "Help me create a TypeScript learning plan",
-  "context": "Optional extra context"
-}
-```
+- without `OPENAI_API_KEY`: `MockAIProvider`
+- with `OPENAI_API_KEY`: `FallbackAIProvider(OpenAIProvider, MockAIProvider)`
+- if OpenAI fails: fallback keeps the demo stable
 
 Supported backend features:
 
@@ -274,182 +107,13 @@ Supported backend features:
 - `prompt-improver`
 - `code-feedback`
 
-### Agent Registry
+## 3. Next.js AI Route
 
-The backend keeps reusable agent profiles in:
-
-```text
-src/domain/agents/AgentRegistry.ts
-```
-
-The current internal multi-agent profiles are:
-
-- `architect-agent`
-- `coder-agent`
-- `reviewer-agent`
-- `debugger-agent`
-- `tutor-agent`
-- `operator-agent`
-
-Compatibility agents also remain available:
-
-- `tutor`
-- `mentor`
-- `architect`
-- `course-generator`
-- `cuba-education-assistant`
-
-The public frontend selector uses only public IDs and labels. It does not expose `systemInstructions`.
-
-## 5. Private AI Lab Flow
-
-UNV-HMND now includes an internal private AI lab core. This layer is not a public automation surface and does not execute real-world actions. It prepares the project for controlled, auditable agent operations.
-
-Proposal does not mean execution. The private lab currently generates structured, auditable proposals only.
-
-The private lab flow is:
-
-```text
-ToolRequest
-  -> ToolRegistry
-  -> ApprovalGate
-  -> LocalToolExecutor
-  -> InMemoryAuditLog
-  -> ToolResult
-```
-
-Core files:
-
-```text
-src/domain/tools/ToolProfile.ts
-src/domain/tools/ToolRegistry.ts
-src/domain/security/PermissionProfile.ts
-src/domain/security/ApprovalPolicy.ts
-src/domain/security/ApprovalGate.ts
-src/domain/audit/AuditEvent.ts
-src/infrastructure/tools/LocalToolExecutor.ts
-src/infrastructure/audit/InMemoryAuditLog.ts
-```
-
-### Tool Request And Result
-
-`ToolRequest` represents a request for a controlled tool proposal:
-
-```json
-{
-  "toolId": "review-risk",
-  "agentId": "reviewer-agent",
-  "input": "Review the risk of this planned API change",
-  "context": "Optional bounded context"
-}
-```
-
-`ToolResult` returns structured proposal data:
-
-```json
-{
-  "toolId": "review-risk",
-  "title": "Risk Review",
-  "summary": "Risk review proposal for: planned API change",
-  "requiresHumanApproval": false,
-  "riskLevel": "medium",
-  "approval": {
-    "decision": "safe",
-    "requiresHumanApproval": false,
-    "actionExecuted": false
-  }
-}
-```
-
-Tools can suggest plans, checklists, risk reviews, explanations, and conservative verification commands. They do not run commands, write files, read local folders, send emails, or access secrets.
-
-### Permission And Approval Model
-
-`ApprovalGate` evaluates an internal `ActionProposal` using `ApprovalPolicy`.
-
-Current decision classes:
-
-- `safe`: proposal is allowed as structured guidance
-- `requires-approval`: proposal is sensitive and needs explicit human approval before any future action layer could use it
-- `forbidden`: proposal is blocked by policy
-
-Current examples:
-
-- `create-checklist` -> `safe`
-- `review-risk` -> `safe`
-- `summarize-context` -> `safe`
-- `propose-command` -> `requires-approval`
-- `execute-command` -> `requires-approval`
-- `delete-file` -> `forbidden`
-- `send-email` -> `forbidden`
-- `read-secret` -> `forbidden`
-
-`LocalToolExecutor` always returns proposal metadata. `actionExecuted` is always `false`.
-
-### Audit Log
-
-`InMemoryAuditLog` records recent private lab events in memory:
-
-- `tool-requested`
-- `approval-evaluated`
-- `tool-result-created`
-- `tool-blocked`
-
-Current audit behavior:
-
-- keeps the latest 100 events
-- truncates `inputPreview` to 120 characters
-- applies basic redaction for obvious secret patterns such as `sk-`, `ghp_`, `token`, `OPENAI_API_KEY`, `password`, and `secret`
-- does not store full context
-- does not persist to disk
-- does not use browser localStorage
-- does not write to a database
-
-### Public Demo Vs Private Lab
-
-The public `/demo` page is a safe conversational showcase with multi-agent selection, local history, bounded context, typing simulation, and Vercel fallback mode.
-
-The private lab core is an internal backend/domain foundation for future controlled agent operations. It currently provides:
-
-- typed agents
-- typed tools
-- permission evaluation
-- approval metadata
-- in-memory audit events
-- structured proposals
-
-It does not currently provide:
-
-- real terminal access
-- filesystem access
-- Gmail or email integration
-- authentication
-- database persistence
-- SaaS multi-company management
-- automatic execution of agent decisions
-
-### Cost And Risk Notes
-
-- Real OpenAI usage may create API costs.
-- The API key must remain server-side only.
-- The fallback provider protects the product experience from upstream outages.
-- The current implementation favors stability over surfacing raw provider errors to users.
-- Short session memory increases payload size and future token usage when real AI is enabled.
-- Future phases should add structured logging, cost tracking, and rate limiting before broad public usage.
-- Future private lab phases should add persistent audit storage, stronger redaction, owner access control, and explicit approval workflows before connecting any real external tool.
-
-## 6. Next.js AI Flow
-
-The AI service lives in:
-
-```text
-apps/web/services/ai.ts
-```
-
-The Next.js route lives in:
+Route:
 
 ```text
 apps/web/app/api/ai/run/route.ts
+apps/web/services/ai.ts
 ```
 
 Supported tasks:
@@ -458,92 +122,368 @@ Supported tasks:
 - `translation`
 - `ideas`
 
-Execution flow:
+This path calls OpenAI from the Next.js server layer when configured. It is separate from the private lab and does not grant tool execution.
+
+## 4. Agent Registry
+
+Registry:
 
 ```text
-Browser
-  -> /demo or future AI UI
-  -> POST /api/ai/run
-  -> Next.js route handler
-  -> apps/web/services/ai.ts
-  -> OpenAI Chat Completions API
-  -> normalized result
-  -> UI output
+src/domain/agents/AgentRegistry.ts
+src/domain/agents/AgentProfile.ts
 ```
 
-### Current API Note
+Private agents:
 
-The current implementation uses OpenAI Chat Completions API:
+- `architect-agent`
+- `coder-agent`
+- `reviewer-agent`
+- `debugger-agent`
+- `tutor-agent`
+- `operator-agent`
+
+Compatibility agents:
+
+- `tutor`
+- `mentor`
+- `architect`
+- `course-generator`
+- `cuba-education-assistant`
+
+The private catalog exposes safe labels and metadata. It does not expose `systemInstructions`.
+
+## 5. Private Lab Catalog Flow
+
+Route:
 
 ```text
-https://api.openai.com/v1/chat/completions
+apps/web/app/api/lab/catalog/route.ts
 ```
 
-The architecture keeps AI access behind provider/service boundaries so the project can migrate to OpenAI Responses API later without changing user-facing routes.
+Purpose:
 
-### Environment Variables
+- validate `OWNER_ACCESS_CODE`
+- expose private lab safe catalog metadata
+- return agents, tools, GENIO metadata, memory blueprint, orchestration blueprint, and adapter blueprint
 
-```bash
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-5-mini
+Flow:
+
+```text
+Browser /lab
+  -> POST /api/lab/catalog
+  -> OWNER_ACCESS_CODE check
+  -> AgentRegistry.list()
+  -> ToolRegistry.list()
+  -> GenioGovernanceRegistry.centralProfile()
+  -> safe metadata response
 ```
 
-For `/api/ai/run`, `OPENAI_API_KEY` is required because that route currently calls OpenAI directly from the Next.js server layer.
+The catalog response is metadata-only. It does not expose secrets or internal prompts.
 
-For backend `/api/v1/run` and `/api/v1/ai/ask`, `OPENAI_API_KEY` is optional because the backend has a mock fallback path.
+## 6. Private Tool Proposal Flow
 
-### AI Request Example
+Route:
 
-```json
-{
-  "task": "summary",
-  "text": "Long product text to summarize"
-}
+```text
+apps/web/app/api/lab/tool/route.ts
 ```
 
-### AI Response Example
+Domain:
 
-```json
-{
-  "task": "summary",
-  "output": "Short high-signal summary",
-  "model": "gpt-5-mini"
-}
+```text
+src/domain/tools/ToolProfile.ts
+src/domain/tools/ToolRegistry.ts
+src/infrastructure/tools/LocalToolExecutor.ts
+src/domain/security/ApprovalGate.ts
+src/domain/security/ApprovalPolicy.ts
+src/infrastructure/audit/InMemoryAuditLog.ts
 ```
 
-## 7. Visual Tree
+Flow:
+
+```text
+Browser /lab
+  -> POST /api/lab/tool
+  -> OWNER_ACCESS_CODE check
+  -> ToolRegistry.resolve()
+  -> AgentRegistry.resolve()
+  -> ApprovalGate.evaluate()
+  -> LocalToolExecutor.execute()
+  -> InMemoryAuditLog.record()
+  -> ToolResult + audit events
+```
+
+Current tools:
+
+- `summarize-project-state`
+- `propose-terminal-command`
+- `explain-error-log`
+- `generate-implementation-plan`
+- `review-risk`
+- `create-checklist`
+
+Tools return structured proposals only. They do not run commands, access files, read Gmail, call external services, move money, or control the operating system.
+
+## 7. Owner Approval Flow
+
+Domain:
+
+```text
+src/domain/security/OwnerApproval.ts
+```
+
+States:
+
+- `pending`
+- `approved`
+- `rejected`
+- `blocked`
+
+Identity metadata:
+
+- `proposalId`
+- `correlationId`
+- `sessionId`
+
+Rule:
+
+```text
+Approve != Execute
+```
+
+Approving or rejecting a proposal updates local UI state and audit metadata only:
+
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+There is no real execution layer behind approval.
+
+## 8. GENIO Governance Flow
+
+Domain:
+
+```text
+src/domain/governance/GovernanceProfile.ts
+src/domain/governance/GenioCentralProfile.ts
+```
+
+GENIO is the central governance profile:
+
+- central authority metadata
+- hierarchy owner
+- risk awareness
+- approval-first governance
+- orchestration and context coordination
+- adapter governance
+
+Hierarchy:
+
+```text
+central      GENIO
+supervisor   architect/operator
+specialist   coder/reviewer/debugger
+utility      tutor
+observer     future observability role
+```
+
+GENIO does not bypass owner approval and does not execute actions.
+
+## 9. Strategic Vision Metadata
+
+GENIO includes strategic vision metadata for future reasoning:
+
+- probabilistic simulation
+- scenario comparison
+- opportunity analysis
+- life-map planning
+- financial scenario modeling
+
+Boundaries:
+
+- no omniscience
+- no guarantees
+- no magic
+- no absolute predictions
+- no control over users
+
+Future predictions must be framed as estimates based on data, assumptions, context, statistics, and uncertainty.
+
+## 10. Memory And Context Blueprint
+
+Domain:
+
+```text
+src/domain/context/ContextBlueprint.ts
+```
+
+Prepared types:
+
+- `ContextProfile`
+- `MemoryFragment`
+- `ContextWindow`
+- `LifeObjective`
+- `LifeRoadmap`
+- `Milestone`
+- `JournalEntry`
+- `Reflection`
+- `DailySummary`
+
+Categories:
+
+- `technical`
+- `personal`
+- `strategic`
+- `project`
+- `learning`
+- `financial`
+- `journal`
+- `life-map`
+- `company`
+- `operational`
+
+Retention policies:
+
+- `short-term`
+- `mid-term`
+- `long-term`
+- `archived`
+
+No real persistence exists. No vector memory, embeddings, semantic search, cloud sync, DB, filesystem storage, or browser persistence exists.
+
+## 11. Strategic Multi-Agent Orchestration Blueprint
+
+Domain:
+
+```text
+src/domain/orchestration/OrchestrationBlueprint.ts
+```
+
+Prepared types:
+
+- `OrchestrationFlow`
+- `AgentTask`
+- `TaskAssignment`
+- `CoordinationPlan`
+- `PipelineStep`
+- `DelegationRule`
+
+Conceptual flow:
+
+```text
+GENIO
+  -> planner
+  -> specialist
+  -> reviewer
+  -> validator
+  -> final proposal
+```
+
+This layer does not create jobs, queues, workers, threads, background tasks, real workflows, or autonomous agents.
+
+## 12. Controlled Adapter Blueprint
+
+Domain:
+
+```text
+src/domain/adapters/AdapterBlueprint.ts
+```
+
+Future adapter catalog:
+
+- `terminal-adapter`
+- `filesystem-adapter`
+- `file-preview-adapter`
+- `email-draft-adapter`
+- `finance-simulation-adapter`
+- `local-computer-adapter`
+- `document-organization-adapter`
+
+Every adapter is metadata-only:
+
+- risk-classified
+- permission-scoped
+- approval-aware
+- forbidden actions listed
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+No real adapter implementation exists. There is no `child_process`, `fs`, Gmail API, bank API, trading API, browser automation, OS automation, credential access, env secret reading, or external HTTP execution.
+
+## 13. Audit Flow
+
+Domain:
+
+```text
+src/domain/audit/AuditEvent.ts
+src/infrastructure/audit/InMemoryAuditLog.ts
+```
+
+Current audit log:
+
+- in-memory only
+- latest 100 events
+- basic redaction for obvious secret patterns
+- no disk persistence
+- no DB
+- no localStorage
+
+Event families include:
+
+- tool events
+- approval events
+- context blueprint events
+- orchestration blueprint events
+- adapter blueprint events
+
+All current events remain proposal/simulation metadata. `actionExecuted` remains `false`.
+
+## 14. Current Limitations
+
+The system does not currently provide:
+
+- real terminal access
+- filesystem access
+- Gmail/email integration
+- real authentication
+- database persistence
+- vector memory
+- embeddings
+- autonomous agents
+- real workflows
+- queues/workers/background jobs
+- external execution adapters
+- finance integrations
+- trading/banking
+- browser or OS automation
+- SaaS multi-company management
+
+## 15. Visual Tree
 
 ```text
 UNV-HMND
 ├─ apps/web
-│  ├─ landing
-│  ├─ portfolio
-│  ├─ demo
-│  │  └─ /api/v1/run
-│  │     ├─ src/api/server.ts when backend URL is configured
-│  │     └─ safe demo fallback when backend URL is missing
-│  └─ /api/ai/run
-│     └─ OpenAI Chat Completions API
-└─ src
-   └─ API v1
-      ├─ /api/v1/run
-      ├─ /api/v1/ai/ask
-      └─ AIProvider
-         ├─ OpenAIProvider
-         ├─ MockAIProvider
-         └─ FallbackAIProvider
+│  ├─ /demo
+│  │  └─ POST /api/v1/run
+│  ├─ /lab
+│  │  ├─ POST /api/lab/catalog
+│  │  └─ POST /api/lab/tool
+│  └─ POST /api/ai/run
+└─ src/domain
+   ├─ agents
+   ├─ tools
+   ├─ security
+   ├─ audit
+   ├─ governance
+   ├─ context
+   ├─ orchestration
+   └─ adapters
 ```
 
-## 8. Vercel Notes
+## 16. Verification Commands
 
-For Vercel:
-
-- set `Root Directory` to `apps/web`
-- keep `Output Directory` default
-- define `OPENAI_API_KEY` if `/api/ai/run` should call OpenAI directly
-- define `UNV_API_BASE_URL` if the demo should talk to an external Node API
-- define `OPENAI_API_KEY` in the external Node API environment if backend `/api/v1/ai/ask` should use real OpenAI responses
-
-Without `UNV_API_BASE_URL`, the production demo remains usable through a safe demo fallback response. This makes the Vercel demo stable even before a public Node backend exists.
-
-Without `OPENAI_API_KEY`, backend AI routes can still operate through `MockAIProvider`. This is intentional for local development, demos, and safe fallback behavior.
+```bash
+npm --prefix apps/web run build
+npm --prefix apps/web run test
+npm run build:api
+npm test
+```
