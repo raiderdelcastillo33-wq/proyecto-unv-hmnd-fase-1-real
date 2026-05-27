@@ -187,18 +187,34 @@ export function mockTests(): TestCase[] {
           agentId: 'operator-agent',
           input: '   '
         })
+        const invalidTool = await executor.execute({
+          toolId: 'tool-invalida' as never,
+          agentId: 'operator-agent',
+          input: 'Intentar usar una tool inexistente'
+        })
 
         assert.equal(allowed.toolId, 'review-risk')
+        assert.equal(allowed.approval?.decision, 'safe')
+        assert.equal(allowed.approval?.actionExecuted, false)
         assert.equal(allowed.commands, undefined)
+        assert.equal(commandProposal.approval?.decision, 'requires-approval')
+        assert.equal(commandProposal.approval?.actionExecuted, false)
         assert.equal(commandProposal.requiresHumanApproval, true)
         assert.ok(commandProposal.commands)
         assert.equal(commandProposal.commands.every((command) => command.requiresConfirmation), true)
         assert.equal(commandProposal.commands.every((command) => !('executed' in command)), true)
         assert.equal(blocked.title, 'Tool not available')
+        assert.equal(blocked.approval?.decision, 'forbidden')
+        assert.equal(blocked.approval?.actionExecuted, false)
         assert.equal(blocked.commands, undefined)
         assert.equal(blocked.requiresHumanApproval, true)
         assert.equal(invalid.title, 'Input required')
-        assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid]).includes('executed'), false)
+        assert.equal(invalid.approval?.actionExecuted, false)
+        assert.equal(invalidTool.title, 'Tool not available')
+        assert.equal(invalidTool.approval?.decision, 'forbidden')
+        assert.equal(invalidTool.commands, undefined)
+        assert.equal(invalidTool.approval?.actionExecuted, false)
+        assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid, invalidTool]).includes('executed'), false)
       }
     },
     {

@@ -1,4 +1,5 @@
 import type { AgentId } from '../agents/AgentProfile'
+import type { ApprovalResult } from '../security/PermissionProfile'
 
 export type ToolId =
   | 'summarize-project-state'
@@ -36,6 +37,7 @@ export interface ToolResult {
   }>
   requiresHumanApproval: boolean
   riskLevel: ToolRiskLevel
+  approval?: ApprovalResult
   commands?: Array<{
     command: string
     purpose: string

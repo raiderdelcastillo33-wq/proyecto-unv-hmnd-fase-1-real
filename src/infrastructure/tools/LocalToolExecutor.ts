@@ -1,18 +1,24 @@
 import { AgentRegistry } from '../../domain/agents/AgentRegistry'
+import { ApprovalGate } from '../../domain/security/ApprovalGate'
 import { ToolRegistry } from '../../domain/tools/ToolRegistry'
-import { ToolRequest, ToolResult } from '../../domain/tools/ToolProfile'
+import type { ActionProposal, ApprovalResult, Permission } from '../../domain/security/PermissionProfile'
+import type { ToolId, ToolRequest, ToolResult } from '../../domain/tools/ToolProfile'
 
 export class LocalToolExecutor {
+  private readonly approvalGate = new ApprovalGate()
+
   async execute(request: ToolRequest): Promise<ToolResult> {
     const agent = AgentRegistry.resolve(request.agentId)
     const tool = ToolRegistry.resolve(request.toolId)
+    const approval = this.approvalGate.evaluate(this.createActionProposal(request))
 
     if (!tool || !ToolRegistry.isAllowedForAgent(agent, request.toolId)) {
       return this.safeResult(
         request.toolId,
         'Tool not available',
         'The requested tool is not available for this agent.',
-        ['Choose a tool allowed by the selected agent.', 'No action was run.']
+        ['Choose a tool allowed by the selected agent.', 'No action was run.'],
+        approval
       )
     }
 
@@ -22,27 +28,28 @@ export class LocalToolExecutor {
         tool.id,
         'Input required',
         'The tool needs a clear input before it can produce a useful proposal.',
-        ['Provide a concise objective, error log, or change description.', 'No action was run.']
+        ['Provide a concise objective, error log, or change description.', 'No action was run.'],
+        approval
       )
     }
 
     switch (tool.id) {
       case 'summarize-project-state':
-        return this.summarizeProjectState(request)
+        return this.summarizeProjectState(request, approval)
       case 'propose-terminal-command':
-        return this.proposeTerminalCommand(request)
+        return this.proposeTerminalCommand(request, approval)
       case 'explain-error-log':
-        return this.explainErrorLog(request)
+        return this.explainErrorLog(request, approval)
       case 'generate-implementation-plan':
-        return this.generateImplementationPlan(request)
+        return this.generateImplementationPlan(request, approval)
       case 'review-risk':
-        return this.reviewRisk(request)
+        return this.reviewRisk(request, approval)
       case 'create-checklist':
-        return this.createChecklist(request)
+        return this.createChecklist(request, approval)
     }
   }
 
-  private summarizeProjectState(request: ToolRequest): ToolResult {
+  private summarizeProjectState(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'summarize-project-state',
       title: 'Project State Summary',
@@ -58,11 +65,12 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: false,
-      riskLevel: 'low'
+      riskLevel: 'low',
+      approval
     }
   }
 
-  private proposeTerminalCommand(request: ToolRequest): ToolResult {
+  private proposeTerminalCommand(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'propose-terminal-command',
       title: 'Terminal Command Proposal',
@@ -75,6 +83,7 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: true,
       riskLevel: 'medium',
+      approval,
       commands: [
         {
           command: 'npm test',
@@ -98,7 +107,7 @@ export class LocalToolExecutor {
     }
   }
 
-  private explainErrorLog(request: ToolRequest): ToolResult {
+  private explainErrorLog(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'explain-error-log',
       title: 'Error Log Explanation',
@@ -114,11 +123,12 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: false,
-      riskLevel: 'low'
+      riskLevel: 'low',
+      approval
     }
   }
 
-  private generateImplementationPlan(request: ToolRequest): ToolResult {
+  private generateImplementationPlan(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'generate-implementation-plan',
       title: 'Implementation Plan',
@@ -138,11 +148,12 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: false,
-      riskLevel: 'medium'
+      riskLevel: 'medium',
+      approval
     }
   }
 
-  private reviewRisk(request: ToolRequest): ToolResult {
+  private reviewRisk(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'review-risk',
       title: 'Risk Review',
@@ -158,11 +169,12 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: false,
-      riskLevel: 'medium'
+      riskLevel: 'medium',
+      approval
     }
   }
 
-  private createChecklist(request: ToolRequest): ToolResult {
+  private createChecklist(request: ToolRequest, approval: ApprovalResult): ToolResult {
     return {
       toolId: 'create-checklist',
       title: 'Execution Checklist',
@@ -178,11 +190,18 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: false,
-      riskLevel: 'low'
+      riskLevel: 'low',
+      approval
     }
   }
 
-  private safeResult(toolId: ToolRequest['toolId'], title: string, summary: string, items: string[]): ToolResult {
+  private safeResult(
+    toolId: ToolRequest['toolId'],
+    title: string,
+    summary: string,
+    items: string[],
+    approval: ApprovalResult
+  ): ToolResult {
     return {
       toolId,
       title,
@@ -194,7 +213,44 @@ export class LocalToolExecutor {
         }
       ],
       requiresHumanApproval: true,
-      riskLevel: 'low'
+      riskLevel: 'low',
+      approval: {
+        ...approval,
+        decision: title === 'Tool not available' ? 'forbidden' : approval.decision,
+        reason: title === 'Tool not available' ? 'The requested tool is not allowed for this agent.' : approval.reason,
+        requiresHumanApproval: true,
+        actionExecuted: false
+      }
+    }
+  }
+
+  private createActionProposal(request: ToolRequest): ActionProposal {
+    const permission = this.permissionForTool(request.toolId)
+
+    return {
+      id: `tool-${request.toolId}`,
+      permission,
+      title: `Tool proposal: ${request.toolId}`,
+      summary: this.preview(request.input || request.context || request.toolId),
+      riskLevel: permission === 'propose-command' ? 'medium' : 'low',
+      ...(request.agentId ? { requestedByAgentId: request.agentId } : {})
+    }
+  }
+
+  private permissionForTool(toolId: ToolId | string): Permission {
+    switch (toolId) {
+      case 'summarize-project-state':
+      case 'explain-error-log':
+        return 'summarize-context'
+      case 'propose-terminal-command':
+        return 'propose-command'
+      case 'generate-implementation-plan':
+      case 'create-checklist':
+        return 'create-checklist'
+      case 'review-risk':
+        return 'review-risk'
+      default:
+        return 'read-secret'
     }
   }
 
