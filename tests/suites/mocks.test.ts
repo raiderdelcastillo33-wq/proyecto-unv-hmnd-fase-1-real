@@ -11,6 +11,7 @@ import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
 import { ApprovalGate } from '../../src/domain/security/ApprovalGate'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
+import { InMemoryAuditLog } from '../../src/infrastructure/audit/InMemoryAuditLog'
 import { LocalToolExecutor } from '../../src/infrastructure/tools/LocalToolExecutor'
 import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
@@ -163,9 +164,55 @@ export function mockTests(): TestCase[] {
       }
     },
     {
+      name: 'Audit: InMemoryAuditLog registra eventos seguros en memoria',
+      run: async () => {
+        const auditLog = new InMemoryAuditLog()
+
+        const first = auditLog.record({
+          id: 'audit-1',
+          type: 'tool-requested',
+          timestamp: '2026-05-27T00:00:00.000Z',
+          actionExecuted: false,
+          agentId: 'operator-agent',
+          toolId: 'propose-terminal-command',
+          inputPreview:
+            'Analizar sk-test123456 ghp_abcdef token=abc OPENAI_API_KEY=xyz password=123 secret=hidden ' +
+            'y continuar con texto largo '.repeat(10)
+        })
+
+        const storedEvents = auditLog.list()
+        assert.equal(auditLog.list().length, 1)
+        assert.equal(storedEvents[0]!.id, first.id)
+        assert.ok(first.inputPreview)
+        assert.ok(first.inputPreview.length <= 120)
+        assert.equal(first.inputPreview.includes('sk-test123456'), false)
+        assert.equal(first.inputPreview.includes('ghp_abcdef'), false)
+        assert.equal(first.inputPreview.includes('OPENAI_API_KEY=xyz'), false)
+        assert.equal(first.inputPreview.includes('password=123'), false)
+        assert.equal(first.inputPreview.includes('secret=hidden'), false)
+        assert.equal(first.actionExecuted, false)
+
+        for (let index = 0; index < 105; index += 1) {
+          auditLog.record({
+            id: `audit-overflow-${index}`,
+            type: 'tool-result-created',
+            timestamp: '2026-05-27T00:00:00.000Z',
+            actionExecuted: false
+          })
+        }
+
+        assert.equal(auditLog.list().length, 100)
+        assert.equal(auditLog.list()[0]!.id, 'audit-overflow-5')
+
+        auditLog.clear()
+        assert.equal(auditLog.list().length, 0)
+      }
+    },
+    {
       name: 'Tools: LocalToolExecutor devuelve propuestas seguras sin ejecucion',
       run: async () => {
-        const executor = new LocalToolExecutor()
+        const auditLog = new InMemoryAuditLog()
+        const executor = new LocalToolExecutor(auditLog)
 
         const allowed = await executor.execute({
           toolId: 'review-risk',
@@ -214,6 +261,14 @@ export function mockTests(): TestCase[] {
         assert.equal(invalidTool.approval?.decision, 'forbidden')
         assert.equal(invalidTool.commands, undefined)
         assert.equal(invalidTool.approval?.actionExecuted, false)
+        const auditEvents = auditLog.list()
+        assert.ok(auditEvents.some((event) => event.type === 'tool-requested'))
+        assert.ok(auditEvents.some((event) => event.type === 'approval-evaluated'))
+        assert.ok(auditEvents.some((event) => event.type === 'tool-result-created'))
+        assert.ok(auditEvents.some((event) => event.type === 'tool-blocked'))
+        assert.equal(auditEvents.every((event) => event.actionExecuted === false), true)
+        assert.equal(auditEvents.every((event) => !event.inputPreview || event.inputPreview.length <= 120), true)
+        assert.equal(JSON.stringify(auditEvents).includes('executed'), false)
         assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid, invalidTool]).includes('executed'), false)
       }
     },

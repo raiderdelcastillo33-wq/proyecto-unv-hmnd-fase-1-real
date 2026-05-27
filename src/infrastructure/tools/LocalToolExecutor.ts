@@ -1,52 +1,74 @@
 import { AgentRegistry } from '../../domain/agents/AgentRegistry'
 import { ApprovalGate } from '../../domain/security/ApprovalGate'
 import { ToolRegistry } from '../../domain/tools/ToolRegistry'
+import type { AuditEventType } from '../../domain/audit/AuditEvent'
 import type { ActionProposal, ApprovalResult, Permission } from '../../domain/security/PermissionProfile'
 import type { ToolId, ToolRequest, ToolResult } from '../../domain/tools/ToolProfile'
+import type { InMemoryAuditLog } from '../audit/InMemoryAuditLog'
 
 export class LocalToolExecutor {
   private readonly approvalGate = new ApprovalGate()
+  private auditSequence = 0
+
+  constructor(private readonly auditLog?: InMemoryAuditLog) {}
 
   async execute(request: ToolRequest): Promise<ToolResult> {
     const agent = AgentRegistry.resolve(request.agentId)
     const tool = ToolRegistry.resolve(request.toolId)
     const approval = this.approvalGate.evaluate(this.createActionProposal(request))
 
+    this.recordAuditEvent('tool-requested', request)
+    this.recordAuditEvent('approval-evaluated', request, approval)
+
     if (!tool || !ToolRegistry.isAllowedForAgent(agent, request.toolId)) {
-      return this.safeResult(
+      const result = this.safeResult(
         request.toolId,
         'Tool not available',
         'The requested tool is not available for this agent.',
         ['Choose a tool allowed by the selected agent.', 'No action was run.'],
         approval
       )
+      this.recordAuditEvent('tool-blocked', request, result.approval, result)
+      return result
     }
 
     const input = request.input.trim()
     if (!input) {
-      return this.safeResult(
+      const result = this.safeResult(
         tool.id,
         'Input required',
         'The tool needs a clear input before it can produce a useful proposal.',
         ['Provide a concise objective, error log, or change description.', 'No action was run.'],
         approval
       )
+      this.recordAuditEvent('tool-result-created', request, result.approval, result)
+      return result
     }
 
+    let result: ToolResult
     switch (tool.id) {
       case 'summarize-project-state':
-        return this.summarizeProjectState(request, approval)
+        result = this.summarizeProjectState(request, approval)
+        break
       case 'propose-terminal-command':
-        return this.proposeTerminalCommand(request, approval)
+        result = this.proposeTerminalCommand(request, approval)
+        break
       case 'explain-error-log':
-        return this.explainErrorLog(request, approval)
+        result = this.explainErrorLog(request, approval)
+        break
       case 'generate-implementation-plan':
-        return this.generateImplementationPlan(request, approval)
+        result = this.generateImplementationPlan(request, approval)
+        break
       case 'review-risk':
-        return this.reviewRisk(request, approval)
+        result = this.reviewRisk(request, approval)
+        break
       case 'create-checklist':
-        return this.createChecklist(request, approval)
+        result = this.createChecklist(request, approval)
+        break
     }
+
+    this.recordAuditEvent('tool-result-created', request, result.approval, result)
+    return result
   }
 
   private summarizeProjectState(request: ToolRequest, approval: ApprovalResult): ToolResult {
@@ -252,6 +274,36 @@ export class LocalToolExecutor {
       default:
         return 'read-secret'
     }
+  }
+
+  private recordAuditEvent(
+    type: AuditEventType,
+    request: ToolRequest,
+    approval?: ApprovalResult,
+    result?: ToolResult
+  ): void {
+    this.auditLog?.record({
+      id: `audit-${Date.now()}-${++this.auditSequence}`,
+      type,
+      timestamp: new Date().toISOString(),
+      actionExecuted: false,
+      inputPreview: request.input,
+      metadata: {
+        hasContext: Boolean(request.context),
+        ...(result ? { sectionCount: result.sections.length, commandCount: result.commands?.length ?? 0 } : {})
+      },
+      ...(request.agentId ? { agentId: request.agentId } : {}),
+      ...(request.toolId ? { toolId: request.toolId } : {}),
+      ...(approval
+        ? {
+            proposalId: approval.proposalId,
+            permission: approval.permission,
+            decision: approval.decision,
+            requiresHumanApproval: approval.requiresHumanApproval
+          }
+        : {}),
+      ...(result ? { riskLevel: result.riskLevel } : {})
+    })
   }
 
   private preview(value: string): string {
