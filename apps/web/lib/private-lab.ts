@@ -114,6 +114,33 @@ export type PrivateLabOrchestrationBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabAdapterBlueprint = {
+  id: 'controlled-adapter-blueprint'
+  label: string
+  status: string
+  adapters: Array<{
+    id: string
+    label: string
+    description: string
+    category: string
+    capabilities: Array<{
+      id: string
+      label: string
+      permissionScope: string
+      simulationOnly: true
+    }>
+    riskLevel: string
+    executionMode: string
+    approvalRequirement: string
+    forbiddenActions: string[]
+    simulationOnly: true
+    actionExecuted: false
+  }>
+  governanceRules: string[]
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -130,6 +157,7 @@ export type PrivateLabGenioProfile = {
   strategicVision: PrivateLabStrategicVision
   memoryContextBlueprint: PrivateLabMemoryContextBlueprint
   orchestrationBlueprint: PrivateLabOrchestrationBlueprint
+  adapterBlueprint: PrivateLabAdapterBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -418,6 +446,100 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
         'No agent task can execute tools, terminal commands, filesystem writes, queues, workers, or background jobs.',
         'GENIO can route, block, prioritize, and propose, but cannot bypass owner approval.',
         'Proposal != execution.'
+      ],
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    adapterBlueprint: {
+      id: 'controlled-adapter-blueprint',
+      label: 'Controlled Adapter Blueprint',
+      status: 'metadata-only',
+      adapters: [
+        {
+          id: 'terminal-adapter',
+          label: 'Terminal Adapter',
+          description: 'Future adapter for proposing terminal commands under strict owner approval.',
+          category: 'terminal',
+          capabilities: [
+            {
+              id: 'terminal-command-proposal',
+              label: 'Terminal command proposal',
+              permissionScope: 'propose-only',
+              simulationOnly: true
+            }
+          ],
+          riskLevel: 'critical',
+          executionMode: 'blocked',
+          approvalRequirement: 'always-blocked',
+          forbiddenActions: ['child_process', 'shell-execution', 'process-spawn', 'env-secret-reading'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'filesystem-adapter',
+          label: 'Filesystem Adapter',
+          description: 'Future adapter for scoped filesystem operations after explicit approval.',
+          category: 'filesystem',
+          capabilities: [
+            {
+              id: 'filesystem-read-proposal',
+              label: 'Filesystem read proposal',
+              permissionScope: 'approval-required',
+              simulationOnly: true
+            }
+          ],
+          riskLevel: 'critical',
+          executionMode: 'blocked',
+          approvalRequirement: 'always-blocked',
+          forbiddenActions: ['fs-read', 'fs-write', 'delete-file', 'move-file', 'read-secrets'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'email-draft-adapter',
+          label: 'Email Draft Adapter',
+          description: 'Future adapter for drafting email text without sending messages.',
+          category: 'email',
+          capabilities: [
+            {
+              id: 'email-draft',
+              label: 'Email draft',
+              permissionScope: 'draft-only',
+              simulationOnly: true
+            }
+          ],
+          riskLevel: 'high',
+          executionMode: 'proposal-only',
+          approvalRequirement: 'owner-approval-required',
+          forbiddenActions: ['send-email', 'read-inbox', 'modify-mailbox', 'contact-external-service'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'finance-simulation-adapter',
+          label: 'Finance Simulation Adapter',
+          description: 'Future adapter for financial scenario modeling without transactions.',
+          category: 'finance',
+          capabilities: [
+            {
+              id: 'finance-scenario',
+              label: 'Finance scenario simulation',
+              permissionScope: 'propose-only',
+              simulationOnly: true
+            }
+          ],
+          riskLevel: 'critical',
+          executionMode: 'simulation-only',
+          approvalRequirement: 'owner-approval-required',
+          forbiddenActions: ['trade', 'transfer-money', 'connect-bank', 'investment-order'],
+          simulationOnly: true,
+          actionExecuted: false
+        }
+      ],
+      governanceRules: [
+        'Adapter blueprint != adapter real.',
+        'Proposal != execution.',
+        'No child_process, fs, Gmail API, banking API, trading API, browser automation, OS automation, credentials, env secret reading, or external HTTP action is active.'
       ],
       simulationOnly: true,
       actionExecuted: false

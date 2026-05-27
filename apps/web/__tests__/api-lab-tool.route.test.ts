@@ -150,6 +150,22 @@ describe('POST /api/lab/tool', () => {
       expect.arrayContaining([expect.objectContaining({ stageId: 'review', assignedAgent: 'reviewer-agent' })])
     )
     expect(payload.data.governance.centralProfile.orchestrationBlueprint.simulationOnly).toBe(true)
+    expect(payload.data.governance.centralProfile.adapterBlueprint.id).toBe('controlled-adapter-blueprint')
+    expect(payload.data.governance.centralProfile.adapterBlueprint.adapters).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'terminal-adapter',
+          executionMode: 'blocked',
+          actionExecuted: false
+        }),
+        expect.objectContaining({
+          id: 'finance-simulation-adapter',
+          executionMode: 'simulation-only',
+          actionExecuted: false
+        })
+      ])
+    )
+    expect(payload.data.governance.centralProfile.adapterBlueprint.simulationOnly).toBe(true)
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

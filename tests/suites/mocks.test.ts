@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssistantUseCase'
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
+import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
@@ -175,9 +176,33 @@ export function mockTests(): TestCase[] {
         assert.ok(genio.orchestrationBlueprint.defaultFlow.coordinationPlan.participatingAgents.includes('coder-agent'))
         assert.equal(genio.orchestrationBlueprint.simulationOnly, true)
         assert.equal(genio.orchestrationBlueprint.actionExecuted, false)
+        assert.equal(genio.adapterBlueprint.id, 'controlled-adapter-blueprint')
+        assert.ok(genio.adapterBlueprint.adapters.some((adapter) => adapter.id === 'terminal-adapter'))
+        assert.equal(genio.adapterBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
+      }
+    },
+    {
+      name: 'Adapters: controlled adapter blueprint exposes future adapters without execution',
+      run: async () => {
+        const blueprint = CONTROLLED_ADAPTER_BLUEPRINT
+        const terminal = blueprint.adapters.find((adapter) => adapter.id === 'terminal-adapter')
+        const filesystem = blueprint.adapters.find((adapter) => adapter.id === 'filesystem-adapter')
+        const finance = blueprint.adapters.find((adapter) => adapter.id === 'finance-simulation-adapter')
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.equal(terminal?.executionMode, 'blocked')
+        assert.equal(terminal?.approvalRequirement, 'always-blocked')
+        assert.ok(terminal?.forbiddenActions.includes('child_process'))
+        assert.equal(filesystem?.executionMode, 'blocked')
+        assert.ok(filesystem?.forbiddenActions.includes('fs-write'))
+        assert.equal(finance?.executionMode, 'simulation-only')
+        assert.ok(finance?.forbiddenActions.includes('trade'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Adapter blueprint != adapter real')))
       }
     },
     {

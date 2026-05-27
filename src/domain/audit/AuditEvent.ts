@@ -19,6 +19,10 @@ export type AuditEventType =
   | 'task-delegated'
   | 'pipeline-completed'
   | 'governance-blocked'
+  | 'adapter-discovered'
+  | 'adapter-requested'
+  | 'adapter-blocked'
+  | 'adapter-simulated'
 
 export interface AuditEvent {
   id: string

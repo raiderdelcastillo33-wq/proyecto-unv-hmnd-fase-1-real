@@ -149,6 +149,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.orchestrationBlueprint.simulationOnly,
         actionExecuted: centralProfile.orchestrationBlueprint.actionExecuted
       },
+      adapterBlueprint: {
+        id: centralProfile.adapterBlueprint.id,
+        label: centralProfile.adapterBlueprint.label,
+        status: centralProfile.adapterBlueprint.status,
+        adapters: centralProfile.adapterBlueprint.adapters.map((adapter) => ({
+          id: adapter.id,
+          label: adapter.label,
+          description: adapter.description,
+          category: adapter.category,
+          capabilities: adapter.capabilities,
+          riskLevel: adapter.riskLevel,
+          executionMode: adapter.executionMode,
+          approvalRequirement: adapter.approvalRequirement,
+          forbiddenActions: adapter.forbiddenActions,
+          simulationOnly: adapter.simulationOnly,
+          actionExecuted: adapter.actionExecuted
+        })),
+        governanceRules: centralProfile.adapterBlueprint.governanceRules,
+        simulationOnly: centralProfile.adapterBlueprint.simulationOnly,
+        actionExecuted: centralProfile.adapterBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

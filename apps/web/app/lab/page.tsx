@@ -484,6 +484,25 @@ export default function LabPage() {
               </div>
             </section>
 
+            <section className="result-state">
+              <p className="result-eyebrow">Adapter blueprint</p>
+              <h3>{governance.centralProfile.adapterBlueprint.label}</h3>
+              <p>Future adapters are cataloged as approval-aware metadata only. No adapter can execute in this phase.</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.adapterBlueprint.status}</span>
+                <span className="info-chip">Adapter blueprint != adapter real</span>
+                <span className="info-chip">Approval required</span>
+                <span className="info-chip">Simulation only</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.adapterBlueprint.adapters.slice(0, 5).map((adapter) => (
+                  <span className="tech-pill" key={adapter.id}>
+                    {adapter.label}: {adapter.riskLevel}
+                  </span>
+                ))}
+              </div>
+            </section>
+
             <label className="field-label" htmlFor="lab-agent">
               Agent
             </label>
@@ -722,6 +741,17 @@ export default function LabPage() {
                     {governance.centralProfile.orchestrationBlueprint.defaultFlow.pipelineSteps.map((step) => (
                       <span className="info-chip" key={step.id}>
                         {step.stageId}: {step.assignedAgent}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Adapter readiness</p>
+                  <h3>{governance.centralProfile.adapterBlueprint.adapters.length} future adapters</h3>
+                  <div className="response-meta">
+                    {governance.centralProfile.adapterBlueprint.adapters.slice(0, 4).map((adapter) => (
+                      <span className="info-chip" key={adapter.id}>
+                        {adapter.id}: {adapter.executionMode}
                       </span>
                     ))}
                   </div>
