@@ -63,6 +63,10 @@ describe('LabPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
 
     expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
+    expect(screen.getByText('Memory blueprint')).toBeInTheDocument()
+    expect(screen.getByText('GENIO Memory & Context Blueprint')).toBeInTheDocument()
+    expect(screen.getByText('No persistent memory')).toBeInTheDocument()
+    expect(screen.getByText('No embeddings')).toBeInTheDocument()
     expect(screen.getByLabelText('Agent')).toHaveValue('operator-agent')
     expect(screen.getByLabelText('Tool')).toHaveValue('review-risk')
     expect(screen.getByText('Risk high')).toBeInTheDocument()

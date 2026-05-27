@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssistantUseCase'
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
+import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
@@ -164,9 +165,32 @@ export function mockTests(): TestCase[] {
         assert.ok(genio.strategicVision.reasoningPrinciples.some((principle) => principle.includes('probabilities')))
         assert.ok(genio.strategicVision.predictionBoundaries.includes('GENIO does not know the future.'))
         assert.ok(genio.strategicVision.predictionBoundaries.includes('GENIO does not guarantee outcomes.'))
+        assert.equal(genio.memoryContextBlueprint.id, 'genio-memory-context-blueprint')
+        assert.equal(genio.memoryContextBlueprint.futureArchitecture.vectorMemory, 'placeholder-only')
+        assert.equal(genio.memoryContextBlueprint.futureArchitecture.embeddings, 'placeholder-only')
+        assert.ok(genio.memoryContextBlueprint.memoryCategories.includes('life-map'))
+        assert.ok(genio.memoryContextBlueprint.retentionPolicies.includes('archived'))
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
+      }
+    },
+    {
+      name: 'Context: GENIO memory blueprint is typed metadata without persistence',
+      run: async () => {
+        const blueprint = GENIO_MEMORY_CONTEXT_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.memoryCategories.includes('technical'))
+        assert.ok(blueprint.memoryCategories.includes('company'))
+        assert.deepEqual(blueprint.retentionPolicies, ['short-term', 'mid-term', 'long-term', 'archived'])
+        assert.equal(blueprint.futureArchitecture.semanticSearch, 'placeholder-only')
+        assert.equal(blueprint.futureArchitecture.persistentMemory, 'placeholder-only')
+        assert.ok(blueprint.lifeMapPreparation.objectives.some((objective) => objective.id === 'life-objective-blueprint'))
+        assert.ok(blueprint.journalBlueprint.entries.some((entry) => entry.id === 'journal-entry-blueprint'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('No database')))
       }
     },
     {

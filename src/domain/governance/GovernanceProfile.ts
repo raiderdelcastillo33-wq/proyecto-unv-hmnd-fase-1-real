@@ -1,4 +1,5 @@
 import type { AgentRiskProfile } from '../agents/AgentProfile'
+import type { MemoryContextBlueprint } from '../context/ContextBlueprint'
 import type { ApprovalDecision, Permission } from '../security/PermissionProfile'
 
 export type AgentHierarchyLevel = 'central' | 'supervisor' | 'specialist' | 'utility' | 'observer'
@@ -57,6 +58,7 @@ export interface GenioCentralProfile {
   systemGoals: string[]
   futureCapabilities: FutureCapabilityMetadata[]
   strategicVision: StrategicVisionMetadata
+  memoryContextBlueprint: MemoryContextBlueprint
   governanceMetadata: GovernanceMetadata
   lifeMapVision: FutureCapabilityMetadata[]
   financialStrategyVision: FutureCapabilityMetadata[]

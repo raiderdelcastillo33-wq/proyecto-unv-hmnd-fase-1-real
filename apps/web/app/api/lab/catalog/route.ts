@@ -81,6 +81,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       capabilities: centralProfile.capabilities,
       futureCapabilities: centralProfile.futureCapabilities,
       strategicVision: centralProfile.strategicVision,
+      memoryContextBlueprint: {
+        id: centralProfile.memoryContextBlueprint.id,
+        label: centralProfile.memoryContextBlueprint.label,
+        status: centralProfile.memoryContextBlueprint.status,
+        memoryCategories: centralProfile.memoryContextBlueprint.memoryCategories,
+        retentionPolicies: centralProfile.memoryContextBlueprint.retentionPolicies,
+        contextWindows: centralProfile.memoryContextBlueprint.contextProfile.contextWindows,
+        futureArchitecture: centralProfile.memoryContextBlueprint.futureArchitecture,
+        lifeMapReadiness: [
+          'LifeObjective',
+          'LifeRoadmap',
+          'Milestone',
+          'PersonalGrowthSignal',
+          'OpportunitySignal',
+          'RiskSignal'
+        ],
+        journalReadiness: ['JournalEntry', 'Reflection', 'DailySummary', 'MoodTag', 'FocusArea'],
+        governanceRules: centralProfile.memoryContextBlueprint.governanceRules,
+        simulationOnly: centralProfile.memoryContextBlueprint.simulationOnly,
+        actionExecuted: centralProfile.memoryContextBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

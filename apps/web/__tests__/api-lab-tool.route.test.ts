@@ -129,6 +129,17 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.governance.centralProfile.strategicVision.futureEngines).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: 'predictive-simulation-engine', simulationOnly: true })])
     )
+    expect(payload.data.governance.centralProfile.memoryContextBlueprint.id).toBe('genio-memory-context-blueprint')
+    expect(payload.data.governance.centralProfile.memoryContextBlueprint.memoryCategories).toEqual(
+      expect.arrayContaining(['technical', 'life-map', 'company'])
+    )
+    expect(payload.data.governance.centralProfile.memoryContextBlueprint.futureArchitecture.vectorMemory).toBe(
+      'placeholder-only'
+    )
+    expect(payload.data.governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary).toContain(
+      'No data is stored'
+    )
+    expect(payload.data.governance.centralProfile.memoryContextBlueprint.simulationOnly).toBe(true)
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

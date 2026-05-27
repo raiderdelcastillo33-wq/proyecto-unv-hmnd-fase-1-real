@@ -446,6 +446,25 @@ export default function LabPage() {
               </div>
             </section>
 
+            <section className="result-state">
+              <p className="result-eyebrow">Memory blueprint</p>
+              <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
+              <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.memoryContextBlueprint.status}</span>
+                <span className="info-chip">No persistent memory</span>
+                <span className="info-chip">No embeddings</span>
+                <span className="info-chip">Simulation only</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.memoryContextBlueprint.memoryCategories.slice(0, 6).map((category) => (
+                  <span className="tech-pill" key={category}>
+                    {category}
+                  </span>
+                ))}
+              </div>
+            </section>
+
             <label className="field-label" htmlFor="lab-agent">
               Agent
             </label>
@@ -662,6 +681,17 @@ export default function LabPage() {
                     {governance.centralProfile.futureCapabilities.map((capability) => (
                       <span className="tech-pill" key={capability.id}>
                         {capability.label}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Context architecture</p>
+                  <h3>{governance.centralProfile.memoryContextBlueprint.retentionPolicies.join(' / ')}</h3>
+                  <div className="response-meta">
+                    {governance.centralProfile.memoryContextBlueprint.contextWindows.map((window) => (
+                      <span className="info-chip" key={window.id}>
+                        {window.label}
                       </span>
                     ))}
                   </div>

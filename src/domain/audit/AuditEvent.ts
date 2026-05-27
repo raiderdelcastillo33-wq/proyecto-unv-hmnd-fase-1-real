@@ -11,6 +11,9 @@ export type AuditEventType =
   | 'approval-requested'
   | 'approval-approved'
   | 'approval-rejected'
+  | 'context-created'
+  | 'context-linked'
+  | 'memory-classified'
 
 export interface AuditEvent {
   id: string
