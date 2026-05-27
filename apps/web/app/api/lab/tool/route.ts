@@ -33,7 +33,10 @@ function normalizeToolRequest(body: Record<string, unknown>): ToolRequest {
   return {
     toolId: typeof body.toolId === 'string' ? (body.toolId as ToolRequest['toolId']) : ('review-risk' as ToolRequest['toolId']),
     input: typeof body.input === 'string' ? body.input : '',
-    ...(typeof body.agentId === 'string' ? { agentId: body.agentId as ToolRequest['agentId'] } : {})
+    ...(typeof body.agentId === 'string' ? { agentId: body.agentId as ToolRequest['agentId'] } : {}),
+    ...(typeof body.proposalId === 'string' ? { proposalId: body.proposalId } : {}),
+    ...(typeof body.correlationId === 'string' ? { correlationId: body.correlationId } : {}),
+    ...(typeof body.sessionId === 'string' ? { sessionId: body.sessionId } : {})
   }
 }
 

@@ -28,6 +28,7 @@ type ToolResult = {
     requiresHumanApproval: boolean
     actionExecuted: false
   }
+  ownerApproval?: OwnerApprovalState
   commands?: Array<{
     command: string
     purpose: string
@@ -45,6 +46,9 @@ type AuditEvent = {
   agentId?: string
   toolId?: string
   actionType?: string
+  proposalId?: string
+  correlationId?: string
+  sessionId?: string
   riskLevel?: string
   decision?: string
   approvalStatus?: string
@@ -53,10 +57,27 @@ type AuditEvent = {
   governanceSource?: string
   hierarchyLevel?: string
   blockedReason?: string
+  reviewedBy?: string
+  reviewTimestamp?: string
+  rejectionReason?: string
   requiresHumanApproval?: boolean
   simulationOnly?: true
   inputPreview?: string
   summary?: string
+}
+
+type OwnerApprovalStatus = 'pending' | 'approved' | 'rejected' | 'blocked'
+
+type OwnerApprovalState = {
+  proposalId: string
+  correlationId: string
+  sessionId: string
+  approvalStatus: OwnerApprovalStatus
+  reviewedBy?: string
+  reviewTimestamp?: string
+  rejectionReason?: string
+  simulationOnly: true
+  actionExecuted: false
 }
 
 type LabResponse = {
@@ -82,6 +103,83 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Unexpected private lab error.'
+}
+
+function createFallbackApprovalState(result: ToolResult): OwnerApprovalState {
+  const proposalId = result.approval?.proposalId ?? `tool-${result.toolId}`
+
+  return {
+    proposalId,
+    correlationId: `corr-${proposalId}`,
+    sessionId: 'private-lab-local-session',
+    approvalStatus: result.approval?.decision === 'forbidden' ? 'blocked' : 'pending',
+    simulationOnly: true,
+    actionExecuted: false
+  }
+}
+
+function createOwnerDecisionEvent(
+  type: 'approval-approved' | 'approval-rejected',
+  result: ToolResult,
+  approvalState: OwnerApprovalState
+): AuditEvent {
+  const timestamp = approvalState.reviewTimestamp ?? new Date().toISOString()
+
+  return {
+    id: `${type}-${approvalState.proposalId}-${timestamp}`,
+    eventId: `${type}-${approvalState.proposalId}-${timestamp}`,
+    type,
+    timestamp,
+    actionExecuted: false,
+    simulationOnly: true,
+    actionType: type,
+    proposalId: approvalState.proposalId,
+    correlationId: approvalState.correlationId,
+    sessionId: approvalState.sessionId,
+    approvalStatus: approvalState.approvalStatus,
+    governanceSource: 'genio-central',
+    approvalDecision: result.approval?.decision,
+    riskLevel: result.riskLevel,
+    toolId: result.toolId,
+    ...(approvalState.reviewedBy ? { reviewedBy: approvalState.reviewedBy } : {}),
+    ...(approvalState.reviewTimestamp ? { reviewTimestamp: approvalState.reviewTimestamp } : {}),
+    ...(approvalState.rejectionReason ? { rejectionReason: approvalState.rejectionReason } : {}),
+    summary:
+      type === 'approval-approved'
+        ? 'Owner approved the proposal metadata. No action was executed.'
+        : 'Owner rejected the proposal metadata. No action was executed.'
+  }
+}
+
+function approveProposalState(state: OwnerApprovalState): OwnerApprovalState {
+  if (state.approvalStatus === 'blocked') {
+    return state
+  }
+
+  return {
+    ...state,
+    approvalStatus: 'approved',
+    reviewedBy: 'owner',
+    reviewTimestamp: new Date().toISOString(),
+    simulationOnly: true,
+    actionExecuted: false
+  }
+}
+
+function rejectProposalState(state: OwnerApprovalState): OwnerApprovalState {
+  if (state.approvalStatus === 'blocked') {
+    return state
+  }
+
+  return {
+    ...state,
+    approvalStatus: 'rejected',
+    reviewedBy: 'owner',
+    reviewTimestamp: new Date().toISOString(),
+    rejectionReason: 'Rejected by owner in proposal-only lab.',
+    simulationOnly: true,
+    actionExecuted: false
+  }
 }
 
 async function readJson(response: Response): Promise<unknown> {
@@ -162,6 +260,7 @@ export default function LabPage() {
   const [toolId, setToolId] = useState('review-risk')
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ToolResult | null>(null)
+  const [ownerApproval, setOwnerApproval] = useState<OwnerApprovalState | null>(null)
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -221,12 +320,33 @@ export default function LabPage() {
       })
 
       setResult(payload.data.result)
+      setOwnerApproval(payload.data.result.ownerApproval ?? createFallbackApprovalState(payload.data.result))
       setAuditEvents(payload.data.auditEvents)
     } catch (currentError) {
       setError(getErrorMessage(currentError))
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleApproveProposal(): void {
+    if (!result || !ownerApproval) {
+      return
+    }
+
+    const nextApproval = approveProposalState(ownerApproval)
+    setOwnerApproval(nextApproval)
+    setAuditEvents((currentEvents) => [...currentEvents, createOwnerDecisionEvent('approval-approved', result, nextApproval)])
+  }
+
+  function handleRejectProposal(): void {
+    if (!result || !ownerApproval) {
+      return
+    }
+
+    const nextApproval = rejectProposalState(ownerApproval)
+    setOwnerApproval(nextApproval)
+    setAuditEvents((currentEvents) => [...currentEvents, createOwnerDecisionEvent('approval-rejected', result, nextApproval)])
   }
 
   return (
@@ -423,6 +543,49 @@ export default function LabPage() {
                   </div>
                 </section>
 
+                {ownerApproval ? (
+                  <section className="result-state">
+                    <p className="result-eyebrow">Owner approval flow</p>
+                    <h3>{ownerApproval.approvalStatus}</h3>
+                    <p>Approve records owner consent for the proposal metadata only. Approve does not execute anything.</p>
+                    <div className="response-meta">
+                      <span className="info-chip">{ownerApproval.proposalId}</span>
+                      <span className="info-chip">{ownerApproval.correlationId}</span>
+                      <span className="info-chip">{ownerApproval.sessionId}</span>
+                      <span className="info-chip">Action performed: no</span>
+                      <span className="info-chip">Simulation only</span>
+                    </div>
+                    {ownerApproval.reviewedBy ? (
+                      <div className="response-meta">
+                        <span className="info-chip">Reviewed by {ownerApproval.reviewedBy}</span>
+                        <span className="info-chip">{ownerApproval.reviewTimestamp}</span>
+                        {ownerApproval.rejectionReason ? (
+                          <span className="info-chip">{ownerApproval.rejectionReason}</span>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    <div className="actions">
+                      <button
+                        className="primary-button"
+                        disabled={ownerApproval.approvalStatus === 'blocked'}
+                        onClick={handleApproveProposal}
+                        type="button"
+                      >
+                        Approve proposal
+                      </button>
+                      <button
+                        className="secondary-button"
+                        disabled={ownerApproval.approvalStatus === 'blocked'}
+                        onClick={handleRejectProposal}
+                        type="button"
+                      >
+                        Reject proposal
+                      </button>
+                      <span className="meta-text">Approve != Execute</span>
+                    </div>
+                  </section>
+                ) : null}
+
                 {result.approval ? (
                   <section className="result-state">
                     <p className="result-eyebrow">Approval metadata</p>
@@ -478,6 +641,8 @@ export default function LabPage() {
                       {event.governanceSource ? <span className="info-chip">{event.governanceSource}</span> : null}
                       {event.hierarchyLevel ? <span className="info-chip">{event.hierarchyLevel}</span> : null}
                       {event.toolId ? <span className="info-chip">{event.toolId}</span> : null}
+                      {event.reviewedBy ? <span className="info-chip">Owner {event.reviewedBy}</span> : null}
+                      {event.reviewTimestamp ? <span className="info-chip">{event.reviewTimestamp}</span> : null}
                       <span className="info-chip">{event.simulationOnly ? 'Simulation only' : 'Proposal only'}</span>
                     </div>
                   ))}

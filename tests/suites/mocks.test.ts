@@ -8,6 +8,7 @@ import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
 import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
 import { GenioGovernanceRegistry } from '../../src/domain/governance/GenioCentralProfile'
+import { approveProposal, createPendingApproval, rejectProposal } from '../../src/domain/security/OwnerApproval'
 import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
 import { ApprovalGate } from '../../src/domain/security/ApprovalGate'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
@@ -163,6 +164,34 @@ export function mockTests(): TestCase[] {
       }
     },
     {
+      name: 'Approvals: owner proposal lifecycle remains simulation only',
+      run: async () => {
+        const pending = createPendingApproval({
+          proposalId: 'tool-propose-terminal-command',
+          correlationId: 'corr-local',
+          sessionId: 'session-local'
+        })
+        const approved = approveProposal(pending, 'owner', '2026-05-27T00:00:00.000Z')
+        const rejected = rejectProposal(approved, 'owner', '2026-05-27T00:01:00.000Z', 'Not safe enough.')
+        const blocked = createPendingApproval(
+          {
+            proposalId: 'tool-blocked',
+            correlationId: 'corr-blocked',
+            sessionId: 'session-local'
+          },
+          true
+        )
+
+        assert.equal(pending.approvalStatus, 'pending')
+        assert.equal(approved.approvalStatus, 'approved')
+        assert.equal(rejected.approvalStatus, 'rejected')
+        assert.equal(rejected.rejectionReason, 'Not safe enough.')
+        assert.equal(approveProposal(blocked, 'owner', '2026-05-27T00:00:00.000Z').approvalStatus, 'blocked')
+        assert.equal([pending, approved, rejected, blocked].every((state) => state.actionExecuted === false), true)
+        assert.equal([pending, approved, rejected, blocked].every((state) => state.simulationOnly === true), true)
+      }
+    },
+    {
       name: 'Tools: ToolRegistry lista, resuelve y valida permisos por agente',
       run: async () => {
         const tools = ToolRegistry.list()
@@ -276,15 +305,20 @@ export function mockTests(): TestCase[] {
         assert.equal(allowed.toolId, 'review-risk')
         assert.equal(allowed.approval?.decision, 'safe')
         assert.equal(allowed.approval?.actionExecuted, false)
+        assert.equal(allowed.ownerApproval?.approvalStatus, 'pending')
+        assert.equal(allowed.ownerApproval?.actionExecuted, false)
         assert.equal(allowed.commands, undefined)
         assert.equal(commandProposal.approval?.decision, 'requires-approval')
         assert.equal(commandProposal.approval?.actionExecuted, false)
+        assert.equal(commandProposal.ownerApproval?.approvalStatus, 'pending')
+        assert.equal(commandProposal.ownerApproval?.simulationOnly, true)
         assert.equal(commandProposal.requiresHumanApproval, true)
         assert.ok(commandProposal.commands)
         assert.equal(commandProposal.commands.every((command) => command.requiresConfirmation), true)
         assert.equal(commandProposal.commands.every((command) => !('executed' in command)), true)
         assert.equal(blocked.title, 'Tool not available')
         assert.equal(blocked.approval?.decision, 'forbidden')
+        assert.equal(blocked.ownerApproval?.approvalStatus, 'blocked')
         assert.equal(blocked.approval?.actionExecuted, false)
         assert.equal(blocked.commands, undefined)
         assert.equal(blocked.requiresHumanApproval, true)
@@ -299,6 +333,7 @@ export function mockTests(): TestCase[] {
         assert.ok(auditEvents.some((event) => event.type === 'approval-evaluated'))
         assert.ok(auditEvents.some((event) => event.type === 'tool-result-created'))
         assert.ok(auditEvents.some((event) => event.type === 'tool-blocked'))
+        assert.ok(auditEvents.some((event) => event.type === 'approval-requested'))
         assert.equal(auditEvents.every((event) => event.actionExecuted === false), true)
         assert.equal(auditEvents.every((event) => event.simulationOnly === true), true)
         assert.equal(auditEvents.every((event) => Boolean(event.eventId)), true)

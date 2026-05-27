@@ -1,4 +1,5 @@
 import type { AgentId } from '../agents/AgentProfile'
+import type { OwnerApprovalState } from '../security/OwnerApproval'
 import type { ApprovalResult } from '../security/PermissionProfile'
 
 export type ToolId =
@@ -33,6 +34,9 @@ export interface ToolRequest {
   input: string
   context?: string
   constraints?: string[]
+  proposalId?: string
+  correlationId?: string
+  sessionId?: string
 }
 
 export interface ToolResult {
@@ -46,6 +50,7 @@ export interface ToolResult {
   requiresHumanApproval: boolean
   riskLevel: ToolRiskLevel
   approval?: ApprovalResult
+  ownerApproval?: OwnerApprovalState
   commands?: Array<{
     command: string
     purpose: string

@@ -1,5 +1,6 @@
 import { AgentRegistry } from '../../domain/agents/AgentRegistry'
 import { ApprovalGate } from '../../domain/security/ApprovalGate'
+import { createPendingApproval, type ProposalIdentity } from '../../domain/security/OwnerApproval'
 import { ToolRegistry } from '../../domain/tools/ToolRegistry'
 import type { AuditEventType } from '../../domain/audit/AuditEvent'
 import type { ActionProposal, ApprovalResult, Permission } from '../../domain/security/PermissionProfile'
@@ -22,6 +23,7 @@ export class LocalToolExecutor {
 
     if (!tool || !ToolRegistry.isAllowedForAgent(agent, request.toolId)) {
       const result = this.safeResult(
+        request,
         request.toolId,
         'Tool not available',
         'The requested tool is not available for this agent.',
@@ -29,12 +31,14 @@ export class LocalToolExecutor {
         approval
       )
       this.recordAuditEvent('tool-blocked', request, result.approval, result)
+      this.recordAuditEvent('approval-requested', request, result.approval, result)
       return result
     }
 
     const input = request.input.trim()
     if (!input) {
       const result = this.safeResult(
+        request,
         tool.id,
         'Input required',
         'The tool needs a clear input before it can produce a useful proposal.',
@@ -42,6 +46,7 @@ export class LocalToolExecutor {
         approval
       )
       this.recordAuditEvent('tool-result-created', request, result.approval, result)
+      this.recordAuditEvent('approval-requested', request, result.approval, result)
       return result
     }
 
@@ -68,6 +73,7 @@ export class LocalToolExecutor {
     }
 
     this.recordAuditEvent('tool-result-created', request, result.approval, result)
+    this.recordAuditEvent('approval-requested', request, result.approval, result)
     return result
   }
 
@@ -88,7 +94,8 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: false,
       riskLevel: 'low',
-      approval
+      approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId))
     }
   }
 
@@ -106,6 +113,7 @@ export class LocalToolExecutor {
       requiresHumanApproval: true,
       riskLevel: 'medium',
       approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId)),
       commands: [
         {
           command: 'npm test',
@@ -146,7 +154,8 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: false,
       riskLevel: 'low',
-      approval
+      approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId))
     }
   }
 
@@ -171,7 +180,8 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: false,
       riskLevel: 'medium',
-      approval
+      approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId))
     }
   }
 
@@ -192,7 +202,8 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: false,
       riskLevel: 'medium',
-      approval
+      approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId))
     }
   }
 
@@ -213,11 +224,13 @@ export class LocalToolExecutor {
       ],
       requiresHumanApproval: false,
       riskLevel: 'low',
-      approval
+      approval,
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId))
     }
   }
 
   private safeResult(
+    request: ToolRequest,
     toolId: ToolRequest['toolId'],
     title: string,
     summary: string,
@@ -242,7 +255,8 @@ export class LocalToolExecutor {
         reason: title === 'Tool not available' ? 'The requested tool is not allowed for this agent.' : approval.reason,
         requiresHumanApproval: true,
         actionExecuted: false
-      }
+      },
+      ownerApproval: createPendingApproval(this.identityFor(request, approval.proposalId), title === 'Tool not available')
     }
   }
 
@@ -256,6 +270,21 @@ export class LocalToolExecutor {
       summary: this.preview(request.input || request.context || request.toolId),
       riskLevel: permission === 'propose-command' ? 'medium' : 'low',
       ...(request.agentId ? { requestedByAgentId: request.agentId } : {})
+    }
+  }
+
+  private identityFor(request: ToolRequest, proposalId: string): ProposalIdentity {
+    const stableInput = this.preview(request.input || request.context || request.toolId)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 48)
+    const suffix = stableInput || 'proposal'
+
+    return {
+      proposalId: request.proposalId ?? proposalId,
+      correlationId: request.correlationId ?? `corr-${request.toolId}-${suffix}`,
+      sessionId: request.sessionId ?? 'private-lab-local-session'
     }
   }
 
@@ -312,8 +341,14 @@ export class LocalToolExecutor {
             permission: approval.permission,
             decision: approval.decision,
             approvalDecision: approval.decision,
-            approvalStatus: approval.decision,
+            approvalStatus: result?.ownerApproval?.approvalStatus ?? approval.decision,
             requiresHumanApproval: approval.requiresHumanApproval,
+            ...((result?.ownerApproval?.correlationId ?? request.correlationId)
+              ? { correlationId: result?.ownerApproval?.correlationId ?? request.correlationId }
+              : {}),
+            ...((result?.ownerApproval?.sessionId ?? request.sessionId)
+              ? { sessionId: result?.ownerApproval?.sessionId ?? request.sessionId }
+              : {}),
             ...(approval.decision === 'forbidden' ? { blockedReason: approval.reason } : {})
           }
         : {}),

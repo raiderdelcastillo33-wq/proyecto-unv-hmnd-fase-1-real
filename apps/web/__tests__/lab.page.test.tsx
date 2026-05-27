@@ -130,6 +130,14 @@ describe('LabPage', () => {
               requiresHumanApproval: true,
               actionExecuted: false
             },
+            ownerApproval: {
+              proposalId: 'tool-propose-terminal-command',
+              correlationId: 'corr-tool-propose-terminal-command',
+              sessionId: 'private-lab-local-session',
+              approvalStatus: 'pending',
+              simulationOnly: true,
+              actionExecuted: false
+            },
             sections: [
               {
                 heading: 'Safety',
@@ -193,10 +201,21 @@ describe('LabPage', () => {
 
     expect(await screen.findByText('Terminal Command Proposal')).toBeInTheDocument()
     expect(screen.getAllByText('requires-approval').length).toBeGreaterThan(0)
-    expect(screen.getByText('Action performed: no')).toBeInTheDocument()
+    expect(screen.getAllByText('Action performed: no').length).toBeGreaterThan(0)
     expect(screen.getByText('Suggested commands as text only')).toBeInTheDocument()
     expect(screen.getByText('npm test')).toBeInTheDocument()
     expect(screen.getByText('2 events in memory')).toBeInTheDocument()
+    expect(screen.getByText('Owner approval flow')).toBeInTheDocument()
+    expect(screen.getByText('pending')).toBeInTheDocument()
+    expect(screen.getByText('Approve != Execute')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Approve proposal' }))
+    expect(screen.getByText('approved')).toBeInTheDocument()
+    expect(screen.getByText('3 events in memory')).toBeInTheDocument()
+    expect(screen.getByText('Owner owner')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Reject proposal' }))
+    expect(screen.getByText('rejected')).toBeInTheDocument()
+    expect(screen.getByText('4 events in memory')).toBeInTheDocument()
+    expect(screen.getByText('Rejected by owner in proposal-only lab.')).toBeInTheDocument()
     expect(screen.getAllByText('Simulation only').length).toBeGreaterThan(0)
     expect(screen.getByText('Governance observability')).toBeInTheDocument()
     expect(screen.queryByText(/systemInstructions/i)).not.toBeInTheDocument()
