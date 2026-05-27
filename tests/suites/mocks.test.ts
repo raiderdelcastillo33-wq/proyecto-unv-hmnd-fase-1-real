@@ -8,6 +8,7 @@ import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
 import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
 import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
+import { ApprovalGate } from '../../src/domain/security/ApprovalGate'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
 import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
 import { LocalToolExecutor } from '../../src/infrastructure/tools/LocalToolExecutor'
@@ -198,6 +199,56 @@ export function mockTests(): TestCase[] {
         assert.equal(blocked.requiresHumanApproval, true)
         assert.equal(invalid.title, 'Input required')
         assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid]).includes('executed'), false)
+      }
+    },
+    {
+      name: 'Security: ApprovalGate clasifica acciones privadas sin ejecutar nada',
+      run: async () => {
+        const gate = new ApprovalGate()
+
+        const command = gate.evaluate({
+          id: 'proposal-command',
+          permission: 'execute-command',
+          title: 'Run tests',
+          summary: 'Request to execute a terminal command.',
+          riskLevel: 'high'
+        })
+        const deleteFile = gate.evaluate({
+          id: 'proposal-delete',
+          permission: 'delete-file',
+          title: 'Delete file',
+          summary: 'Request to delete a file.',
+          riskLevel: 'critical'
+        })
+        const sendEmail = gate.evaluate({
+          id: 'proposal-email',
+          permission: 'send-email',
+          title: 'Send email',
+          summary: 'Request to send an email.',
+          riskLevel: 'critical'
+        })
+        const checklist = gate.evaluate({
+          id: 'proposal-checklist',
+          permission: 'create-checklist',
+          title: 'Create checklist',
+          summary: 'Request to create a checklist.',
+          riskLevel: 'low'
+        })
+        const readSecret = gate.evaluate({
+          id: 'proposal-secret',
+          permission: 'read-secret',
+          title: 'Read secret',
+          summary: 'Request to read a secret.',
+          riskLevel: 'critical'
+        })
+
+        assert.equal(command.decision, 'requires-approval')
+        assert.equal(command.requiresHumanApproval, true)
+        assert.equal(deleteFile.decision, 'forbidden')
+        assert.equal(sendEmail.decision, 'forbidden')
+        assert.equal(checklist.decision, 'safe')
+        assert.equal(readSecret.decision, 'forbidden')
+        assert.equal([command, deleteFile, sendEmail, checklist, readSecret].every((result) => result.actionExecuted === false), true)
       }
     },
     {
