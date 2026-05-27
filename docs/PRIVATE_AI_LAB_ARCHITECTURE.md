@@ -307,6 +307,7 @@ Completed phases:
 9. Strategic Multi-Agent Orchestration Layer
 10. Controlled Adapter Blueprint
 11. Documentation sync
+12. Master Production Architecture Blueprint
 
 Future roadmap:
 
@@ -331,3 +332,21 @@ npm --prefix apps/web run test
 npm run build:api
 npm test
 ```
+
+## 13. Production Blueprint And Testing
+
+Production-readiness planning lives in:
+
+```text
+docs/MASTER_PRODUCTION_ARCHITECTURE.md
+docs/PRODUCTION_TESTING_GUIDE.md
+```
+
+These documents define:
+
+- production architecture target
+- readiness matrix
+- web validation guide
+- future roadmap by phase
+- World Access Layer concept
+- local and Vercel testing evidence

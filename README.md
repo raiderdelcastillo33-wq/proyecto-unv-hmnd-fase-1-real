@@ -478,21 +478,51 @@ Fases completadas:
 - GENIO Memory & Context Blueprint
 - Strategic Multi-Agent Orchestration Layer
 - Controlled Adapter Blueprint
+- Master Production Architecture Blueprint
 
 Roadmap futuro:
 
-- auth real de owner
-- audit log persistente
-- storage seguro
-- memory retrieval con aprobacion
-- adapters read-only controlados
-- company agents
-- SaaS multiempresa
-- execution adapters reversibles y aprobados
+- Real Owner Auth
+- Persistent Audit Log
+- Secure Storage / DB
+- Read-only File Preview Adapter
+- Controlled Draft Adapters
+- Memory Retrieval System
+- Company Agents
+- SaaS Admin Dashboard
+- Controlled Execution Layer
 
 La evolucion debe seguir siendo progresiva, auditable, reversible y controlada por el owner.
+
+## Validacion Web
+
+Local:
+
+```text
+http://localhost:3001
+http://localhost:3001/demo
+http://localhost:3001/lab
+```
+
+Produccion/Vercel:
+
+```text
+https://your-vercel-domain.example
+https://your-vercel-domain.example/demo
+https://your-vercel-domain.example/lab
+```
+
+Validar:
+
+- `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, memory, orchestration y adapters
+- Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
+- approve/reject no ejecutan acciones reales
+- no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
 
 ## Documentacion
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
+- [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
+- [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)
