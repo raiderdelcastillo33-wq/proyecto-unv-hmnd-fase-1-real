@@ -269,6 +269,25 @@ describe('POST /api/lab/tool', () => {
       'controlled-runtime-sandbox-blueprint'
     )
     expect(payload.data.governance.centralProfile.filePreviewBlueprint.actionExecuted).toBe(false)
+    expect(payload.data.governance.centralProfile.humanityGuideOSBlueprint.id).toBe('humanity-guide-os-blueprint')
+    expect(payload.data.governance.centralProfile.humanityGuideOSBlueprint.productName).toBe('Humanity Guide OS')
+    expect(payload.data.governance.centralProfile.humanityGuideOSBlueprint.layers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'genesis',
+          type: 'reflection-layer',
+          actionExecuted: false
+        }),
+        expect.objectContaining({
+          id: 'human-centered-alignment-layer',
+          type: 'alignment-validator',
+          actionExecuted: false
+        })
+      ])
+    )
+    expect(payload.data.governance.centralProfile.humanityGuideOSBlueprint.pseudoAgiAvoidanceRules).toEqual(
+      expect.arrayContaining([expect.stringContaining('Never claim real consciousness')])
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

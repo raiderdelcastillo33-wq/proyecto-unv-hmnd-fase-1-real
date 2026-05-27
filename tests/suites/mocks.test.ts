@@ -5,6 +5,7 @@ import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterB
 import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
 import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../../src/domain/capabilities/CapabilityBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
+import { HUMANITY_GUIDE_OS_BLUEPRINT } from '../../src/domain/ecosystem/HumanityGuideOSBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/FilePreviewBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
@@ -202,6 +203,9 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.filePreviewBlueprint.id, 'read-only-file-preview-adapter-blueprint')
         assert.equal(genio.filePreviewBlueprint.profile.lifecycle, 'blocked')
         assert.equal(genio.filePreviewBlueprint.actionExecuted, false)
+        assert.equal(genio.humanityGuideOSBlueprint.id, 'humanity-guide-os-blueprint')
+        assert.equal(genio.humanityGuideOSBlueprint.productName, 'Humanity Guide OS')
+        assert.equal(genio.humanityGuideOSBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
@@ -334,6 +338,29 @@ export function mockTests(): TestCase[] {
         assert.equal(blueprint.runtimeIntegration.runtimeSandboxId, 'controlled-runtime-sandbox-blueprint')
         assert.ok(blueprint.governanceRules.some((rule) => rule.includes('filesystem access real')))
         assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No fs runtime')))
+      }
+    },
+    {
+      name: 'Ecosystem: Humanity Guide OS defines bounded human-centered layers',
+      run: async () => {
+        const blueprint = HUMANITY_GUIDE_OS_BLUEPRINT
+        const genesis = blueprint.layers.find((layer) => layer.id === 'genesis')
+        const alignment = blueprint.layers.find((layer) => layer.id === 'human-centered-alignment-layer')
+
+        assert.equal(blueprint.status, 'conceptual-blueprint')
+        assert.equal(blueprint.productName, 'Humanity Guide OS')
+        assert.equal(blueprint.mvpName, 'Humanity Guide OS — Intelligent Organization MVP')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.principles.some((principle) => principle.includes('AI does not invade')))
+        assert.ok(blueprint.layers.some((layer) => layer.id === 'genio'))
+        assert.equal(genesis?.type, 'reflection-layer')
+        assert.ok(genesis?.boundaries.includes('is not AGI'))
+        assert.ok(genesis?.forbiddenClaims.includes('real consciousness'))
+        assert.equal(alignment?.type, 'alignment-validator')
+        assert.ok(alignment?.boundaries.includes('does not score humans'))
+        assert.ok(blueprint.relationships.some((relationship) => relationship.to === 'genesis'))
+        assert.ok(blueprint.pseudoAgiAvoidanceRules.some((rule) => rule.includes('Never claim real consciousness')))
       }
     },
     {

@@ -447,6 +447,25 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">Humanity Guide OS</p>
+              <h3>{governance.centralProfile.humanityGuideOSBlueprint.mvpName}</h3>
+              <p>{governance.centralProfile.humanityGuideOSBlueprint.principles[1]}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.humanityGuideOSBlueprint.status}</span>
+                <span className="info-chip">No AGI claims</span>
+                <span className="info-chip">No human scoring</span>
+                <span className="info-chip">Human-centered alignment</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.humanityGuideOSBlueprint.layers.map((layer) => (
+                  <span className="tech-pill" key={layer.id}>
+                    {layer.label}: {layer.type}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Auth blueprint</p>
               <h3>{governance.centralProfile.authBlueprint.label}</h3>
               <p>{governance.centralProfile.authBlueprint.ownerAccessCodeBoundary}</p>
@@ -866,6 +885,15 @@ export default function LabPage() {
                       {governance.centralProfile.capabilityBlueprint.businessBuilderBlueprint.label}
                     </span>
                     <span className="info-chip">No autonomous execution</span>
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Ecosystem map</p>
+                  <h3>{governance.centralProfile.humanityGuideOSBlueprint.productName}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">GENIO: governance</span>
+                    <span className="info-chip">GENESIS: reflection</span>
+                    <span className="info-chip">Alignment: policy validator</span>
                   </div>
                 </section>
                 <section className="result-state">

@@ -1,6 +1,6 @@
 # Private AI Lab Architecture
 
-This document describes the current Private AI Lab and GENIO architecture in UNV-HMND.
+This document describes the current Private AI Lab, GENIO, and Humanity Guide OS architecture in UNV-HMND.
 
 The system is intentionally conservative. It prepares an AI Operating System blueprint without granting real execution powers.
 
@@ -19,19 +19,46 @@ Core principles:
 
 ```text
 Owner
+  -> Humanity Guide OS
   -> /lab
   -> GENIO Central Governance Layer
-  -> Real Owner Auth Blueprint metadata
-  -> AgentRegistry / ToolRegistry
-  -> ApprovalGate
-  -> LocalToolExecutor
-  -> InMemoryAuditLog
-  -> Proposal + approval metadata
+  -> GÉNESIS reflection metadata
+  -> Human-Centered Alignment Layer
+  -> Approval / Sandbox / Capability / Adapter blueprints
+  -> Proposal + audit metadata
 ```
 
 GENIO is the central governance profile. It coordinates metadata, hierarchy, risk, approval, observability, future memory, future orchestration, and future adapters.
 
 GENIO does not execute actions.
+
+## 1.1 Humanity Guide OS Conceptual Ecosystem
+
+Source:
+
+```text
+src/domain/ecosystem/HumanityGuideOSBlueprint.ts
+docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md
+```
+
+The official product direction is Humanity Guide OS: a human + AI organization system focused on clarity, organization, chaos reduction, conscious productivity, governance, and progressive evolution.
+
+Layer responsibilities:
+
+- Humanity Guide OS: product and UX layer.
+- GENIO: operational governance, approval, permissions, stability, and policy enforcement.
+- GÉNESIS: reflection layer, contextual mirror, and simulation-first scenario exploration.
+- Human-Centered Alignment Layer: policy validator, ethics middleware, governance audit system, and contextual audit engine.
+
+Boundaries:
+
+- no AGI claims
+- no real consciousness claims
+- no spiritual authority claims
+- no human scoring
+- no human surveillance
+- no manipulative emotional dependency
+- no conceptual layer grants execution privileges
 
 ## 2. GENIO Central Governance Layer
 

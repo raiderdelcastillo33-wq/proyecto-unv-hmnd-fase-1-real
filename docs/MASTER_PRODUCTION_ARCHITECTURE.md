@@ -1,6 +1,6 @@
 # Master Production Architecture Blueprint
 
-This blueprint defines how UNV-HMND / Humanidad_Universo should evolve from the current Private AI Lab into a professional, production-oriented AI Operating System platform.
+This blueprint defines how UNV-HMND / Humanidad_Universo should evolve from the current Private AI Lab into Humanity Guide OS: a professional, human-centered AI organization platform.
 
 This document is architectural. It does not introduce real execution, authentication, database storage, adapters, workers, or SaaS runtime behavior.
 
@@ -10,6 +10,7 @@ Core rules:
 - Approve != Execute
 - Blueprint != Runtime
 - Human owner remains final authority
+- AI does not invade; AI mutates with permission
 - Every future dangerous capability must be approval-required, audit-first, permission-scoped, and reversible when possible
 
 ## 1. What Exists Today
@@ -25,6 +26,7 @@ Current implemented surfaces:
 
 Current implemented architecture:
 
+- Humanity Guide OS conceptual ecosystem
 - GENIO Central Governance Layer
 - Owner Approval Flow Minimal
 - GENIO Strategic Vision Metadata
@@ -89,6 +91,11 @@ The current system does not include:
 Target layers:
 
 ```text
+Humanity Guide OS
+  -> Intelligent Organization MVP
+  -> Human-centered UX
+  -> Context clarity
+
 Public Web
   -> Portfolio
   -> Public Demo
@@ -118,9 +125,55 @@ World Access Layer
   -> Draft adapters
   -> Simulation adapters
   -> Future execution adapters
+
+GÉNESIS Reflection Layer
+  -> Contextual mirror
+  -> Scenario simulation
+  -> Non-invasive reflection
+
+Human-Centered Alignment Layer
+  -> Policy validator
+  -> Ethics middleware
+  -> Contextual audit engine
 ```
 
-## 4. GENIO Master Role
+## 4. Humanity Guide OS Ecosystem
+
+Humanity Guide OS is the primary product architecture and MVP direction.
+
+Responsibilities:
+
+- intelligent organization
+- clarity and chaos reduction
+- conscious productivity
+- safe simulations
+- reversible proposals
+- human-centered UX
+
+Conceptual layers:
+
+- GENIO: operational governance and policy enforcement.
+- GÉNESIS: reflection layer and contextual mirror.
+- Human-Centered Alignment Layer: policy validator and ethics middleware.
+
+Forbidden claims:
+
+- AGI
+- real consciousness
+- spiritual authority
+- human scoring
+- human surveillance
+- emotional manipulation
+- unrestricted autonomy
+
+Detailed ecosystem blueprint:
+
+```text
+docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md
+src/domain/ecosystem/HumanityGuideOSBlueprint.ts
+```
+
+## 5. GENIO Master Role
 
 GENIO should act as:
 
@@ -142,7 +195,7 @@ GENIO must never act as:
 - hidden background worker
 - unbounded decision engine
 
-## 5. Real Owner Auth Blueprint
+## 6. Real Owner Auth Blueprint
 
 The current `/lab` surface uses `OWNER_ACCESS_CODE` as a temporary server-side gate.
 
@@ -164,7 +217,7 @@ docs/AUTH_BLUEPRINT.md
 src/domain/auth/AuthBlueprint.ts
 ```
 
-## 6. Persistent Audit & Observability Blueprint
+## 7. Persistent Audit & Observability Blueprint
 
 GENIO now has metadata for future enterprise auditability and observability.
 
@@ -191,7 +244,7 @@ docs/OBSERVABILITY_BLUEPRINT.md
 src/domain/observability/ObservabilityBlueprint.ts
 ```
 
-## 7. Controlled Practical Capability Blueprint
+## 8. Controlled Practical Capability Blueprint
 
 GENIO now has metadata for future practical capabilities without enabling execution.
 
@@ -224,7 +277,7 @@ docs/CAPABILITY_BLUEPRINT.md
 src/domain/capabilities/CapabilityBlueprint.ts
 ```
 
-## 8. Controlled Runtime Sandbox Blueprint
+## 9. Controlled Runtime Sandbox Blueprint
 
 GENIO now has metadata for a future governed runtime sandbox.
 
@@ -261,7 +314,7 @@ docs/RUNTIME_SANDBOX_BLUEPRINT.md
 src/domain/runtime/RuntimeSandboxBlueprint.ts
 ```
 
-## 9. Read-Only File Preview Adapter Blueprint
+## 10. Read-Only File Preview Adapter Blueprint
 
 GENIO now has metadata for a future owner-approved read-only file preview adapter.
 
@@ -281,7 +334,7 @@ docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md
 src/domain/file-preview/FilePreviewBlueprint.ts
 ```
 
-## 10. Production Readiness Matrix
+## 11. Production Readiness Matrix
 
 | Module | Current Status | Production Requirement | Risk Level | Next Step | Verification Method |
 | --- | --- | --- | --- | --- | --- |
@@ -305,7 +358,7 @@ src/domain/file-preview/FilePreviewBlueprint.ts
 | Monitoring | Observability blueprint metadata only | Logs, error tracking, health checks, alerts | Medium | Persistent Audit & Observability runtime plan | Health endpoint, alert tests |
 | Security | Progressive boundaries documented | Threat model, auth, secrets, rate limits | Critical | Security hardening phase | Security checklist, review |
 
-## 11. Web Testing And Production Validation
+## 12. Web Testing And Production Validation
 
 Local URLs:
 
@@ -364,7 +417,7 @@ Browser DevTools:
   - `/api/lab/tool`
 - Response payloads should not expose secrets or `systemInstructions`
 
-## 12. Production Verification Checklist
+## 13. Production Verification Checklist
 
 Run before closing a production-readiness phase:
 
@@ -396,7 +449,7 @@ Manual checklist:
 - no `systemInstructions` in public responses
 - no terminal/filesystem/Gmail/finance execution
 
-## 13. Future Roadmap By Phases
+## 14. Future Roadmap By Phases
 
 ### Phase 1: Production Architecture Blueprint
 
@@ -489,7 +542,7 @@ Manual checklist:
 - Prerequisites: all previous phases, threat model, rollback strategy, monitoring
 - Verification: sandbox tests, approval tests, audit tests, rollback drills
 
-## 14. World Access Layer
+## 15. World Access Layer
 
 World Access Layer is the future controlled connection between GENIO and external tools.
 
@@ -522,7 +575,7 @@ Required future properties:
 - owner-controlled
 - never bypass owner approval
 
-## 15. Release Criteria For Future Production Phases
+## 16. Release Criteria For Future Production Phases
 
 A future phase is production-ready only when:
 

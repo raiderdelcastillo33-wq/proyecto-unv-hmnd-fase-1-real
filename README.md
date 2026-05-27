@@ -1,14 +1,17 @@
 # UNV-HMND / Humanidad_Universo
 
-UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura privada de IA llamada GENIO.
+UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura humano + IA llamada Humanity Guide OS.
 
-El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Private AI Operating System:
+El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Humanity Guide OS:
 
 - portfolio frontend para reclutadores
 - demo publica multiagente segura
 - backend Node.js desacoplado
 - Private AI Lab controlado por owner
+- Humanity Guide OS como experiencia principal humano + IA
 - GENIO como nucleo central de gobernanza
+- GENESIS como reflection layer y contextual mirror
+- Human-Centered Alignment Layer como validador etico/contextual
 - blueprints de memoria, orquestacion y adapters futuros
 - blueprint de autenticacion real futura del owner
 - blueprint de observabilidad y audit persistente futuro
@@ -23,6 +26,39 @@ Proposal != execution
 ```
 
 GENIO puede analizar, organizar, priorizar, simular y proponer. GENIO no ejecuta acciones reales.
+
+## Humanity Guide OS
+
+Humanity Guide OS es la direccion conceptual oficial del ecosistema.
+
+Objetivo del MVP:
+
+```text
+Humanity Guide OS — Intelligent Organization MVP
+```
+
+Principios:
+
+- La IA no invade. La IA muta con permiso.
+- El humano no se adapta al sistema. El sistema se adapta al humano.
+- La IA no entrega poder. La IA acompana evolucion.
+
+Capas:
+
+- `Humanity Guide OS`: experiencia principal, organizacion inteligente, claridad contextual y productividad consciente.
+- `GENIO`: governance operativo, approval systems, permisos, estabilidad, policy enforcement y control reversible.
+- `GENESIS`: reflection layer, contextual mirror, simulacion reflexiva y exploracion no invasiva de posibilidades.
+- `Human-Centered Alignment Layer`: auditoria humano-centrica, ethics middleware, policy validator y contextual audit engine.
+
+Limites:
+
+- no AGI
+- no conciencia real
+- no claims espirituales reales
+- no manipulacion emocional
+- no scoring humano
+- no vigilancia humana
+- no dependencia psicologica
 
 ## Stack Tecnologico
 
@@ -696,6 +732,7 @@ UNV-HMND/
 │  │  ├─ audit
 │  │  ├─ capabilities
 │  │  ├─ context
+│  │  ├─ ecosystem
 │  │  ├─ file-preview
 │  │  ├─ governance
 │  │  ├─ observability
@@ -738,6 +775,7 @@ Fases completadas:
 - Controlled Practical Capability Blueprint
 - Controlled Runtime Sandbox Blueprint
 - Read-Only File Preview Adapter Blueprint
+- Humanity Guide OS Architecture
 
 Roadmap futuro:
 
@@ -785,6 +823,7 @@ Validar:
 ## Documentacion
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
+- [Humanity Guide OS Architecture](docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)

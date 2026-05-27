@@ -429,6 +429,38 @@ export type PrivateLabFilePreviewBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabHumanityGuideOSBlueprint = {
+  id: 'humanity-guide-os-blueprint'
+  label: string
+  status: string
+  productName: string
+  mvpName: string
+  principles: string[]
+  layers: Array<{
+    id: string
+    label: string
+    type: string
+    responsibilities: string[]
+    boundaries: string[]
+    forbiddenClaims: string[]
+    simulationOnly: true
+    actionExecuted: false
+  }>
+  relationships: Array<{
+    from: string
+    to: string
+    relationship: string
+    governanceImplication: string
+  }>
+  architecturalRisks: string[]
+  governanceImplications: string[]
+  professionalPositioning: string[]
+  pseudoAgiAvoidanceRules: string[]
+  technicalLanding: string[]
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -451,6 +483,7 @@ export type PrivateLabGenioProfile = {
   capabilityBlueprint: PrivateLabCapabilityBlueprint
   runtimeSandboxBlueprint: PrivateLabRuntimeSandboxBlueprint
   filePreviewBlueprint: PrivateLabFilePreviewBlueprint
+  humanityGuideOSBlueprint: PrivateLabHumanityGuideOSBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -1450,6 +1483,112 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
         'Phase 3: Redaction pipeline design',
         'Phase 4: Read-only sandboxed preview proof',
         'Phase 5: Persistent audit for previews'
+      ],
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    humanityGuideOSBlueprint: {
+      id: 'humanity-guide-os-blueprint',
+      label: 'Humanity Guide OS Blueprint',
+      status: 'conceptual-blueprint',
+      productName: 'Humanity Guide OS',
+      mvpName: 'Humanity Guide OS - Intelligent Organization MVP',
+      principles: [
+        'AI does not invade. AI mutates with permission.',
+        'The human does not adapt to the system. The system adapts to the human.',
+        'AI does not deliver power. AI accompanies evolution.',
+        'Governance first.',
+        'Proposal != Execution.',
+        'Approve != Execute.'
+      ],
+      layers: [
+        {
+          id: 'humanity-guide-os',
+          label: 'Humanity Guide OS',
+          type: 'primary-experience',
+          responsibilities: ['organize context', 'reduce chaos', 'support conscious productivity'],
+          boundaries: ['does not control humans', 'does not replace human judgment', 'does not present itself as AGI'],
+          forbiddenClaims: ['AGI', 'real consciousness', 'human replacement'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'genio',
+          label: 'GENIO',
+          type: 'governance-operator',
+          responsibilities: ['operate governance metadata', 'coordinate approval systems', 'enforce permission boundaries'],
+          boundaries: ['does not execute directly', 'does not bypass owner approval', 'does not access host systems directly'],
+          forbiddenClaims: ['absolute controller', 'autonomous executor', 'owner replacement'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'genesis',
+          label: 'GENESIS',
+          type: 'reflection-layer',
+          responsibilities: ['mirror context', 'simulate possibilities', 'surface strategic alternatives'],
+          boundaries: ['is not AGI', 'is not real consciousness', 'is not an emotional entity'],
+          forbiddenClaims: ['AGI', 'digital soul', 'human judge'],
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'human-centered-alignment-layer',
+          label: 'El Despertar De La Conciencia Humana',
+          type: 'alignment-validator',
+          responsibilities: ['validate human-centered coherence', 'limit manipulative automation', 'protect clarity'],
+          boundaries: ['is not a supreme AI', 'does not score humans', 'does not surveil humans'],
+          forbiddenClaims: ['supreme AI', 'real artificial consciousness', 'absolute authority'],
+          simulationOnly: true,
+          actionExecuted: false
+        }
+      ],
+      relationships: [
+        {
+          from: 'humanity-guide-os',
+          to: 'genio',
+          relationship: 'delegates operational governance',
+          governanceImplication: 'Sensitive flows route through GENIO before tools, agents, adapters, or sandbox metadata.'
+        },
+        {
+          from: 'genio',
+          to: 'genesis',
+          relationship: 'requests reflection and scenario framing',
+          governanceImplication: 'GENESIS mirrors context but cannot approve, execute, or override governance.'
+        },
+        {
+          from: 'genio',
+          to: 'human-centered-alignment-layer',
+          relationship: 'submits policies and flows for alignment review',
+          governanceImplication: 'Alignment review flags manipulation risk, boundary drift, or incoherence.'
+        }
+      ],
+      architecturalRisks: [
+        'pseudo-AGI perception if naming lacks explicit technical boundaries',
+        'overstated capabilities if conceptual layers are described as runtime intelligence',
+        'architecture drift if GENIO, GENESIS, and alignment responsibilities blur'
+      ],
+      governanceImplications: [
+        'GENIO remains the operational governance layer.',
+        'GENESIS remains reflection and simulation only.',
+        'Owner authority remains maximum.',
+        'No conceptual layer creates execution privileges.'
+      ],
+      professionalPositioning: [
+        'Position as a human-centered AI organization platform, not AGI.',
+        'Describe the MVP as intelligent organization, clarity, planning, and governance.',
+        'Use enterprise language: policy validation, context governance, risk controls, auditability.'
+      ],
+      pseudoAgiAvoidanceRules: [
+        'Never claim real consciousness, AGI, omniscience, spiritual authority, or emotional sentience.',
+        'Avoid language that implies the system controls, judges, scores, or manipulates humans.',
+        'Frame simulations as contextual and reviewable.'
+      ],
+      technicalLanding: [
+        'Represent Humanity Guide OS as product architecture and UX layer.',
+        'Represent GENIO as governance and policy orchestration metadata.',
+        'Represent GENESIS as reflection/context simulation metadata.',
+        'Represent El Despertar De La Conciencia Humana as Human-Centered Alignment Layer.'
       ],
       simulationOnly: true,
       actionExecuted: false

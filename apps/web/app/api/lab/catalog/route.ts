@@ -290,6 +290,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.filePreviewBlueprint.simulationOnly,
         actionExecuted: centralProfile.filePreviewBlueprint.actionExecuted
       },
+      humanityGuideOSBlueprint: {
+        id: centralProfile.humanityGuideOSBlueprint.id,
+        label: centralProfile.humanityGuideOSBlueprint.label,
+        status: centralProfile.humanityGuideOSBlueprint.status,
+        productName: centralProfile.humanityGuideOSBlueprint.productName,
+        mvpName: centralProfile.humanityGuideOSBlueprint.mvpName,
+        principles: centralProfile.humanityGuideOSBlueprint.principles,
+        layers: centralProfile.humanityGuideOSBlueprint.layers,
+        relationships: centralProfile.humanityGuideOSBlueprint.relationships,
+        architecturalRisks: centralProfile.humanityGuideOSBlueprint.architecturalRisks,
+        governanceImplications: centralProfile.humanityGuideOSBlueprint.governanceImplications,
+        professionalPositioning: centralProfile.humanityGuideOSBlueprint.professionalPositioning,
+        pseudoAgiAvoidanceRules: centralProfile.humanityGuideOSBlueprint.pseudoAgiAvoidanceRules,
+        technicalLanding: centralProfile.humanityGuideOSBlueprint.technicalLanding,
+        simulationOnly: centralProfile.humanityGuideOSBlueprint.simulationOnly,
+        actionExecuted: centralProfile.humanityGuideOSBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

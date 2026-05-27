@@ -3,6 +3,7 @@ import type { ControlledAdapterBlueprint } from '../adapters/AdapterBlueprint'
 import type { AuthBlueprint } from '../auth/AuthBlueprint'
 import type { CapabilityBlueprint } from '../capabilities/CapabilityBlueprint'
 import type { MemoryContextBlueprint } from '../context/ContextBlueprint'
+import type { HumanityGuideOSBlueprint } from '../ecosystem/HumanityGuideOSBlueprint'
 import type { FilePreviewBlueprint } from '../file-preview/FilePreviewBlueprint'
 import type { ObservabilityBlueprint } from '../observability/ObservabilityBlueprint'
 import type { StrategicOrchestrationBlueprint } from '../orchestration/OrchestrationBlueprint'
@@ -73,6 +74,7 @@ export interface GenioCentralProfile {
   capabilityBlueprint: CapabilityBlueprint
   runtimeSandboxBlueprint: RuntimeSandboxBlueprint
   filePreviewBlueprint: FilePreviewBlueprint
+  humanityGuideOSBlueprint: HumanityGuideOSBlueprint
   governanceMetadata: GovernanceMetadata
   lifeMapVision: FutureCapabilityMetadata[]
   financialStrategyVision: FutureCapabilityMetadata[]

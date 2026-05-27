@@ -63,6 +63,10 @@ describe('LabPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
 
     expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
+    expect(screen.getAllByText('Humanity Guide OS').length).toBeGreaterThan(0)
+    expect(screen.getByText('Humanity Guide OS - Intelligent Organization MVP')).toBeInTheDocument()
+    expect(screen.getByText('No AGI claims')).toBeInTheDocument()
+    expect(screen.getByText('GENESIS: reflection-layer')).toBeInTheDocument()
     expect(screen.getByText('Auth blueprint')).toBeInTheDocument()
     expect(screen.getByText('Real Owner Auth Blueprint')).toBeInTheDocument()
     expect(screen.getAllByText('owner-access-code').length).toBeGreaterThan(0)
