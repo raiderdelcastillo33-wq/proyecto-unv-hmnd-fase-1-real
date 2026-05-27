@@ -197,6 +197,41 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.authBlueprint.simulationOnly,
         actionExecuted: centralProfile.authBlueprint.actionExecuted
       },
+      observabilityBlueprint: {
+        id: centralProfile.observabilityBlueprint.id,
+        label: centralProfile.observabilityBlueprint.label,
+        status: centralProfile.observabilityBlueprint.status,
+        auditTrace: centralProfile.observabilityBlueprint.auditTrace,
+        eventLineage: centralProfile.observabilityBlueprint.eventLineage.map((lineage) => ({
+          id: lineage.id,
+          label: lineage.label,
+          traceId: lineage.traceId,
+          parentEventId: lineage.parentEventId,
+          childEventIds: lineage.childEventIds,
+          correlationId: lineage.correlationId,
+          approvalChain: lineage.approvalChain,
+          governanceSource: lineage.governanceSource,
+          riskLevel: lineage.riskLevel,
+          simulationOnly: lineage.simulationOnly,
+          actionExecuted: lineage.actionExecuted
+        })),
+        governanceCheckpoints: centralProfile.observabilityBlueprint.governanceCheckpoints.map((checkpoint) => ({
+          id: checkpoint.id,
+          label: checkpoint.label,
+          description: checkpoint.description,
+          riskLevel: checkpoint.riskLevel,
+          escalationRequired: checkpoint.escalationRequired,
+          simulationOnly: checkpoint.simulationOnly,
+          actionExecuted: checkpoint.actionExecuted
+        })),
+        monitoringScopes: centralProfile.observabilityBlueprint.monitoringScopes,
+        retentionPolicies: centralProfile.observabilityBlueprint.retentionPolicies,
+        auditPersistenceReadiness: centralProfile.observabilityBlueprint.auditPersistenceReadiness,
+        privacyPrinciples: centralProfile.observabilityBlueprint.privacyPrinciples,
+        nonCapabilities: centralProfile.observabilityBlueprint.nonCapabilities,
+        simulationOnly: centralProfile.observabilityBlueprint.simulationOnly,
+        actionExecuted: centralProfile.observabilityBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

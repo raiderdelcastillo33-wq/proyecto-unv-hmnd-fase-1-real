@@ -174,6 +174,63 @@ export type PrivateLabAuthBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabObservabilityBlueprint = {
+  id: 'persistent-audit-observability-blueprint'
+  label: string
+  status: string
+  auditTrace: {
+    traceId: string
+    correlationId: string
+    sessionId: string
+    proposalId?: string
+    orchestrationId?: string
+    governanceSource: string
+    originatingAgent: string
+    hierarchyLevel: string
+    simulationOnly: true
+    actionExecuted: false
+  }
+  eventLineage: Array<{
+    id: string
+    label: string
+    traceId: string
+    parentEventId?: string
+    childEventIds: string[]
+    correlationId: string
+    approvalChain: string[]
+    governanceSource: string
+    riskLevel: string
+    simulationOnly: true
+    actionExecuted: false
+  }>
+  governanceCheckpoints: Array<{
+    id: string
+    label: string
+    description: string
+    riskLevel: string
+    escalationRequired: boolean
+    simulationOnly: true
+    actionExecuted: false
+  }>
+  monitoringScopes: string[]
+  retentionPolicies: string[]
+  auditPersistenceReadiness: {
+    persistentAudit: string
+    immutableLogs: string
+    encryptedAuditStorage: string
+    auditRetention: string
+    eventReplay: string
+    forensicAnalysis: string
+    governanceHistory: string
+    safetyBoundary: string
+    simulationOnly: true
+  }
+  privacyPrinciples: string[]
+  nonCapabilities: string[]
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -192,6 +249,7 @@ export type PrivateLabGenioProfile = {
   orchestrationBlueprint: PrivateLabOrchestrationBlueprint
   adapterBlueprint: PrivateLabAdapterBlueprint
   authBlueprint: PrivateLabAuthBlueprint
+  observabilityBlueprint: PrivateLabObservabilityBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -676,6 +734,105 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
       ],
       ownerAccessCodeBoundary:
         'OWNER_ACCESS_CODE is a temporary server-side gate for the private lab. It is not real authentication and must never be exposed as NEXT_PUBLIC_OWNER_ACCESS_CODE.',
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    observabilityBlueprint: {
+      id: 'persistent-audit-observability-blueprint',
+      label: 'Persistent Audit & Observability Blueprint',
+      status: 'metadata-only',
+      auditTrace: {
+        traceId: 'trace-genio-blueprint',
+        correlationId: 'corr-genio-blueprint',
+        sessionId: 'private-lab-local-session',
+        proposalId: 'proposal-observability-blueprint',
+        orchestrationId: 'orch-genio-default-flow',
+        governanceSource: 'genio-central',
+        originatingAgent: 'genio-central',
+        hierarchyLevel: 'central',
+        simulationOnly: true,
+        actionExecuted: false
+      },
+      eventLineage: [
+        {
+          id: 'lineage-proposal-requested',
+          label: 'Proposal requested',
+          traceId: 'trace-genio-blueprint',
+          childEventIds: ['lineage-approval-evaluated'],
+          correlationId: 'corr-genio-blueprint',
+          approvalChain: ['owner-review-required'],
+          governanceSource: 'genio-central',
+          riskLevel: 'medium',
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'lineage-approval-evaluated',
+          label: 'Approval evaluated',
+          traceId: 'trace-genio-blueprint',
+          parentEventId: 'lineage-proposal-requested',
+          childEventIds: ['lineage-governance-recorded'],
+          correlationId: 'corr-genio-blueprint',
+          approvalChain: ['approval-gate', 'owner-final-authority'],
+          governanceSource: 'approval-gate',
+          riskLevel: 'high',
+          simulationOnly: true,
+          actionExecuted: false
+        }
+      ],
+      governanceCheckpoints: [
+        {
+          id: 'checkpoint-proposal-only',
+          label: 'Proposal-only boundary',
+          description: 'Any event lineage must confirm that proposal metadata did not become execution.',
+          riskLevel: 'high',
+          escalationRequired: true,
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        {
+          id: 'checkpoint-sensitive-adapter',
+          label: 'Sensitive adapter guard',
+          description: 'Future adapter activity must be correlated, risk-classified, and blocked until approved.',
+          riskLevel: 'critical',
+          escalationRequired: true,
+          simulationOnly: true,
+          actionExecuted: false
+        }
+      ],
+      monitoringScopes: [
+        'system-health',
+        'governance-monitoring',
+        'orchestration-monitoring',
+        'adapter-monitoring',
+        'auth-monitoring',
+        'risk-monitoring',
+        'audit-anomaly-detection',
+        'incident-escalation'
+      ],
+      retentionPolicies: ['ephemeral-current', 'short-term-future', 'long-term-future', 'immutable-future'],
+      auditPersistenceReadiness: {
+        persistentAudit: 'placeholder-only',
+        immutableLogs: 'placeholder-only',
+        encryptedAuditStorage: 'placeholder-only',
+        auditRetention: 'placeholder-only',
+        eventReplay: 'placeholder-only',
+        forensicAnalysis: 'placeholder-only',
+        governanceHistory: 'placeholder-only',
+        safetyBoundary:
+          'No database, cloud logging, external telemetry, workers, realtime monitoring, or persistent audit storage exists in this phase.',
+        simulationOnly: true
+      },
+      privacyPrinciples: [
+        'Observability does not mean invasive surveillance.',
+        'Audit lineage must be privacy-aware, owner-controlled, and purpose-limited.',
+        'GENIO must not act outside approval flow because an observation exists.'
+      ],
+      nonCapabilities: [
+        'No persistent audit database.',
+        'No OpenTelemetry runtime.',
+        'No realtime monitoring, websocket telemetry, workers, queues, or background processing.'
+      ],
       simulationOnly: true,
       actionExecuted: false
     },

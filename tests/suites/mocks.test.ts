@@ -5,6 +5,7 @@ import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterB
 import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
+import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
@@ -185,6 +186,10 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.authBlueprint.realAuthImplemented, false)
         assert.ok(genio.authBlueprint.supportedFutureRoles.includes('owner'))
         assert.ok(genio.authBlueprint.accessPolicies.some((policy) => policy.id === 'approve_proposal'))
+        assert.equal(genio.observabilityBlueprint.id, 'persistent-audit-observability-blueprint')
+        assert.equal(genio.observabilityBlueprint.auditTrace.traceId, 'trace-genio-blueprint')
+        assert.equal(genio.observabilityBlueprint.auditPersistenceReadiness.persistentAudit, 'placeholder-only')
+        assert.equal(genio.observabilityBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
@@ -213,6 +218,29 @@ export function mockTests(): TestCase[] {
         assert.equal(executionPolicy?.riskLevel, 'critical')
         assert.ok(blueprint.ownerAccessCodeBoundary.includes('not real authentication'))
         assert.ok(blueprint.ownerAccessCodeBoundary.includes('NEXT_PUBLIC_OWNER_ACCESS_CODE'))
+      }
+    },
+    {
+      name: 'Observability: persistent audit blueprint remains metadata only',
+      run: async () => {
+        const blueprint = PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.equal(blueprint.auditTrace.correlationId, 'corr-genio-blueprint')
+        assert.equal(blueprint.auditTrace.actionExecuted, false)
+        assert.ok(blueprint.eventLineage.some((lineage) => lineage.parentEventId === 'lineage-proposal-requested'))
+        assert.ok(blueprint.correlationChain.approvalChain.includes('owner-final-authority'))
+        assert.ok(blueprint.governanceCheckpoints.some((checkpoint) => checkpoint.id === 'checkpoint-sensitive-adapter'))
+        assert.equal(blueprint.executionLineage.status, 'not-implemented')
+        assert.equal(blueprint.executionLineage.blockedExecution, true)
+        assert.ok(blueprint.monitoringScopes.includes('audit-anomaly-detection'))
+        assert.ok(blueprint.retentionPolicies.includes('immutable-future'))
+        assert.equal(blueprint.auditPersistenceReadiness.persistentAudit, 'placeholder-only')
+        assert.ok(blueprint.auditPersistenceReadiness.safetyBoundary.includes('No database'))
+        assert.ok(blueprint.privacyPrinciples.some((principle) => principle.includes('invasive surveillance')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No OpenTelemetry')))
       }
     },
     {

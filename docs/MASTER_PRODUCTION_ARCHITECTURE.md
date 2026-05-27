@@ -32,6 +32,7 @@ Current implemented architecture:
 - Strategic Multi-Agent Orchestration Layer
 - Controlled Adapter Blueprint
 - Real Owner Auth Blueprint
+- Persistent Audit & Observability Blueprint
 - AgentRegistry
 - ToolRegistry
 - ApprovalGate / ApprovalPolicy
@@ -47,6 +48,7 @@ Current guarantees:
 - no persistent memory
 - no autonomous agents
 - no real authentication runtime
+- no persistent audit or real observability runtime
 
 ## 2. What Does Not Exist Yet
 
@@ -69,6 +71,7 @@ The current system does not include:
 - SaaS tenant management
 - company agents runtime
 - production monitoring
+- real tracing or external telemetry
 - rate limiting
 - secrets management layer beyond environment variables
 
@@ -152,7 +155,34 @@ docs/AUTH_BLUEPRINT.md
 src/domain/auth/AuthBlueprint.ts
 ```
 
-## 6. Production Readiness Matrix
+## 6. Persistent Audit & Observability Blueprint
+
+GENIO now has metadata for future enterprise auditability and observability.
+
+The blueprint prepares:
+
+- audit traces
+- event lineage
+- correlation chains
+- governance checkpoints
+- execution lineage placeholders
+- system observations
+- incident signals
+- monitoring scopes
+- audit retention policies
+
+Current audit remains in-memory only. There is no persistent audit database, OpenTelemetry runtime, cloud logging, Sentry, DataDog, Prometheus, Grafana, ElasticSearch, realtime telemetry, workers, or background monitoring.
+
+Observability must be privacy-aware and owner-controlled. It must never become invasive surveillance or a bypass around approval flow.
+
+Detailed observability blueprint:
+
+```text
+docs/OBSERVABILITY_BLUEPRINT.md
+src/domain/observability/ObservabilityBlueprint.ts
+```
+
+## 7. Production Readiness Matrix
 
 | Module | Current Status | Production Requirement | Risk Level | Next Step | Verification Method |
 | --- | --- | --- | --- | --- | --- |
@@ -170,10 +200,10 @@ src/domain/auth/AuthBlueprint.ts
 | Admin dashboard | Not implemented | Owner admin for audit, policies, users | Medium | Admin Dashboard | E2E/manual checks |
 | Deployment | Frontend Vercel-ready | Environment validation, preview/prod gates | Medium | Production deploy checklist | Vercel deploy, route smoke tests |
 | Testing | Jest/domain tests present | Add E2E smoke tests and production checklist | Medium | Production Testing Guide | CI + manual evidence |
-| Monitoring | Not implemented | Logs, error tracking, health checks, alerts | Medium | Observability plan | Health endpoint, alert tests |
+| Monitoring | Observability blueprint metadata only | Logs, error tracking, health checks, alerts | Medium | Persistent Audit & Observability runtime plan | Health endpoint, alert tests |
 | Security | Progressive boundaries documented | Threat model, auth, secrets, rate limits | Critical | Security hardening phase | Security checklist, review |
 
-## 7. Web Testing And Production Validation
+## 8. Web Testing And Production Validation
 
 Local URLs:
 
@@ -216,6 +246,7 @@ Validate `/lab`:
 - orchestration blueprint is visible
 - adapter blueprint is visible
 - auth blueprint is visible
+- observability blueprint is visible
 - approve/reject buttons update metadata only
 - no real execution happens
 
@@ -228,7 +259,7 @@ Browser DevTools:
   - `/api/lab/tool`
 - Response payloads should not expose secrets or `systemInstructions`
 
-## 8. Production Verification Checklist
+## 9. Production Verification Checklist
 
 Run before closing a production-readiness phase:
 
@@ -253,10 +284,11 @@ Manual checklist:
 - no `NEXT_PUBLIC_OWNER_ACCESS_CODE`
 - `OWNER_ACCESS_CODE` only exists server-side
 - no real execution adapters
+- no real telemetry or persistent audit storage
 - no `systemInstructions` in public responses
 - no terminal/filesystem/Gmail/finance execution
 
-## 9. Future Roadmap By Phases
+## 10. Future Roadmap By Phases
 
 ### Phase 1: Production Architecture Blueprint
 
@@ -274,7 +306,7 @@ Manual checklist:
 
 ### Phase 3: Persistent Audit Log
 
-- Objective: store append-only audit events durably
+- Objective: move from observability blueprint to append-only audit events stored durably
 - Risk: high
 - Prerequisites: DB/storage decision, migration plan, redaction policy
 - Verification: audit write/read tests, redaction tests, failure tests
@@ -328,7 +360,7 @@ Manual checklist:
 - Prerequisites: all previous phases, threat model, rollback strategy, monitoring
 - Verification: sandbox tests, approval tests, audit tests, rollback drills
 
-## 10. World Access Layer
+## 11. World Access Layer
 
 World Access Layer is the future controlled connection between GENIO and external tools.
 
@@ -361,7 +393,7 @@ Required future properties:
 - owner-controlled
 - never bypass owner approval
 
-## 11. Release Criteria For Future Production Phases
+## 12. Release Criteria For Future Production Phases
 
 A future phase is production-ready only when:
 

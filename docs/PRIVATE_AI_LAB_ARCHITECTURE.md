@@ -56,6 +56,7 @@ GENIO contains:
 - orchestration blueprint
 - controlled adapter blueprint
 - real owner auth blueprint
+- persistent audit and observability blueprint
 
 GENIO is not a regular worker agent. It is the governance layer above the agent hierarchy.
 
@@ -158,7 +159,55 @@ Prepared permissions include proposal requests, approval/rejection, audit views,
 
 `execute_controlled_action_future` is future-only, critical risk, approval-required, and not implemented.
 
-## 6. Strategic Vision Metadata
+## 6. Persistent Audit & Observability Blueprint
+
+Source:
+
+```text
+src/domain/observability/ObservabilityBlueprint.ts
+docs/OBSERVABILITY_BLUEPRINT.md
+```
+
+Current audit remains in memory only.
+
+Prepared concepts:
+
+- `AuditTrace`
+- `EventLineage`
+- `CorrelationChain`
+- `GovernanceCheckpoint`
+- `ExecutionLineage`
+- `SystemObservation`
+- `IncidentSignal`
+- `MonitoringScope`
+- `AuditRetentionPolicy`
+
+Prepared correlation metadata:
+
+- `correlationId`
+- `traceId`
+- `parentEventId`
+- `orchestrationId`
+- `proposalId`
+- `sessionId`
+- `governanceSource`
+- `originatingAgent`
+- `approvalChain`
+
+Future audit persistence may include immutable logs, encrypted audit storage, retention, event replay, forensic analysis, and governance history.
+
+Current boundaries:
+
+- no persistent audit DB
+- no OpenTelemetry runtime
+- no Sentry, DataDog, Prometheus, Grafana, ElasticSearch, or cloud logging
+- no realtime telemetry
+- no workers, queues, or background processing
+- no execution telemetry
+
+Observability does not mean invasive surveillance. Future monitoring must remain privacy-aware, owner-controlled, purpose-limited, and governed by approval flow.
+
+## 7. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -182,7 +231,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 7. Memory & Context Blueprint
+## 8. Memory & Context Blueprint
 
 Source:
 
@@ -226,7 +275,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 8. Strategic Multi-Agent Orchestration Layer
+## 9. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -256,7 +305,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 9. Controlled Adapter Blueprint
+## 10. Controlled Adapter Blueprint
 
 Source:
 
@@ -287,7 +336,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 10. Audit System
+## 11. Audit System
 
 Source:
 
@@ -315,7 +364,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 11. Current Non-Capabilities
+## 12. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -324,6 +373,9 @@ The system currently does not include:
 - Gmail integration
 - database persistence
 - real auth layer
+- persistent audit
+- real tracing
+- external observability
 - vector memory
 - embeddings
 - semantic search
@@ -338,7 +390,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 12. Evolution Timeline
+## 13. Evolution Timeline
 
 Completed phases:
 
@@ -355,6 +407,7 @@ Completed phases:
 11. Documentation sync
 12. Master Production Architecture Blueprint
 13. Real Owner Auth Blueprint
+14. Persistent Audit & Observability Blueprint
 
 Future roadmap:
 
@@ -369,7 +422,7 @@ Future roadmap:
 - reversible execution adapters
 - operational monitoring
 
-## 13. Verification
+## 14. Verification
 
 Before closing a phase, run:
 
@@ -380,7 +433,7 @@ npm run build:api
 npm test
 ```
 
-## 14. Production Blueprint And Testing
+## 15. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 
@@ -388,6 +441,7 @@ Production-readiness planning lives in:
 docs/MASTER_PRODUCTION_ARCHITECTURE.md
 docs/PRODUCTION_TESTING_GUIDE.md
 docs/AUTH_BLUEPRINT.md
+docs/OBSERVABILITY_BLUEPRINT.md
 ```
 
 These documents define:

@@ -466,6 +466,26 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">Observability blueprint</p>
+              <h3>{governance.centralProfile.observabilityBlueprint.label}</h3>
+              <p>{governance.centralProfile.observabilityBlueprint.auditPersistenceReadiness.safetyBoundary}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.observabilityBlueprint.status}</span>
+                <span className="info-chip">{governance.centralProfile.observabilityBlueprint.auditTrace.traceId}</span>
+                <span className="info-chip">{governance.centralProfile.observabilityBlueprint.auditTrace.correlationId}</span>
+                <span className="info-chip">No telemetry</span>
+                <span className="info-chip">No persistent audit</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.observabilityBlueprint.governanceCheckpoints.map((checkpoint) => (
+                  <span className="tech-pill" key={checkpoint.id}>
+                    {checkpoint.label}: {checkpoint.riskLevel}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Memory blueprint</p>
               <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
               <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
@@ -749,6 +769,17 @@ export default function LabPage() {
                     <span className="info-chip">Real auth not implemented</span>
                     <span className="info-chip">No persistent sessions</span>
                     <span className="info-chip">No user DB</span>
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Audit lineage</p>
+                  <h3>{governance.centralProfile.observabilityBlueprint.auditTrace.traceId}</h3>
+                  <div className="response-meta">
+                    {governance.centralProfile.observabilityBlueprint.eventLineage.map((lineage) => (
+                      <span className="info-chip" key={lineage.id}>
+                        {lineage.label}: {lineage.riskLevel}
+                      </span>
+                    ))}
                   </div>
                 </section>
                 <section className="result-state">

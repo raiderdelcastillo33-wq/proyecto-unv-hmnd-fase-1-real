@@ -187,6 +187,31 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.governance.centralProfile.authBlueprint.ownerAccessCodeBoundary).toContain(
       'not real authentication'
     )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.id).toBe(
+      'persistent-audit-observability-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.auditTrace.traceId).toBe(
+      'trace-genio-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.auditTrace.actionExecuted).toBe(false)
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.eventLineage).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'lineage-approval-evaluated',
+          parentEventId: 'lineage-proposal-requested',
+          actionExecuted: false
+        })
+      ])
+    )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.monitoringScopes).toContain(
+      'audit-anomaly-detection'
+    )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.auditPersistenceReadiness.persistentAudit).toBe(
+      'placeholder-only'
+    )
+    expect(payload.data.governance.centralProfile.observabilityBlueprint.nonCapabilities).toEqual(
+      expect.arrayContaining([expect.stringContaining('No OpenTelemetry')])
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

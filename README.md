@@ -11,6 +11,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - GENIO como nucleo central de gobernanza
 - blueprints de memoria, orquestacion y adapters futuros
 - blueprint de autenticacion real futura del owner
+- blueprint de observabilidad y audit persistente futuro
 
 La regla central del sistema es:
 
@@ -65,6 +66,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - muestra approval metadata
 - registra audit events en memoria
 - permite aprobar/rechazar propuestas en modo simulation-only
+- muestra blueprint de observabilidad futura sin telemetria real
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -199,6 +201,51 @@ Permisos futuros preparados:
 `execute_controlled_action_future` esta marcado como future-only, high-risk, approval-required y not implemented.
 
 No existe todavia login real, registro, DB, sesiones persistentes, cookies auth, JWT, OAuth, Supabase, Clerk, NextAuth, bcrypt ni multiempresa real.
+
+## Persistent Audit & Observability Blueprint
+
+GENIO queda preparado para observabilidad profesional futura solo como metadata.
+
+Tipos preparados:
+
+- `ObservabilityBlueprint`
+- `AuditTrace`
+- `EventLineage`
+- `CorrelationChain`
+- `GovernanceCheckpoint`
+- `ExecutionLineage`
+- `SystemObservation`
+- `IncidentSignal`
+- `MonitoringScope`
+- `AuditRetentionPolicy`
+- `ObservabilityRiskLevel`
+
+Metadata preparada:
+
+- `correlationId`
+- `traceId`
+- `parentEventId`
+- `orchestrationId`
+- `proposalId`
+- `sessionId`
+- `governanceSource`
+- `originatingAgent`
+- `approvalChain`
+
+Roadmap futuro:
+
+- persistent audit
+- immutable logs
+- encrypted audit storage
+- audit retention
+- event replay
+- forensic analysis
+- governance history
+- incident escalation
+
+No existe todavia DB de audit, OpenTelemetry real, cloud logging, Sentry, DataDog, Prometheus, Grafana, ElasticSearch, workers, realtime telemetry ni dashboards reales.
+
+Observabilidad no significa vigilancia invasiva. Toda auditabilidad futura debe ser owner-controlled, privacy-aware, audit-first y compatible con approval flow.
 
 ## GENIO Strategic Vision Metadata
 
@@ -366,6 +413,9 @@ No existen todavia:
 - filesystem real
 - DB real
 - auth real
+- observabilidad real
+- audit persistente
+- tracing real
 - memoria vectorial
 - embeddings reales
 - autonomous agents
@@ -465,6 +515,7 @@ Ruta privada server-side para catalogo seguro:
 - orchestration blueprint
 - adapter blueprint
 - auth blueprint
+- observability blueprint
 
 Requiere `OWNER_ACCESS_CODE`.
 
@@ -496,6 +547,7 @@ UNV-HMND/
 │  │  ├─ audit
 │  │  ├─ context
 │  │  ├─ governance
+│  │  ├─ observability
 │  │  ├─ orchestration
 │  │  ├─ security
 │  │  └─ tools
@@ -530,6 +582,7 @@ Fases completadas:
 - Controlled Adapter Blueprint
 - Master Production Architecture Blueprint
 - Real Owner Auth Blueprint
+- Persistent Audit & Observability Blueprint
 
 Roadmap futuro:
 
@@ -566,7 +619,7 @@ https://your-vercel-domain.example/lab
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
-- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, memory, orchestration y adapters
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, memory, orchestration y adapters
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
@@ -576,5 +629,6 @@ Validar:
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
+- [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)
 - [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
 - [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)
