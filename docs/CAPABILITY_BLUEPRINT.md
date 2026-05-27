@@ -169,6 +169,22 @@ Owner
 
 Direct agent-to-host access is forbidden.
 
+## File Preview Dependency
+
+The first practical future capability track is the Read-Only File Preview Adapter Blueprint.
+
+It remains:
+
+- preview-only
+- read-only
+- approval-required
+- audit-required
+- sandbox-aware
+- redaction-aware
+- metadata-only in this phase
+
+No real filesystem read, upload, parsing, OCR, indexing, or host access exists.
+
 ## Non-Capabilities
 
 The current system does not include:

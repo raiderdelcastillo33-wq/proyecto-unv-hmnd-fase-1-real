@@ -59,6 +59,7 @@ GENIO contains:
 - persistent audit and observability blueprint
 - controlled practical capability blueprint
 - controlled runtime sandbox blueprint
+- read-only file preview adapter blueprint
 
 GENIO is not a regular worker agent. It is the governance layer above the agent hierarchy.
 
@@ -297,7 +298,52 @@ Current sandbox state:
 
 No real sandbox, terminal, filesystem, Docker, VM, workers, queues, browser automation, OS automation, autonomous loops, self-modification, self-replication, or unrestricted execution exists.
 
-## 9. Strategic Vision Metadata
+## 9. Read-Only File Preview Adapter Blueprint
+
+Source:
+
+```text
+src/domain/file-preview/FilePreviewBlueprint.ts
+docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md
+```
+
+The file preview blueprint prepares a future owner-approved, read-only preview adapter.
+
+Prepared concepts:
+
+- `FilePreviewBlueprint`
+- `FilePreviewProfile`
+- `FilePreviewType`
+- `FilePreviewPermission`
+- `FilePreviewRedactionPolicy`
+- `FilePreviewAuditTrace`
+- `FilePreviewLifecycle`
+
+Current state:
+
+- lifecycle: `blocked`
+- visibility: `metadata-only`
+- redaction: `metadata-only`
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+Current boundaries:
+
+- preview-only
+- read-only
+- no-write
+- no-delete
+- no-execute
+- no-shell
+- no-host-direct-access
+- approval-required
+- audit-required
+- size-limited
+- type-limited
+
+No real filesystem read, upload, watcher, indexing, embeddings, OCR, parsing, shell access, file execution, filesystem traversal, file browser UI, or direct host access exists.
+
+## 10. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -321,7 +367,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 10. Memory & Context Blueprint
+## 11. Memory & Context Blueprint
 
 Source:
 
@@ -365,7 +411,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 11. Strategic Multi-Agent Orchestration Layer
+## 12. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -395,7 +441,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 12. Controlled Adapter Blueprint
+## 13. Controlled Adapter Blueprint
 
 Source:
 
@@ -426,7 +472,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 13. Audit System
+## 14. Audit System
 
 Source:
 
@@ -454,7 +500,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 14. Current Non-Capabilities
+## 15. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -470,6 +516,9 @@ The system currently does not include:
 - autonomous execution
 - runtime sandbox
 - direct host access
+- real file preview
+- filesystem read
+- file uploads
 - vector memory
 - embeddings
 - semantic search
@@ -484,7 +533,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 15. Evolution Timeline
+## 16. Evolution Timeline
 
 Completed phases:
 
@@ -504,6 +553,7 @@ Completed phases:
 14. Persistent Audit & Observability Blueprint
 15. Controlled Practical Capability Blueprint
 16. Controlled Runtime Sandbox Blueprint
+17. Read-Only File Preview Adapter Blueprint
 
 Future roadmap:
 
@@ -518,9 +568,10 @@ Future roadmap:
 - reversible execution adapters
 - controlled practical capability runtime
 - governed runtime sandbox
+- read-only file preview adapter
 - operational monitoring
 
-## 16. Verification
+## 17. Verification
 
 Before closing a phase, run:
 
@@ -531,7 +582,7 @@ npm run build:api
 npm test
 ```
 
-## 17. Production Blueprint And Testing
+## 18. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 
@@ -542,6 +593,7 @@ docs/AUTH_BLUEPRINT.md
 docs/OBSERVABILITY_BLUEPRINT.md
 docs/CAPABILITY_BLUEPRINT.md
 docs/RUNTIME_SANDBOX_BLUEPRINT.md
+docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md
 ```
 
 These documents define:

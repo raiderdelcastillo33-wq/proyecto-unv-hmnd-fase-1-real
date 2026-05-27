@@ -363,6 +363,72 @@ export type PrivateLabRuntimeSandboxBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabFilePreviewBlueprint = {
+  id: 'read-only-file-preview-adapter-blueprint'
+  label: string
+  status: string
+  supportedFutureTypes: string[]
+  lifecycleStates: string[]
+  profile: {
+    id: string
+    label: string
+    description: string
+    supportedTypes: string[]
+    permissions: string[]
+    riskLevel: string
+    visibility: string
+    lifecycle: string
+    conceptualFileReference: string
+    approvalRequired: true
+    boundaries: Array<{
+      id: string
+      label: string
+      permission: string
+      description: string
+      enforcedInThisPhase: boolean
+    }>
+    redactionPolicy: {
+      id: string
+      label: string
+      status: string
+      redactionModes: string[]
+      detectionImplemented: false
+      simulationOnly: true
+    }
+    auditTrace: {
+      traceId: string
+      correlationId: string
+      proposalId: string
+      adapterId: string
+      capabilityId: string
+      sandboxRouteId: string
+      lifecycle: string
+      simulationOnly: true
+      actionExecuted: false
+    }
+    simulationOnly: true
+    actionExecuted: false
+  }
+  runtimeIntegration: {
+    sandboxAware: true
+    capabilityAware: true
+    observabilityAware: true
+    approvalAware: true
+    authAware: true
+    runtimeSandboxId: string
+    capabilityBlueprintId: string
+    observabilityBlueprintId: string
+    approvalFlow: string
+    authMode: string
+    simulationOnly: true
+  }
+  governanceRules: string[]
+  nonCapabilities: string[]
+  roadmap: string[]
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -384,6 +450,7 @@ export type PrivateLabGenioProfile = {
   observabilityBlueprint: PrivateLabObservabilityBlueprint
   capabilityBlueprint: PrivateLabCapabilityBlueprint
   runtimeSandboxBlueprint: PrivateLabRuntimeSandboxBlueprint
+  filePreviewBlueprint: PrivateLabFilePreviewBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -1256,6 +1323,133 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
       nonCapabilities: [
         'No terminal, shell, child_process, filesystem, Docker, VM, worker, queue, browser automation, or OS automation runtime exists.',
         'No autonomous loops, self-modification, self-replication, unrestricted execution, or direct host access exists.'
+      ],
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    filePreviewBlueprint: {
+      id: 'read-only-file-preview-adapter-blueprint',
+      label: 'Read-Only File Preview Adapter Blueprint',
+      status: 'metadata-only',
+      supportedFutureTypes: [
+        'text',
+        'markdown',
+        'json',
+        'yaml',
+        'log',
+        'code',
+        'pdf-preview-future',
+        'image-preview-future',
+        'spreadsheet-preview-future'
+      ],
+      lifecycleStates: ['requested', 'awaiting-approval', 'approved-for-preview', 'simulated-preview', 'blocked', 'expired'],
+      profile: {
+        id: 'safe-file-preview-capability',
+        label: 'Safe File Preview Capability',
+        description:
+          'Future owner-approved, read-only file preview adapter. No filesystem access, parsing, uploads, indexing, OCR, or host access exists in this phase.',
+        supportedTypes: [
+          'text',
+          'markdown',
+          'json',
+          'yaml',
+          'log',
+          'code',
+          'pdf-preview-future',
+          'image-preview-future',
+          'spreadsheet-preview-future'
+        ],
+        permissions: [
+          'preview-only',
+          'read-only',
+          'no-write',
+          'no-delete',
+          'no-execute',
+          'no-shell',
+          'no-host-direct-access',
+          'approval-required',
+          'audit-required',
+          'size-limited',
+          'type-limited'
+        ],
+        riskLevel: 'high',
+        visibility: 'metadata-only',
+        lifecycle: 'blocked',
+        conceptualFileReference: 'owner-selected-file-placeholder',
+        approvalRequired: true,
+        boundaries: [
+          {
+            id: 'preview-only',
+            label: 'Preview only',
+            permission: 'preview-only',
+            description: 'Future adapter may preview scoped content only.',
+            enforcedInThisPhase: true
+          },
+          {
+            id: 'no-host-direct-access',
+            label: 'No host direct access',
+            permission: 'no-host-direct-access',
+            description: 'GENIO and agents cannot access the host directly.',
+            enforcedInThisPhase: true
+          }
+        ],
+        redactionPolicy: {
+          id: 'file-preview-redaction-policy',
+          label: 'File Preview Redaction Policy',
+          status: 'metadata-only',
+          redactionModes: [
+            'secret-masking',
+            'token-masking',
+            'env-redaction',
+            'key-detection',
+            'pii-redaction',
+            'unsafe-content-blocking'
+          ],
+          detectionImplemented: false,
+          simulationOnly: true
+        },
+        auditTrace: {
+          traceId: 'file-preview-trace-blueprint',
+          correlationId: 'file-preview-corr-blueprint',
+          proposalId: 'proposal-file-preview-blueprint',
+          adapterId: 'file-preview-adapter',
+          capabilityId: 'safe-file-preview-capability',
+          sandboxRouteId: 'route-capability-to-sandbox',
+          lifecycle: 'blocked',
+          simulationOnly: true,
+          actionExecuted: false
+        },
+        simulationOnly: true,
+        actionExecuted: false
+      },
+      runtimeIntegration: {
+        sandboxAware: true,
+        capabilityAware: true,
+        observabilityAware: true,
+        approvalAware: true,
+        authAware: true,
+        runtimeSandboxId: 'controlled-runtime-sandbox-blueprint',
+        capabilityBlueprintId: 'controlled-practical-capability-blueprint',
+        observabilityBlueprintId: 'persistent-audit-observability-blueprint',
+        approvalFlow: 'owner-approval-required',
+        authMode: 'owner-access-code-temporary',
+        simulationOnly: true
+      },
+      governanceRules: [
+        'Read-only preview blueprint != filesystem access real.',
+        'Proposal != Execution.',
+        'GENIO governs future preview adapters but does not access the host directly.'
+      ],
+      nonCapabilities: [
+        'No fs runtime, filesystem traversal, uploads, watchers, indexing, embeddings, OCR, parsing, shell access, file execution, or host access exists.',
+        'No file contents are read, stored, parsed, embedded, summarized, or displayed in this phase.'
+      ],
+      roadmap: [
+        'Phase 1: Preview blueprint metadata',
+        'Phase 2: Owner-selected file reference model',
+        'Phase 3: Redaction pipeline design',
+        'Phase 4: Read-only sandboxed preview proof',
+        'Phase 5: Persistent audit for previews'
       ],
       simulationOnly: true,
       actionExecuted: false

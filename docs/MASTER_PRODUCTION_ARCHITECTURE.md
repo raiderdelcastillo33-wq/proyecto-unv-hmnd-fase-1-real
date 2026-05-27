@@ -35,6 +35,7 @@ Current implemented architecture:
 - Persistent Audit & Observability Blueprint
 - Controlled Practical Capability Blueprint
 - Controlled Runtime Sandbox Blueprint
+- Read-Only File Preview Adapter Blueprint
 - AgentRegistry
 - ToolRegistry
 - ApprovalGate / ApprovalPolicy
@@ -79,6 +80,7 @@ The current system does not include:
 - real tracing or external telemetry
 - unrestricted capability system
 - unrestricted execution or direct agent-to-host access
+- real filesystem preview or file browser
 - rate limiting
 - secrets management layer beyond environment variables
 
@@ -259,7 +261,27 @@ docs/RUNTIME_SANDBOX_BLUEPRINT.md
 src/domain/runtime/RuntimeSandboxBlueprint.ts
 ```
 
-## 9. Production Readiness Matrix
+## 9. Read-Only File Preview Adapter Blueprint
+
+GENIO now has metadata for a future owner-approved read-only file preview adapter.
+
+Current status:
+
+- lifecycle: `blocked`
+- visibility: `metadata-only`
+- redaction: `metadata-only`
+- no real filesystem read
+- no uploads
+- no watchers, indexing, embeddings, OCR, parsing, shell access, file execution, traversal, or host access
+
+Detailed file preview blueprint:
+
+```text
+docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md
+src/domain/file-preview/FilePreviewBlueprint.ts
+```
+
+## 10. Production Readiness Matrix
 
 | Module | Current Status | Production Requirement | Risk Level | Next Step | Verification Method |
 | --- | --- | --- | --- | --- | --- |
@@ -273,6 +295,7 @@ src/domain/runtime/RuntimeSandboxBlueprint.ts
 | Adapter blueprint | Metadata-only future adapters | Permission-scoped adapters with explicit approval | Critical | Start read-only file preview adapter | Adapter safety tests |
 | Capability blueprint | Metadata-only practical capability governance | Capability runtime only after auth, audit, sandbox, and owner approval | Critical | Read-only Capabilities | Capability safety tests |
 | Runtime sandbox blueprint | Metadata-only sandbox governance | Isolated runtime only after auth, audit, rollback, kill switch, and owner approval | Critical | Sandbox threat model | Sandbox safety review |
+| File preview blueprint | Metadata-only read-only preview plan | Owner-selected, redacted, audited, sandboxed preview runtime | High | File preview threat model | Preview safety review |
 | Auth | OWNER_ACCESS_CODE temporary gate plus auth blueprint | Owner auth, sessions, CSRF/session hardening | Critical | Real Owner Auth runtime | Auth tests, security review |
 | DB/storage | Not implemented | Durable encrypted data store and migrations | High | Secure Storage / DB | Migration tests, backup plan |
 | User management | Not implemented | Users, roles, owner/admin boundaries | High | Role/Permission system | RBAC tests |
@@ -282,7 +305,7 @@ src/domain/runtime/RuntimeSandboxBlueprint.ts
 | Monitoring | Observability blueprint metadata only | Logs, error tracking, health checks, alerts | Medium | Persistent Audit & Observability runtime plan | Health endpoint, alert tests |
 | Security | Progressive boundaries documented | Threat model, auth, secrets, rate limits | Critical | Security hardening phase | Security checklist, review |
 
-## 10. Web Testing And Production Validation
+## 11. Web Testing And Production Validation
 
 Local URLs:
 
@@ -328,6 +351,7 @@ Validate `/lab`:
 - observability blueprint is visible
 - capability blueprint is visible
 - runtime sandbox blueprint is visible
+- file preview blueprint is visible
 - approve/reject buttons update metadata only
 - no real execution happens
 
@@ -340,7 +364,7 @@ Browser DevTools:
   - `/api/lab/tool`
 - Response payloads should not expose secrets or `systemInstructions`
 
-## 11. Production Verification Checklist
+## 12. Production Verification Checklist
 
 Run before closing a production-readiness phase:
 
@@ -368,10 +392,11 @@ Manual checklist:
 - no real telemetry or persistent audit storage
 - no capability runtime
 - no sandbox runtime
+- no real filesystem read or file browser UI
 - no `systemInstructions` in public responses
 - no terminal/filesystem/Gmail/finance execution
 
-## 12. Future Roadmap By Phases
+## 13. Future Roadmap By Phases
 
 ### Phase 1: Production Architecture Blueprint
 
@@ -422,6 +447,13 @@ Manual checklist:
 - Prerequisites: real auth, persistent audit, rollback policy, emergency stop, threat model, sandbox isolation design
 - Verification: sandbox safety tests, isolation review, rollback drill, no host-access proof
 
+### File Preview Track: Read-Only File Preview Adapter
+
+- Objective: progress from metadata-only preview to owner-selected, redacted, audited read-only previews
+- Risk: high
+- Prerequisites: real auth, persistent audit, sandbox route, redaction design, type and size limits
+- Verification: preview boundary tests, redaction tests, no host traversal proof
+
 ### Phase 6: Controlled Draft Adapters
 
 - Objective: draft-only email/document flows without sending or writing
@@ -457,7 +489,7 @@ Manual checklist:
 - Prerequisites: all previous phases, threat model, rollback strategy, monitoring
 - Verification: sandbox tests, approval tests, audit tests, rollback drills
 
-## 13. World Access Layer
+## 14. World Access Layer
 
 World Access Layer is the future controlled connection between GENIO and external tools.
 
@@ -490,7 +522,7 @@ Required future properties:
 - owner-controlled
 - never bypass owner approval
 
-## 14. Release Criteria For Future Production Phases
+## 15. Release Criteria For Future Production Phases
 
 A future phase is production-ready only when:
 

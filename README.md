@@ -14,6 +14,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - blueprint de observabilidad y audit persistente futuro
 - blueprint de capacidades practicas controladas futuras
 - blueprint de sandbox runtime controlado futuro
+- blueprint de adapter read-only para preview futuro de archivos
 
 La regla central del sistema es:
 
@@ -71,6 +72,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - muestra blueprint de observabilidad futura sin telemetria real
 - muestra blueprint de capacidades futuras sin runtime de ejecucion
 - muestra blueprint de sandbox futuro sin ejecucion real ni acceso al host
+- muestra blueprint de file preview futuro sin lectura real del filesystem
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -353,6 +355,40 @@ El estado actual es `blocked`, con `executionMode: no-runtime`, `isolationLevel:
 
 No existe todavia terminal real, shell real, `child_process`, filesystem real, Docker real, VM real, workers, queues, browser automation, OS automation, kill switch real ni sandbox runtime real.
 
+## Read-Only File Preview Adapter Blueprint
+
+GENIO queda preparado para gobernar un futuro adapter de preview controlado y read-only.
+
+Tipos preparados:
+
+- `FilePreviewBlueprint`
+- `FilePreviewProfile`
+- `FilePreviewType`
+- `FilePreviewPermission`
+- `FilePreviewRiskLevel`
+- `FilePreviewBoundary`
+- `FilePreviewConstraint`
+- `FilePreviewAuditTrace`
+- `FilePreviewRedactionPolicy`
+- `FilePreviewVisibility`
+- `FilePreviewLifecycle`
+
+Preview types futuros:
+
+- `text`
+- `markdown`
+- `json`
+- `yaml`
+- `log`
+- `code`
+- `pdf-preview-future`
+- `image-preview-future`
+- `spreadsheet-preview-future`
+
+El estado actual es `blocked`, `visibility: metadata-only`, `simulationOnly: true` y `actionExecuted: false`.
+
+No existe todavia `fs` real, lectura real de archivos, uploads, watchers, indexing, embeddings, OCR, parsing, shell access, file execution, filesystem traversal, file browser UI ni acceso directo al host.
+
 ## GENIO Strategic Vision Metadata
 
 GENIO esta descrito como una inteligencia estrategica calmada, analitica y orientada al crecimiento humano.
@@ -525,6 +561,8 @@ No existen todavia:
 - capability runtime real
 - sandbox runtime real
 - host machine access
+- file preview runtime real
+- filesystem read real
 - memoria vectorial
 - embeddings reales
 - autonomous agents
@@ -658,6 +696,7 @@ UNV-HMND/
 │  │  ├─ audit
 │  │  ├─ capabilities
 │  │  ├─ context
+│  │  ├─ file-preview
 │  │  ├─ governance
 │  │  ├─ observability
 │  │  ├─ orchestration
@@ -698,6 +737,7 @@ Fases completadas:
 - Persistent Audit & Observability Blueprint
 - Controlled Practical Capability Blueprint
 - Controlled Runtime Sandbox Blueprint
+- Read-Only File Preview Adapter Blueprint
 
 Roadmap futuro:
 
@@ -737,7 +777,7 @@ https://your-vercel-domain.example/lab
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
-- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, memory, orchestration y adapters
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, file preview, memory, orchestration y adapters
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
@@ -750,5 +790,6 @@ Validar:
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)
 - [Controlled Practical Capability Blueprint](docs/CAPABILITY_BLUEPRINT.md)
 - [Controlled Runtime Sandbox Blueprint](docs/RUNTIME_SANDBOX_BLUEPRINT.md)
+- [Read-Only File Preview Adapter Blueprint](docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md)
 - [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
 - [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)

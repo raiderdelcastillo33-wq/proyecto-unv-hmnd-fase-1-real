@@ -276,6 +276,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.runtimeSandboxBlueprint.simulationOnly,
         actionExecuted: centralProfile.runtimeSandboxBlueprint.actionExecuted
       },
+      filePreviewBlueprint: {
+        id: centralProfile.filePreviewBlueprint.id,
+        label: centralProfile.filePreviewBlueprint.label,
+        status: centralProfile.filePreviewBlueprint.status,
+        supportedFutureTypes: centralProfile.filePreviewBlueprint.supportedFutureTypes,
+        lifecycleStates: centralProfile.filePreviewBlueprint.lifecycleStates,
+        profile: centralProfile.filePreviewBlueprint.profile,
+        runtimeIntegration: centralProfile.filePreviewBlueprint.runtimeIntegration,
+        governanceRules: centralProfile.filePreviewBlueprint.governanceRules,
+        nonCapabilities: centralProfile.filePreviewBlueprint.nonCapabilities,
+        roadmap: centralProfile.filePreviewBlueprint.roadmap,
+        simulationOnly: centralProfile.filePreviewBlueprint.simulationOnly,
+        actionExecuted: centralProfile.filePreviewBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

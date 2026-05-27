@@ -534,6 +534,31 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">File preview blueprint</p>
+              <h3>{governance.centralProfile.filePreviewBlueprint.label}</h3>
+              <p>{governance.centralProfile.filePreviewBlueprint.profile.description}</p>
+              <div className="response-meta">
+                <span className="info-chip">
+                  Lifecycle {governance.centralProfile.filePreviewBlueprint.profile.lifecycle}
+                </span>
+                <span className="info-chip">
+                  Visibility {governance.centralProfile.filePreviewBlueprint.profile.visibility}
+                </span>
+                <span className="info-chip">
+                  Redaction {governance.centralProfile.filePreviewBlueprint.profile.redactionPolicy.status}
+                </span>
+                <span className="info-chip">Filesystem access: no</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.filePreviewBlueprint.supportedFutureTypes.slice(0, 6).map((previewType) => (
+                  <span className="tech-pill" key={previewType}>
+                    {previewType}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Memory blueprint</p>
               <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
               <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
@@ -854,6 +879,19 @@ export default function LabPage() {
                       {governance.centralProfile.runtimeSandboxBlueprint.emergencyStop.emergencyStopAvailable}
                     </span>
                     <span className="info-chip">No host access</span>
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">File preview readiness</p>
+                  <h3>{governance.centralProfile.filePreviewBlueprint.profile.lifecycle}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">
+                      {governance.centralProfile.filePreviewBlueprint.profile.auditTrace.traceId}
+                    </span>
+                    <span className="info-chip">
+                      {governance.centralProfile.filePreviewBlueprint.profile.redactionPolicy.label}
+                    </span>
+                    <span className="info-chip">No real file read</span>
                   </div>
                 </section>
                 <section className="result-state">

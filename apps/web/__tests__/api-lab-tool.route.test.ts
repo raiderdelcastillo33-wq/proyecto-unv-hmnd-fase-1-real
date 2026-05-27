@@ -255,6 +255,20 @@ describe('POST /api/lab/tool', () => {
         })
       ])
     )
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.id).toBe(
+      'read-only-file-preview-adapter-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.profile.lifecycle).toBe('blocked')
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.profile.permissions).toEqual(
+      expect.arrayContaining(['preview-only', 'read-only', 'no-write', 'no-host-direct-access'])
+    )
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.profile.redactionPolicy.detectionImplemented).toBe(
+      false
+    )
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.runtimeIntegration.runtimeSandboxId).toBe(
+      'controlled-runtime-sandbox-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.filePreviewBlueprint.actionExecuted).toBe(false)
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

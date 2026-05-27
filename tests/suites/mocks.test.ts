@@ -6,6 +6,7 @@ import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
 import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../../src/domain/capabilities/CapabilityBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
+import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/FilePreviewBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
 import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
@@ -198,6 +199,9 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.runtimeSandboxBlueprint.id, 'controlled-runtime-sandbox-blueprint')
         assert.equal(genio.runtimeSandboxBlueprint.sandboxProfile.lifecycleState, 'blocked')
         assert.equal(genio.runtimeSandboxBlueprint.actionExecuted, false)
+        assert.equal(genio.filePreviewBlueprint.id, 'read-only-file-preview-adapter-blueprint')
+        assert.equal(genio.filePreviewBlueprint.profile.lifecycle, 'blocked')
+        assert.equal(genio.filePreviewBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
@@ -306,6 +310,30 @@ export function mockTests(): TestCase[] {
         assert.ok(blueprint.capabilityRoutes[0]?.blockedPermissions.includes('terminal-blocked'))
         assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Sandbox blueprint != runtime real')))
         assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal')))
+      }
+    },
+    {
+      name: 'File Preview: read-only adapter blueprint has no filesystem access',
+      run: async () => {
+        const blueprint = READ_ONLY_FILE_PREVIEW_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.supportedFutureTypes.includes('markdown'))
+        assert.ok(blueprint.supportedFutureTypes.includes('pdf-preview-future'))
+        assert.equal(blueprint.profile.lifecycle, 'blocked')
+        assert.equal(blueprint.profile.visibility, 'metadata-only')
+        assert.equal(blueprint.profile.approvalRequired, true)
+        assert.ok(blueprint.profile.permissions.includes('no-host-direct-access'))
+        assert.ok(blueprint.profile.permissions.includes('no-write'))
+        assert.equal(blueprint.profile.redactionPolicy.detectionImplemented, false)
+        assert.ok(blueprint.profile.redactionPolicy.redactionModes.includes('secret-masking'))
+        assert.equal(blueprint.profile.auditTrace.adapterId, 'file-preview-adapter')
+        assert.equal(blueprint.profile.auditTrace.actionExecuted, false)
+        assert.equal(blueprint.runtimeIntegration.runtimeSandboxId, 'controlled-runtime-sandbox-blueprint')
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('filesystem access real')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No fs runtime')))
       }
     },
     {

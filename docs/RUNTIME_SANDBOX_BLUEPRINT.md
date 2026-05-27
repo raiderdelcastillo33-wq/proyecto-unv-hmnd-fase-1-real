@@ -116,6 +116,7 @@ These are metadata-only policies until a future sandbox runtime is explicitly ap
 The sandbox blueprint is conceptually connected to:
 
 - Controlled Practical Capability Blueprint
+- Read-Only File Preview Adapter Blueprint
 - Controlled Adapter Blueprint
 - Persistent Audit & Observability Blueprint
 - Owner Approval Flow
@@ -129,6 +130,8 @@ Prepared route metadata includes:
 - audit trace
 - isolation level
 - blocked permissions
+
+The file preview adapter is the first future read-only adapter track that would route through this sandbox model. It remains blocked and metadata-only until real auth, persistent audit, scoped owner approval, redaction policy, and sandbox isolation are implemented.
 
 ## Non-Capabilities
 
