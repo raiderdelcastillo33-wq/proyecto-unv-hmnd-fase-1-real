@@ -509,6 +509,31 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">Runtime sandbox blueprint</p>
+              <h3>{governance.centralProfile.runtimeSandboxBlueprint.label}</h3>
+              <p>{governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.description}</p>
+              <div className="response-meta">
+                <span className="info-chip">
+                  State {governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.lifecycleState}
+                </span>
+                <span className="info-chip">
+                  Isolation {governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.isolationLevel}
+                </span>
+                <span className="info-chip">
+                  Mode {governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.executionMode}
+                </span>
+                <span className="info-chip">Runtime sandbox: no</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.runtimeSandboxBlueprint.rollbackPolicy.policies.slice(0, 4).map((policy) => (
+                  <span className="tech-pill" key={policy}>
+                    {policy}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Memory blueprint</p>
               <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
               <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
@@ -816,6 +841,19 @@ export default function LabPage() {
                       {governance.centralProfile.capabilityBlueprint.businessBuilderBlueprint.label}
                     </span>
                     <span className="info-chip">No autonomous execution</span>
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Sandbox readiness</p>
+                  <h3>{governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.lifecycleState}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">
+                      {governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.isolationLevel}
+                    </span>
+                    <span className="info-chip">
+                      {governance.centralProfile.runtimeSandboxBlueprint.emergencyStop.emergencyStopAvailable}
+                    </span>
+                    <span className="info-chip">No host access</span>
                   </div>
                 </section>
                 <section className="result-state">

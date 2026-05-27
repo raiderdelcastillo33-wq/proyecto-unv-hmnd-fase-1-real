@@ -5,6 +5,7 @@ import type { CapabilityBlueprint } from '../capabilities/CapabilityBlueprint'
 import type { MemoryContextBlueprint } from '../context/ContextBlueprint'
 import type { ObservabilityBlueprint } from '../observability/ObservabilityBlueprint'
 import type { StrategicOrchestrationBlueprint } from '../orchestration/OrchestrationBlueprint'
+import type { RuntimeSandboxBlueprint } from '../runtime/RuntimeSandboxBlueprint'
 import type { ApprovalDecision, Permission } from '../security/PermissionProfile'
 
 export type AgentHierarchyLevel = 'central' | 'supervisor' | 'specialist' | 'utility' | 'observer'
@@ -69,6 +70,7 @@ export interface GenioCentralProfile {
   authBlueprint: AuthBlueprint
   observabilityBlueprint: ObservabilityBlueprint
   capabilityBlueprint: CapabilityBlueprint
+  runtimeSandboxBlueprint: RuntimeSandboxBlueprint
   governanceMetadata: GovernanceMetadata
   lifeMapVision: FutureCapabilityMetadata[]
   financialStrategyVision: FutureCapabilityMetadata[]

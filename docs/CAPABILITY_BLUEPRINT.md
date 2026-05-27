@@ -152,6 +152,23 @@ This remains conceptual and simulation-only. It does not create accounts, move m
 6. Human-supervised execution
 7. Enterprise execution governance
 
+## Runtime Sandbox Dependency
+
+Any future controlled capability that approaches runtime behavior must route through the Controlled Runtime Sandbox Blueprint.
+
+Required path:
+
+```text
+Owner
+  -> GENIO Central
+  -> Governance Layer
+  -> Runtime Sandbox
+  -> Specialized Agents
+  -> Controlled Capabilities
+```
+
+Direct agent-to-host access is forbidden.
+
 ## Non-Capabilities
 
 The current system does not include:

@@ -58,6 +58,7 @@ GENIO contains:
 - real owner auth blueprint
 - persistent audit and observability blueprint
 - controlled practical capability blueprint
+- controlled runtime sandbox blueprint
 
 GENIO is not a regular worker agent. It is the governance layer above the agent hierarchy.
 
@@ -244,7 +245,59 @@ Current boundaries:
 
 The `problem-solver-agent` and `business-builder-blueprint` are metadata only. They can describe future strategy, roadmap, product, and solution-planning behavior, but they cannot execute real actions or replace regulated professionals.
 
-## 8. Strategic Vision Metadata
+## 8. Controlled Runtime Sandbox Blueprint
+
+Source:
+
+```text
+src/domain/runtime/RuntimeSandboxBlueprint.ts
+docs/RUNTIME_SANDBOX_BLUEPRINT.md
+```
+
+The runtime sandbox blueprint prepares a future isolated execution zone governed by GENIO.
+
+Required hierarchy:
+
+```text
+Owner
+  -> GENIO Central
+  -> Governance Layer
+  -> Runtime Sandbox
+  -> Specialized Agents
+  -> Controlled Capabilities
+```
+
+Forbidden path:
+
+```text
+Agent
+  -> host machine directly
+```
+
+Prepared concepts:
+
+- `RuntimeSandboxBlueprint`
+- `SandboxProfile`
+- `SandboxExecutionMode`
+- `SandboxIsolationLevel`
+- `SandboxPermissionScope`
+- `SandboxLifecycleState`
+- `SandboxEmergencyStop`
+- `SandboxRollbackPolicy`
+- `SandboxAuditChain`
+- `SandboxCapabilityRoute`
+
+Current sandbox state:
+
+- `executionMode: no-runtime`
+- `isolationLevel: simulation-only`
+- `lifecycleState: blocked`
+- `simulationOnly: true`
+- `actionExecuted: false`
+
+No real sandbox, terminal, filesystem, Docker, VM, workers, queues, browser automation, OS automation, autonomous loops, self-modification, self-replication, or unrestricted execution exists.
+
+## 9. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -268,7 +321,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 9. Memory & Context Blueprint
+## 10. Memory & Context Blueprint
 
 Source:
 
@@ -312,7 +365,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 10. Strategic Multi-Agent Orchestration Layer
+## 11. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -342,7 +395,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 11. Controlled Adapter Blueprint
+## 12. Controlled Adapter Blueprint
 
 Source:
 
@@ -373,7 +426,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 12. Audit System
+## 13. Audit System
 
 Source:
 
@@ -401,7 +454,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 13. Current Non-Capabilities
+## 14. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -415,6 +468,8 @@ The system currently does not include:
 - external observability
 - practical capability runtime
 - autonomous execution
+- runtime sandbox
+- direct host access
 - vector memory
 - embeddings
 - semantic search
@@ -429,7 +484,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 14. Evolution Timeline
+## 15. Evolution Timeline
 
 Completed phases:
 
@@ -448,6 +503,7 @@ Completed phases:
 13. Real Owner Auth Blueprint
 14. Persistent Audit & Observability Blueprint
 15. Controlled Practical Capability Blueprint
+16. Controlled Runtime Sandbox Blueprint
 
 Future roadmap:
 
@@ -461,9 +517,10 @@ Future roadmap:
 - SaaS tenant boundaries
 - reversible execution adapters
 - controlled practical capability runtime
+- governed runtime sandbox
 - operational monitoring
 
-## 15. Verification
+## 16. Verification
 
 Before closing a phase, run:
 
@@ -474,7 +531,7 @@ npm run build:api
 npm test
 ```
 
-## 16. Production Blueprint And Testing
+## 17. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 
@@ -484,6 +541,7 @@ docs/PRODUCTION_TESTING_GUIDE.md
 docs/AUTH_BLUEPRINT.md
 docs/OBSERVABILITY_BLUEPRINT.md
 docs/CAPABILITY_BLUEPRINT.md
+docs/RUNTIME_SANDBOX_BLUEPRINT.md
 ```
 
 These documents define:

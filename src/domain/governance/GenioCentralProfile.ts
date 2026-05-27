@@ -4,6 +4,7 @@ import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../capabilities/Capab
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../context/ContextBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../orchestration/OrchestrationBlueprint'
+import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../runtime/RuntimeSandboxBlueprint'
 import type { GenioCentralProfile } from './GovernanceProfile'
 
 export const GENIO_CENTRAL_PROFILE: GenioCentralProfile = {
@@ -20,6 +21,7 @@ export const GENIO_CENTRAL_PROFILE: GenioCentralProfile = {
     'prepare future owner authentication as metadata',
     'prepare persistent audit and observability as metadata',
     'govern future practical capabilities as metadata',
+    'prepare future runtime sandbox governance as metadata',
     'simulate multi-agent orchestration flows',
     'govern future controlled adapters as metadata',
     'analyze patterns as simulation metadata',
@@ -179,6 +181,7 @@ export const GENIO_CENTRAL_PROFILE: GenioCentralProfile = {
   authBlueprint: REAL_OWNER_AUTH_BLUEPRINT,
   observabilityBlueprint: PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT,
   capabilityBlueprint: CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT,
+  runtimeSandboxBlueprint: CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT,
   governanceMetadata: {
     permissions: ['create-checklist', 'summarize-context', 'review-risk', 'propose-command'],
     approvalFlows: ['safe', 'requires-approval', 'forbidden'],

@@ -8,6 +8,7 @@ import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/Context
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
+import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
@@ -194,6 +195,9 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.capabilityBlueprint.id, 'controlled-practical-capability-blueprint')
         assert.equal(genio.capabilityBlueprint.executionLifecycle.approvalStatus, 'blocked')
         assert.equal(genio.capabilityBlueprint.actionExecuted, false)
+        assert.equal(genio.runtimeSandboxBlueprint.id, 'controlled-runtime-sandbox-blueprint')
+        assert.equal(genio.runtimeSandboxBlueprint.sandboxProfile.lifecycleState, 'blocked')
+        assert.equal(genio.runtimeSandboxBlueprint.actionExecuted, false)
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
@@ -273,6 +277,35 @@ export function mockTests(): TestCase[] {
         assert.equal(blueprint.businessBuilderBlueprint.id, 'business-builder-blueprint')
         assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Capability blueprint != capability runtime')))
         assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal execution')))
+      }
+    },
+    {
+      name: 'Runtime: controlled sandbox blueprint blocks host access and execution',
+      run: async () => {
+        const blueprint = CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.deepEqual(blueprint.hierarchy.slice(0, 4), [
+          'Owner',
+          'GENIO Central',
+          'Governance Layer',
+          'Runtime Sandbox'
+        ])
+        assert.equal(blueprint.sandboxProfile.executionMode, 'no-runtime')
+        assert.equal(blueprint.sandboxProfile.isolationLevel, 'simulation-only')
+        assert.equal(blueprint.sandboxProfile.lifecycleState, 'blocked')
+        assert.ok(blueprint.sandboxProfile.permissionScopes.includes('no-host-access'))
+        assert.ok(blueprint.lifecycleStates.includes('terminated'))
+        assert.equal(blueprint.emergencyStop.emergencyStopAvailable, 'metadata-only')
+        assert.equal(blueprint.emergencyStop.actionExecuted, false)
+        assert.ok(blueprint.rollbackPolicy.policies.includes('dry-run-first'))
+        assert.equal(blueprint.auditChain.traceId, 'sandbox-trace-genio-blueprint')
+        assert.equal(blueprint.capabilityRoutes[0]?.approvalStatus, 'blocked')
+        assert.ok(blueprint.capabilityRoutes[0]?.blockedPermissions.includes('terminal-blocked'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Sandbox blueprint != runtime real')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal')))
       }
     },
     {

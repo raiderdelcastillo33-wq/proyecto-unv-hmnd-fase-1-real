@@ -13,6 +13,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - blueprint de autenticacion real futura del owner
 - blueprint de observabilidad y audit persistente futuro
 - blueprint de capacidades practicas controladas futuras
+- blueprint de sandbox runtime controlado futuro
 
 La regla central del sistema es:
 
@@ -69,6 +70,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - permite aprobar/rechazar propuestas en modo simulation-only
 - muestra blueprint de observabilidad futura sin telemetria real
 - muestra blueprint de capacidades futuras sin runtime de ejecucion
+- muestra blueprint de sandbox futuro sin ejecucion real ni acceso al host
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -300,6 +302,57 @@ La fase prepara:
 
 No existe todavia runtime de capacidades, ejecucion terminal, filesystem write, browser automation, external API execution, Gmail real, trading, OS automation, self-modification, self-replication ni autonomia irrestricta.
 
+## Controlled Runtime Sandbox Blueprint
+
+GENIO queda preparado para gobernar una zona futura de ejecucion controlada, aislada y auditada.
+
+Tipos preparados:
+
+- `RuntimeSandboxBlueprint`
+- `SandboxProfile`
+- `SandboxExecutionMode`
+- `SandboxIsolationLevel`
+- `SandboxPermissionScope`
+- `SandboxRiskLevel`
+- `SandboxLifecycleState`
+- `SandboxBoundary`
+- `SandboxEmergencyStop`
+- `SandboxRollbackPolicy`
+- `SandboxAuditChain`
+- `SandboxCapabilityRoute`
+
+Jerarquia obligatoria:
+
+```text
+Owner
+-> GENIO Central
+-> Governance Layer
+-> Runtime Sandbox
+-> Specialized Agents
+-> Controlled Capabilities
+```
+
+Arquitectura prohibida:
+
+```text
+Agent
+-> host machine directly
+```
+
+Estados preparados:
+
+- `planned`
+- `requested`
+- `awaiting-approval`
+- `approved-for-simulation`
+- `simulated`
+- `blocked`
+- `terminated`
+
+El estado actual es `blocked`, con `executionMode: no-runtime`, `isolationLevel: simulation-only`, `simulationOnly: true` y `actionExecuted: false`.
+
+No existe todavia terminal real, shell real, `child_process`, filesystem real, Docker real, VM real, workers, queues, browser automation, OS automation, kill switch real ni sandbox runtime real.
+
 ## GENIO Strategic Vision Metadata
 
 GENIO esta descrito como una inteligencia estrategica calmada, analitica y orientada al crecimiento humano.
@@ -470,6 +523,8 @@ No existen todavia:
 - audit persistente
 - tracing real
 - capability runtime real
+- sandbox runtime real
+- host machine access
 - memoria vectorial
 - embeddings reales
 - autonomous agents
@@ -571,6 +626,7 @@ Ruta privada server-side para catalogo seguro:
 - auth blueprint
 - observability blueprint
 - capability blueprint
+- runtime sandbox blueprint
 
 Requiere `OWNER_ACCESS_CODE`.
 
@@ -605,6 +661,7 @@ UNV-HMND/
 │  │  ├─ governance
 │  │  ├─ observability
 │  │  ├─ orchestration
+│  │  ├─ runtime
 │  │  ├─ security
 │  │  └─ tools
 │  ├─ infrastructure
@@ -640,6 +697,7 @@ Fases completadas:
 - Real Owner Auth Blueprint
 - Persistent Audit & Observability Blueprint
 - Controlled Practical Capability Blueprint
+- Controlled Runtime Sandbox Blueprint
 
 Roadmap futuro:
 
@@ -647,6 +705,7 @@ Roadmap futuro:
 - Persistent Audit Log
 - Read-only Capabilities
 - Controlled Draft Capabilities
+- Controlled Runtime Sandbox
 - Secure Storage / DB
 - Read-only File Preview Adapter
 - Controlled Draft Adapters
@@ -678,7 +737,7 @@ https://your-vercel-domain.example/lab
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
-- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, memory, orchestration y adapters
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, memory, orchestration y adapters
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
@@ -690,5 +749,6 @@ Validar:
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)
 - [Controlled Practical Capability Blueprint](docs/CAPABILITY_BLUEPRINT.md)
+- [Controlled Runtime Sandbox Blueprint](docs/RUNTIME_SANDBOX_BLUEPRINT.md)
 - [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
 - [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)

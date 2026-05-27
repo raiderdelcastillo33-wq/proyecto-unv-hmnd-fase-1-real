@@ -259,6 +259,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.capabilityBlueprint.simulationOnly,
         actionExecuted: centralProfile.capabilityBlueprint.actionExecuted
       },
+      runtimeSandboxBlueprint: {
+        id: centralProfile.runtimeSandboxBlueprint.id,
+        label: centralProfile.runtimeSandboxBlueprint.label,
+        status: centralProfile.runtimeSandboxBlueprint.status,
+        hierarchy: centralProfile.runtimeSandboxBlueprint.hierarchy,
+        sandboxProfile: centralProfile.runtimeSandboxBlueprint.sandboxProfile,
+        lifecycleStates: centralProfile.runtimeSandboxBlueprint.lifecycleStates,
+        isolationModel: centralProfile.runtimeSandboxBlueprint.isolationModel,
+        emergencyStop: centralProfile.runtimeSandboxBlueprint.emergencyStop,
+        rollbackPolicy: centralProfile.runtimeSandboxBlueprint.rollbackPolicy,
+        auditChain: centralProfile.runtimeSandboxBlueprint.auditChain,
+        capabilityRoutes: centralProfile.runtimeSandboxBlueprint.capabilityRoutes,
+        governanceRules: centralProfile.runtimeSandboxBlueprint.governanceRules,
+        nonCapabilities: centralProfile.runtimeSandboxBlueprint.nonCapabilities,
+        simulationOnly: centralProfile.runtimeSandboxBlueprint.simulationOnly,
+        actionExecuted: centralProfile.runtimeSandboxBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

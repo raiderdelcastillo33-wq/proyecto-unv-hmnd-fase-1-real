@@ -233,6 +233,28 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.governance.centralProfile.capabilityBlueprint.businessBuilderBlueprint.id).toBe(
       'business-builder-blueprint'
     )
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.id).toBe(
+      'controlled-runtime-sandbox-blueprint'
+    )
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.executionMode).toBe(
+      'no-runtime'
+    )
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.lifecycleState).toBe('blocked')
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.permissionScopes).toContain(
+      'no-host-access'
+    )
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.emergencyStop.emergencyStopAvailable).toBe(
+      'metadata-only'
+    )
+    expect(payload.data.governance.centralProfile.runtimeSandboxBlueprint.capabilityRoutes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          requestedCapabilityId: 'future-terminal-execution-capability',
+          approvalStatus: 'blocked',
+          actionExecuted: false
+        })
+      ])
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)
