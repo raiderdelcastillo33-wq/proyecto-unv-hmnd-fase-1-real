@@ -170,6 +170,33 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         simulationOnly: centralProfile.adapterBlueprint.simulationOnly,
         actionExecuted: centralProfile.adapterBlueprint.actionExecuted
       },
+      authBlueprint: {
+        id: centralProfile.authBlueprint.id,
+        label: centralProfile.authBlueprint.label,
+        status: centralProfile.authBlueprint.status,
+        currentAuthMode: centralProfile.authBlueprint.currentAuthMode,
+        realAuthImplemented: centralProfile.authBlueprint.realAuthImplemented,
+        authBlueprintReady: centralProfile.authBlueprint.authBlueprintReady,
+        supportedFutureRoles: centralProfile.authBlueprint.supportedFutureRoles,
+        protectedSurfaces: centralProfile.authBlueprint.protectedSurfaces,
+        accessPolicies: centralProfile.authBlueprint.accessPolicies.map((policy) => ({
+          id: policy.id,
+          label: policy.label,
+          roles: policy.roles,
+          riskLevel: policy.riskLevel,
+          approvalRequired: policy.approvalRequired,
+          implemented: policy.implemented,
+          futureOnly: policy.futureOnly,
+          safetyBoundary: policy.safetyBoundary
+        })),
+        sessionPolicy: centralProfile.authBlueprint.sessionPolicy,
+        roadmap: centralProfile.authBlueprint.roadmap,
+        productionSecurityRisks: centralProfile.authBlueprint.productionSecurityRisks,
+        futureSecurityRequirements: centralProfile.authBlueprint.futureSecurityRequirements,
+        ownerAccessCodeBoundary: centralProfile.authBlueprint.ownerAccessCodeBoundary,
+        simulationOnly: centralProfile.authBlueprint.simulationOnly,
+        actionExecuted: centralProfile.authBlueprint.actionExecuted
+      },
       lifeMapVision: centralProfile.lifeMapVision,
       financialStrategyVision: centralProfile.financialStrategyVision,
       safetyBoundaries: centralProfile.governanceMetadata.safetyBoundaries,

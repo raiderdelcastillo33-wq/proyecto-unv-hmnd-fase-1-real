@@ -166,6 +166,27 @@ describe('POST /api/lab/tool', () => {
       ])
     )
     expect(payload.data.governance.centralProfile.adapterBlueprint.simulationOnly).toBe(true)
+    expect(payload.data.governance.centralProfile.authBlueprint.id).toBe('real-owner-auth-blueprint')
+    expect(payload.data.governance.centralProfile.authBlueprint.currentAuthMode).toBe('owner-access-code')
+    expect(payload.data.governance.centralProfile.authBlueprint.realAuthImplemented).toBe(false)
+    expect(payload.data.governance.centralProfile.authBlueprint.authBlueprintReady).toBe(true)
+    expect(payload.data.governance.centralProfile.authBlueprint.supportedFutureRoles).toEqual(
+      expect.arrayContaining(['owner', 'admin', 'operator', 'guest'])
+    )
+    expect(payload.data.governance.centralProfile.authBlueprint.accessPolicies).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'execute_controlled_action_future',
+          futureOnly: true,
+          implemented: false,
+          approvalRequired: true,
+          riskLevel: 'critical'
+        })
+      ])
+    )
+    expect(payload.data.governance.centralProfile.authBlueprint.ownerAccessCodeBoundary).toContain(
+      'not real authentication'
+    )
     expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)

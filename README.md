@@ -10,6 +10,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - Private AI Lab controlado por owner
 - GENIO como nucleo central de gobernanza
 - blueprints de memoria, orquestacion y adapters futuros
+- blueprint de autenticacion real futura del owner
 
 La regla central del sistema es:
 
@@ -66,6 +67,8 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - permite aprobar/rechazar propuestas en modo simulation-only
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
+
+`OWNER_ACCESS_CODE` es una barrera temporal minima del lado servidor. No es autenticacion real, no gestiona usuarios, no crea sesiones persistentes y no debe exponerse como `NEXT_PUBLIC_OWNER_ACCESS_CODE`.
 
 ## GENIO Central Governance Layer
 
@@ -152,6 +155,50 @@ Campos clave:
 - `reviewTimestamp`
 - `simulationOnly: true`
 - `actionExecuted: false`
+
+## Real Owner Auth Blueprint
+
+La autenticacion real del owner esta preparada solo como blueprint.
+
+Metadata creada:
+
+- `AuthBlueprint`
+- `UserRole`
+- `PermissionScope`
+- `AccessPolicy`
+- `SessionPolicy`
+- `OwnerIdentity`
+- `AdminIdentity`
+- `OperatorIdentity`
+- `GuestIdentity`
+- `ProtectedSurface`
+- `AuthRiskLevel`
+
+Roles futuros:
+
+- `owner`
+- `admin`
+- `operator`
+- `guest`
+
+Permisos futuros preparados:
+
+- `view_lab`
+- `use_demo`
+- `request_tool_proposal`
+- `approve_proposal`
+- `reject_proposal`
+- `view_audit`
+- `manage_agents`
+- `manage_tools`
+- `manage_users`
+- `manage_company`
+- `configure_adapters`
+- `execute_controlled_action_future`
+
+`execute_controlled_action_future` esta marcado como future-only, high-risk, approval-required y not implemented.
+
+No existe todavia login real, registro, DB, sesiones persistentes, cookies auth, JWT, OAuth, Supabase, Clerk, NextAuth, bcrypt ni multiempresa real.
 
 ## GENIO Strategic Vision Metadata
 
@@ -384,6 +431,7 @@ Notas:
 - `OPENAI_API_KEY` nunca debe exponerse al frontend
 - `UNV_API_BASE_URL` es opcional en Vercel porque `/api/v1/run` tiene fallback demo seguro
 - `OWNER_ACCESS_CODE` protege `/lab`, pero no sustituye una capa auth real
+- no crear ni exponer `NEXT_PUBLIC_OWNER_ACCESS_CODE`
 
 ## API Principal
 
@@ -416,6 +464,7 @@ Ruta privada server-side para catalogo seguro:
 - memory blueprint
 - orchestration blueprint
 - adapter blueprint
+- auth blueprint
 
 Requiere `OWNER_ACCESS_CODE`.
 
@@ -443,6 +492,7 @@ UNV-HMND/
 │  ├─ domain
 │  │  ├─ adapters
 │  │  ├─ agents
+│  │  ├─ auth
 │  │  ├─ audit
 │  │  ├─ context
 │  │  ├─ governance
@@ -479,10 +529,11 @@ Fases completadas:
 - Strategic Multi-Agent Orchestration Layer
 - Controlled Adapter Blueprint
 - Master Production Architecture Blueprint
+- Real Owner Auth Blueprint
 
 Roadmap futuro:
 
-- Real Owner Auth
+- Real Owner Auth runtime
 - Persistent Audit Log
 - Secure Storage / DB
 - Read-only File Preview Adapter
@@ -524,5 +575,6 @@ Validar:
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
+- [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Master Production Architecture](docs/MASTER_PRODUCTION_ARCHITECTURE.md)
 - [Production Testing Guide](docs/PRODUCTION_TESTING_GUIDE.md)

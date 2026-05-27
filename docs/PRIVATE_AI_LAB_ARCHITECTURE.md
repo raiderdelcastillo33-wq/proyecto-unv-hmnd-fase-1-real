@@ -21,6 +21,7 @@ Core principles:
 Owner
   -> /lab
   -> GENIO Central Governance Layer
+  -> Real Owner Auth Blueprint metadata
   -> AgentRegistry / ToolRegistry
   -> ApprovalGate
   -> LocalToolExecutor
@@ -54,6 +55,7 @@ GENIO contains:
 - memory context blueprint
 - orchestration blueprint
 - controlled adapter blueprint
+- real owner auth blueprint
 
 GENIO is not a regular worker agent. It is the governance layer above the agent hierarchy.
 
@@ -112,7 +114,51 @@ Approval state includes:
 
 Approving a proposal does not execute it. It only records decision metadata.
 
-## 5. Strategic Vision Metadata
+## 5. Real Owner Auth Blueprint
+
+Source:
+
+```text
+src/domain/auth/AuthBlueprint.ts
+docs/AUTH_BLUEPRINT.md
+```
+
+Current `/lab` protection uses `OWNER_ACCESS_CODE`.
+
+This is a temporary server-side gate, not real authentication.
+
+Current boundaries:
+
+- no login runtime
+- no user database
+- no persistent sessions
+- no cookies/JWT/OAuth provider
+- no role-based access runtime
+- no per-user audit attribution
+- no revocation system
+- no `NEXT_PUBLIC_OWNER_ACCESS_CODE`
+
+Prepared future roles:
+
+- `owner`
+- `admin`
+- `operator`
+- `guest`
+
+Prepared future protected surfaces:
+
+- `/lab`
+- future `/admin`
+- future `/company`
+- future adapters
+- future audit dashboard
+- future memory dashboard
+
+Prepared permissions include proposal requests, approval/rejection, audit views, agent/tool management, company management, adapter configuration, and `execute_controlled_action_future`.
+
+`execute_controlled_action_future` is future-only, critical risk, approval-required, and not implemented.
+
+## 6. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -136,7 +182,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 6. Memory & Context Blueprint
+## 7. Memory & Context Blueprint
 
 Source:
 
@@ -180,7 +226,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 7. Strategic Multi-Agent Orchestration Layer
+## 8. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -210,7 +256,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 8. Controlled Adapter Blueprint
+## 9. Controlled Adapter Blueprint
 
 Source:
 
@@ -241,7 +287,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 9. Audit System
+## 10. Audit System
 
 Source:
 
@@ -269,7 +315,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 10. Current Non-Capabilities
+## 11. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -277,7 +323,7 @@ The system currently does not include:
 - filesystem access
 - Gmail integration
 - database persistence
-- auth layer
+- real auth layer
 - vector memory
 - embeddings
 - semantic search
@@ -292,7 +338,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 11. Evolution Timeline
+## 12. Evolution Timeline
 
 Completed phases:
 
@@ -308,10 +354,11 @@ Completed phases:
 10. Controlled Adapter Blueprint
 11. Documentation sync
 12. Master Production Architecture Blueprint
+13. Real Owner Auth Blueprint
 
 Future roadmap:
 
-- stronger owner authentication
+- real owner authentication runtime
 - persistent audit storage
 - explicit approval records
 - scoped read-only adapters
@@ -322,7 +369,7 @@ Future roadmap:
 - reversible execution adapters
 - operational monitoring
 
-## 12. Verification
+## 13. Verification
 
 Before closing a phase, run:
 
@@ -333,13 +380,14 @@ npm run build:api
 npm test
 ```
 
-## 13. Production Blueprint And Testing
+## 14. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 
 ```text
 docs/MASTER_PRODUCTION_ARCHITECTURE.md
 docs/PRODUCTION_TESTING_GUIDE.md
+docs/AUTH_BLUEPRINT.md
 ```
 
 These documents define:

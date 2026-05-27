@@ -141,6 +141,39 @@ export type PrivateLabAdapterBlueprint = {
   actionExecuted: false
 }
 
+export type PrivateLabAuthBlueprint = {
+  id: 'real-owner-auth-blueprint'
+  label: string
+  status: string
+  currentAuthMode: 'owner-access-code'
+  realAuthImplemented: false
+  authBlueprintReady: true
+  supportedFutureRoles: string[]
+  protectedSurfaces: string[]
+  accessPolicies: Array<{
+    id: string
+    label: string
+    roles: string[]
+    riskLevel: string
+    approvalRequired: boolean
+    implemented: boolean
+    futureOnly: boolean
+    safetyBoundary: string
+  }>
+  sessionPolicy: {
+    status: string
+    futureRequirements: string[]
+    currentLimitations: string[]
+    simulationOnly: true
+  }
+  roadmap: string[]
+  productionSecurityRisks: string[]
+  futureSecurityRequirements: string[]
+  ownerAccessCodeBoundary: string
+  simulationOnly: true
+  actionExecuted: false
+}
+
 export type PrivateLabGenioProfile = {
   id: 'genio-central'
   label: string
@@ -158,6 +191,7 @@ export type PrivateLabGenioProfile = {
   memoryContextBlueprint: PrivateLabMemoryContextBlueprint
   orchestrationBlueprint: PrivateLabOrchestrationBlueprint
   adapterBlueprint: PrivateLabAdapterBlueprint
+  authBlueprint: PrivateLabAuthBlueprint
   lifeMapVision: PrivateLabFutureCapability[]
   financialStrategyVision: PrivateLabFutureCapability[]
   safetyBoundaries: string[]
@@ -197,6 +231,7 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
       'organize global context',
       'prioritize safe workflows',
       'prepare approval metadata',
+      'prepare future owner authentication as metadata',
       'observe proposal-only activity',
       'model probabilistic scenarios without claiming certainty',
       'prepare strategic life maps for owner review'
@@ -541,6 +576,106 @@ export const privateLabGovernance: PrivateLabGovernanceCatalog = {
         'Proposal != execution.',
         'No child_process, fs, Gmail API, banking API, trading API, browser automation, OS automation, credentials, env secret reading, or external HTTP action is active.'
       ],
+      simulationOnly: true,
+      actionExecuted: false
+    },
+    authBlueprint: {
+      id: 'real-owner-auth-blueprint',
+      label: 'Real Owner Auth Blueprint',
+      status: 'metadata-only',
+      currentAuthMode: 'owner-access-code',
+      realAuthImplemented: false,
+      authBlueprintReady: true,
+      supportedFutureRoles: ['owner', 'admin', 'operator', 'guest'],
+      protectedSurfaces: [
+        '/lab',
+        'future /admin',
+        'future /company',
+        'future adapters',
+        'future audit dashboard',
+        'future memory dashboard'
+      ],
+      accessPolicies: [
+        {
+          id: 'view_lab',
+          label: 'View Private Lab',
+          roles: ['owner', 'admin'],
+          riskLevel: 'high',
+          approvalRequired: false,
+          implemented: false,
+          futureOnly: true,
+          safetyBoundary: 'Current /lab access uses OWNER_ACCESS_CODE only; real identity is not implemented.'
+        },
+        {
+          id: 'approve_proposal',
+          label: 'Approve Proposal',
+          roles: ['owner'],
+          riskLevel: 'high',
+          approvalRequired: true,
+          implemented: false,
+          futureOnly: true,
+          safetyBoundary: 'Future approval records must bind to a verified owner identity.'
+        },
+        {
+          id: 'execute_controlled_action_future',
+          label: 'Execute Controlled Action Future',
+          roles: ['owner'],
+          riskLevel: 'critical',
+          approvalRequired: true,
+          implemented: false,
+          futureOnly: true,
+          safetyBoundary:
+            'Future-only high-risk permission. Not implemented. Requires real auth, persistent audit, least privilege, and owner approval.'
+        }
+      ],
+      sessionPolicy: {
+        status: 'not-implemented',
+        futureRequirements: [
+          'server-side authentication',
+          'secure httpOnly cookies',
+          'session expiration',
+          'revocation support',
+          'audit linked to userId'
+        ],
+        currentLimitations: [
+          'OWNER_ACCESS_CODE is a temporary shared gate.',
+          'No persistent sessions exist.',
+          'No user identity is attributed to audit events.',
+          'No per-user revocation exists.'
+        ],
+        simulationOnly: true
+      },
+      roadmap: [
+        'Phase 1: OWNER_ACCESS_CODE temporary gate',
+        'Phase 2: Real Owner Auth',
+        'Phase 3: Persistent Sessions',
+        'Phase 4: Role-Based Access Control',
+        'Phase 5: Persistent Audit per User',
+        'Phase 6: Admin Dashboard',
+        'Phase 7: Company/Multi-tenant Access',
+        'Phase 8: Controlled Execution Permissions'
+      ],
+      productionSecurityRisks: [
+        'secret exposure',
+        'client-side auth assumptions',
+        'missing persistent sessions',
+        'shared access code',
+        'no identity attribution',
+        'no per-user audit',
+        'no revocation system'
+      ],
+      futureSecurityRequirements: [
+        'server-side auth',
+        'secure cookies',
+        'session expiration',
+        'user identity',
+        'role-based permissions',
+        'audit linked to userId',
+        'revocation',
+        'least privilege'
+      ],
+      ownerAccessCodeBoundary:
+        'OWNER_ACCESS_CODE is a temporary server-side gate for the private lab. It is not real authentication and must never be exposed as NEXT_PUBLIC_OWNER_ACCESS_CODE.',
       simulationOnly: true,
       actionExecuted: false
     },

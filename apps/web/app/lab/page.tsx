@@ -447,6 +447,25 @@ export default function LabPage() {
             </section>
 
             <section className="result-state">
+              <p className="result-eyebrow">Auth blueprint</p>
+              <h3>{governance.centralProfile.authBlueprint.label}</h3>
+              <p>{governance.centralProfile.authBlueprint.ownerAccessCodeBoundary}</p>
+              <div className="response-meta">
+                <span className="info-chip">{governance.centralProfile.authBlueprint.currentAuthMode}</span>
+                <span className="info-chip">Real auth not implemented</span>
+                <span className="info-chip">Blueprint ready</span>
+                <span className="info-chip">No sessions</span>
+              </div>
+              <div className="tag-row">
+                {governance.centralProfile.authBlueprint.supportedFutureRoles.map((role) => (
+                  <span className="tech-pill" key={role}>
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section className="result-state">
               <p className="result-eyebrow">Memory blueprint</p>
               <h3>{governance.centralProfile.memoryContextBlueprint.label}</h3>
               <p>{governance.centralProfile.memoryContextBlueprint.futureArchitecture.safetyBoundary}</p>
@@ -721,6 +740,15 @@ export default function LabPage() {
                         {capability.label}
                       </span>
                     ))}
+                  </div>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Auth readiness</p>
+                  <h3>{governance.centralProfile.authBlueprint.currentAuthMode}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">Real auth not implemented</span>
+                    <span className="info-chip">No persistent sessions</span>
+                    <span className="info-chip">No user DB</span>
                   </div>
                 </section>
                 <section className="result-state">

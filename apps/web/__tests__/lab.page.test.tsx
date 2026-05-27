@@ -63,6 +63,11 @@ describe('LabPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
 
     expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
+    expect(screen.getByText('Auth blueprint')).toBeInTheDocument()
+    expect(screen.getByText('Real Owner Auth Blueprint')).toBeInTheDocument()
+    expect(screen.getAllByText('owner-access-code').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Real auth not implemented').length).toBeGreaterThan(0)
+    expect(screen.getByText('No sessions')).toBeInTheDocument()
     expect(screen.getByText('Memory blueprint')).toBeInTheDocument()
     expect(screen.getByText('GENIO Memory & Context Blueprint')).toBeInTheDocument()
     expect(screen.getByText('No persistent memory')).toBeInTheDocument()

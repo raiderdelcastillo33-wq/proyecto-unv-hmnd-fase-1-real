@@ -2,6 +2,7 @@ import assert from 'node:assert'
 import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssistantUseCase'
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
 import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterBlueprint'
+import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
 import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
@@ -179,9 +180,39 @@ export function mockTests(): TestCase[] {
         assert.equal(genio.adapterBlueprint.id, 'controlled-adapter-blueprint')
         assert.ok(genio.adapterBlueprint.adapters.some((adapter) => adapter.id === 'terminal-adapter'))
         assert.equal(genio.adapterBlueprint.actionExecuted, false)
+        assert.equal(genio.authBlueprint.id, 'real-owner-auth-blueprint')
+        assert.equal(genio.authBlueprint.currentAuthMode, 'owner-access-code')
+        assert.equal(genio.authBlueprint.realAuthImplemented, false)
+        assert.ok(genio.authBlueprint.supportedFutureRoles.includes('owner'))
+        assert.ok(genio.authBlueprint.accessPolicies.some((policy) => policy.id === 'approve_proposal'))
         assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
         assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
         assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
+      }
+    },
+    {
+      name: 'Auth: real owner auth blueprint remains metadata only',
+      run: async () => {
+        const blueprint = REAL_OWNER_AUTH_BLUEPRINT
+        const executionPolicy = blueprint.accessPolicies.find((policy) => policy.id === 'execute_controlled_action_future')
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.currentAuthMode, 'owner-access-code')
+        assert.equal(blueprint.realAuthImplemented, false)
+        assert.equal(blueprint.authBlueprintReady, true)
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.deepEqual(blueprint.supportedFutureRoles, ['owner', 'admin', 'operator', 'guest'])
+        assert.ok(blueprint.protectedSurfaces.includes('/lab'))
+        assert.ok(blueprint.protectedSurfaces.includes('future /admin'))
+        assert.equal(blueprint.sessionPolicy.status, 'not-implemented')
+        assert.ok(blueprint.sessionPolicy.currentLimitations.some((item) => item.includes('temporary shared gate')))
+        assert.equal(executionPolicy?.futureOnly, true)
+        assert.equal(executionPolicy?.implemented, false)
+        assert.equal(executionPolicy?.approvalRequired, true)
+        assert.equal(executionPolicy?.riskLevel, 'critical')
+        assert.ok(blueprint.ownerAccessCodeBoundary.includes('not real authentication'))
+        assert.ok(blueprint.ownerAccessCodeBoundary.includes('NEXT_PUBLIC_OWNER_ACCESS_CODE'))
       }
     },
     {

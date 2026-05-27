@@ -1,5 +1,6 @@
 import type { AgentRiskProfile } from '../agents/AgentProfile'
 import type { ControlledAdapterBlueprint } from '../adapters/AdapterBlueprint'
+import type { AuthBlueprint } from '../auth/AuthBlueprint'
 import type { MemoryContextBlueprint } from '../context/ContextBlueprint'
 import type { StrategicOrchestrationBlueprint } from '../orchestration/OrchestrationBlueprint'
 import type { ApprovalDecision, Permission } from '../security/PermissionProfile'
@@ -63,6 +64,7 @@ export interface GenioCentralProfile {
   memoryContextBlueprint: MemoryContextBlueprint
   orchestrationBlueprint: StrategicOrchestrationBlueprint
   adapterBlueprint: ControlledAdapterBlueprint
+  authBlueprint: AuthBlueprint
   governanceMetadata: GovernanceMetadata
   lifeMapVision: FutureCapabilityMetadata[]
   financialStrategyVision: FutureCapabilityMetadata[]
