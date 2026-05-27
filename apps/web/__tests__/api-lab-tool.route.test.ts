@@ -114,6 +114,11 @@ describe('POST /api/lab/tool', () => {
 
     expect(response.status).toBe(200)
     expect(payload.success).toBe(true)
+    expect(payload.data.governance.centralProfile.id).toBe('genio-central')
+    expect(payload.data.governance.centralProfile.hierarchyLevel).toBe('central')
+    expect(payload.data.governance.centralProfile.simulationOnly).toBe(true)
+    expect(payload.data.governance.centralProfile.actionExecuted).toBe(false)
+    expect(payload.data.governance.proposalOnly).toBe(true)
     expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
     expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)
     expect(payload.data.agents[0]).toEqual(
@@ -122,7 +127,11 @@ describe('POST /api/lab/tool', () => {
         category: expect.any(String),
         capabilities: expect.any(Array),
         riskProfile: expect.any(String),
-        allowedTools: expect.any(Array)
+        allowedTools: expect.any(Array),
+        hierarchyLevel: expect.any(String),
+        parentAuthority: 'genio-central',
+        escalationRules: expect.any(Array),
+        approvalRequirements: expect.any(Array)
       })
     )
     expect(payload.data.tools[0]).toEqual(
@@ -136,6 +145,7 @@ describe('POST /api/lab/tool', () => {
     )
     expect(JSON.stringify(payload)).not.toContain('systemInstructions')
     expect(JSON.stringify(payload)).not.toContain('systemPrompt')
+    expect(JSON.stringify(payload)).not.toContain('execute terminal')
   })
 
   it('keeps propose-terminal-command behind approval and text-only commands', async () => {
@@ -155,6 +165,8 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.result.approval.decision).toBe('requires-approval')
     expect(payload.data.result.requiresHumanApproval).toBe(true)
     expect(payload.data.result.commands.length).toBeGreaterThan(0)
+    expect(payload.data.auditEvents.every((event: { actionExecuted: boolean; simulationOnly: boolean }) => event.actionExecuted === false && event.simulationOnly === true)).toBe(true)
+    expect(payload.data.auditEvents.some((event: { governanceSource?: string }) => event.governanceSource === 'approval-gate')).toBe(true)
     expect(payload.data.result.commands.every((command: { requiresConfirmation: boolean }) => command.requiresConfirmation)).toBe(
       true
     )

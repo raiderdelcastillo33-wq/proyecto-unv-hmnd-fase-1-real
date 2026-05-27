@@ -283,6 +283,8 @@ export class LocalToolExecutor {
     result?: ToolResult
   ): void {
     const eventId = `audit-${Date.now()}-${++this.auditSequence}`
+    const agent = AgentRegistry.resolve(request.agentId)
+    const hierarchyLevel = agent.hierarchyLevel ?? 'utility'
 
     this.auditLog?.record({
       id: eventId,
@@ -290,11 +292,16 @@ export class LocalToolExecutor {
       type,
       timestamp: new Date().toISOString(),
       actionExecuted: false,
+      simulationOnly: true,
       actionType: type,
       inputPreview: request.input,
       summary: result?.summary ?? `Private lab event: ${type}`,
+      governanceSource: approval ? 'approval-gate' : 'genio-central',
+      hierarchyLevel,
       metadata: {
         hasContext: Boolean(request.context),
+        simulationOnly: true,
+        governanceSource: approval ? 'approval-gate' : 'genio-central',
         ...(result ? { sectionCount: result.sections.length, commandCount: result.commands?.length ?? 0 } : {})
       },
       ...(request.agentId ? { agentId: request.agentId } : {}),
@@ -304,8 +311,10 @@ export class LocalToolExecutor {
             proposalId: approval.proposalId,
             permission: approval.permission,
             decision: approval.decision,
+            approvalDecision: approval.decision,
             approvalStatus: approval.decision,
-            requiresHumanApproval: approval.requiresHumanApproval
+            requiresHumanApproval: approval.requiresHumanApproval,
+            ...(approval.decision === 'forbidden' ? { blockedReason: approval.reason } : {})
           }
         : {}),
       ...(result ? { riskLevel: result.riskLevel } : {})

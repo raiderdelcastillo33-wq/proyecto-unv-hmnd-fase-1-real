@@ -7,6 +7,7 @@ import { AIInteractionRepository } from '../../src/domain/repositories/AIInterac
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
 import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
+import { GenioGovernanceRegistry } from '../../src/domain/governance/GenioCentralProfile'
 import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
 import { ApprovalGate } from '../../src/domain/security/ApprovalGate'
 import { AIController } from '../../src/interfaces/http/controllers/AIController'
@@ -136,8 +137,29 @@ export function mockTests(): TestCase[] {
         assert.equal(AgentRegistry.resolve('operator-agent').label, 'Operator')
         assert.equal(AgentRegistry.resolve('operator-agent').category, 'operations')
         assert.equal(AgentRegistry.resolve('operator-agent').riskProfile, 'high')
+        assert.equal(AgentRegistry.resolve('operator-agent').hierarchyLevel, 'supervisor')
+        assert.equal(AgentRegistry.resolve('operator-agent').parentAuthority, 'genio-central')
+        assert.ok(AgentRegistry.resolve('operator-agent').approvalRequirements?.some((item) => item.includes('Owner approval')))
         assert.ok(AgentRegistry.resolve('operator-agent').capabilities?.includes('command proposal'))
         assert.equal(AgentRegistry.resolve('operator-agent').behaviorSummary?.includes('no automatic execution'), true)
+      }
+    },
+    {
+      name: 'Governance: GENIO central profile coordinates hierarchy as metadata only',
+      run: async () => {
+        const genio = GenioGovernanceRegistry.centralProfile()
+
+        assert.equal(genio.id, 'genio-central')
+        assert.equal(genio.hierarchyLevel, 'central')
+        assert.equal(genio.governanceLevel, 'central-governance')
+        assert.equal(genio.approvalAuthority, 'proposal-governance-only')
+        assert.equal(genio.simulationOnly, true)
+        assert.equal(genio.actionExecuted, false)
+        assert.ok(genio.capabilities.includes('coordinate specialist agents'))
+        assert.ok(genio.futureCapabilities.some((capability) => capability.id === 'memory-systems'))
+        assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
+        assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
+        assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
       }
     },
     {
@@ -201,6 +223,7 @@ export function mockTests(): TestCase[] {
         assert.equal(first.inputPreview.includes('password=123'), false)
         assert.equal(first.inputPreview.includes('secret=hidden'), false)
         assert.equal(first.actionExecuted, false)
+        assert.equal(first.simulationOnly, true)
 
         for (let index = 0; index < 105; index += 1) {
           auditLog.record({
@@ -277,9 +300,12 @@ export function mockTests(): TestCase[] {
         assert.ok(auditEvents.some((event) => event.type === 'tool-result-created'))
         assert.ok(auditEvents.some((event) => event.type === 'tool-blocked'))
         assert.equal(auditEvents.every((event) => event.actionExecuted === false), true)
+        assert.equal(auditEvents.every((event) => event.simulationOnly === true), true)
         assert.equal(auditEvents.every((event) => Boolean(event.eventId)), true)
         assert.ok(auditEvents.some((event) => event.actionType === 'approval-evaluated'))
         assert.ok(auditEvents.some((event) => event.approvalStatus === 'requires-approval'))
+        assert.ok(auditEvents.some((event) => event.governanceSource === 'approval-gate'))
+        assert.ok(auditEvents.some((event) => event.hierarchyLevel === 'supervisor'))
         assert.equal(auditEvents.every((event) => !event.inputPreview || event.inputPreview.length <= 120), true)
         assert.equal(JSON.stringify(auditEvents).includes('executed'), false)
         assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid, invalidTool]).includes('executed'), false)

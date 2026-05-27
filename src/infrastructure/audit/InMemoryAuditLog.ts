@@ -12,6 +12,7 @@ export class InMemoryAuditLog {
     const sanitizedEvent: AuditEvent = {
       ...event,
       actionExecuted: false,
+      simulationOnly: true,
       eventId: event.eventId ?? event.id,
       ...(event.inputPreview ? { inputPreview: this.sanitizePreview(event.inputPreview) } : {}),
       ...(event.summary ? { summary: this.sanitizePreview(event.summary) } : {}),

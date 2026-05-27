@@ -3,8 +3,10 @@
 import { FormEvent, useEffect, useState } from 'react'
 import {
   privateLabAgents,
+  privateLabGovernance,
   privateLabTools,
   type PrivateLabAgentCatalogItem,
+  type PrivateLabGovernanceCatalog,
   type PrivateLabToolCatalogItem
 } from '@/lib/private-lab'
 
@@ -46,8 +48,13 @@ type AuditEvent = {
   riskLevel?: string
   decision?: string
   approvalStatus?: string
+  approvalDecision?: string
   permission?: string
+  governanceSource?: string
+  hierarchyLevel?: string
+  blockedReason?: string
   requiresHumanApproval?: boolean
+  simulationOnly?: true
   inputPreview?: string
   summary?: string
 }
@@ -63,6 +70,7 @@ type LabResponse = {
 type LabCatalogResponse = {
   success: true
   data: {
+    governance?: PrivateLabGovernanceCatalog
     agents: PrivateLabAgentCatalogItem[]
     tools: PrivateLabToolCatalogItem[]
   }
@@ -148,6 +156,7 @@ export default function LabPage() {
   const [ownerAccessCode, setOwnerAccessCode] = useState('')
   const [unlocked, setUnlocked] = useState(false)
   const [agents, setAgents] = useState<PrivateLabAgentCatalogItem[]>([...privateLabAgents])
+  const [governance, setGovernance] = useState<PrivateLabGovernanceCatalog>(privateLabGovernance)
   const [tools, setTools] = useState<PrivateLabToolCatalogItem[]>([...privateLabTools])
   const [agentId, setAgentId] = useState('operator-agent')
   const [toolId, setToolId] = useState('review-risk')
@@ -181,6 +190,7 @@ export default function LabPage() {
 
     try {
       const catalog = await requestLabCatalog(ownerAccessCode)
+      setGovernance(catalog.data.governance ?? privateLabGovernance)
       setAgents(catalog.data.agents)
       setTools(catalog.data.tools)
       setUnlocked(true)
@@ -224,26 +234,30 @@ export default function LabPage() {
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
           <span className="status-pill status-pill--pending">Private local lab</span>
-          <h1>Private AI Lab</h1>
+          <h1>GENIO Central Governance Layer</h1>
           <p>
-            Controlled workspace for private agent proposals, approval metadata, and in-memory audit events. Proposal
-            does not mean execution.
+            Controlled workspace for central governance, private agent proposals, approval metadata, and in-memory audit
+            events. Proposal does not mean execution.
           </p>
 
           <div className="tag-row">
+            <span className="tech-pill">GENIO Central</span>
             <span className="tech-pill">Human-in-the-loop</span>
+            <span className="tech-pill">proposal != execution</span>
             <span className="tech-pill">Proposals only</span>
             <span className="tech-pill">No real terminal</span>
           </div>
         </div>
 
         <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">Security boundary</p>
-          <h2>proposal != execution</h2>
-          <p className="meta-text">
-            Tools can suggest structured plans and commands as text. They cannot run commands, move files, read Gmail, or
-            access secrets.
-          </p>
+          <p className="result-eyebrow">{governance.centralProfile.governanceLevel}</p>
+          <h2>{governance.centralProfile.label}</h2>
+          <p className="meta-text">{governance.centralProfile.systemDescription}</p>
+          <div className="response-meta">
+            <span className="info-chip">{governance.centralProfile.hierarchyLevel}</span>
+            <span className="info-chip">{governance.centralProfile.approvalAuthority}</span>
+            <span className="info-chip">Simulation only</span>
+          </div>
         </aside>
       </section>
 
@@ -283,16 +297,34 @@ export default function LabPage() {
               <h2>Private core only</h2>
               <p>No database, no auth layer, no filesystem, no terminal execution, no Gmail integration.</p>
             </div>
+            <div className="tag-row">
+              {governance.centralProfile.safetyBoundaries.slice(0, 4).map((boundary) => (
+                <span className="tech-pill" key={boundary}>
+                  {boundary}
+                </span>
+              ))}
+            </div>
           </aside>
         </section>
       ) : (
         <section className="workspace">
           <form className="panel" onSubmit={handleSubmit}>
             <div className="panel-heading">
-              <p className="result-eyebrow">Tool request</p>
+              <p className="result-eyebrow">Governed tool request</p>
               <h2>Generate an auditable proposal</h2>
-              <p>Select an agent and a controlled tool. Commands are rendered as text only.</p>
+              <p>Select a subordinate agent and a controlled tool. GENIO metadata governs risk before future tool access.</p>
             </div>
+
+            <section className="result-state">
+              <p className="result-eyebrow">Central authority</p>
+              <h3>{governance.centralProfile.label}</h3>
+              <p>{governance.centralProfile.role}</p>
+              <div className="response-meta">
+                <span className="info-chip">Priority {governance.centralProfile.orchestrationPriority}</span>
+                <span className="info-chip">Risk {governance.centralProfile.riskAwareness}</span>
+                <span className="info-chip">{governance.ownership}</span>
+              </div>
+            </section>
 
             <label className="field-label" htmlFor="lab-agent">
               Agent
@@ -313,6 +345,8 @@ export default function LabPage() {
             <div className="response-meta">
               <span className="info-chip">Category {selectedAgent?.category}</span>
               <span className="info-chip">Risk {selectedAgent?.riskProfile}</span>
+              <span className="info-chip">Hierarchy {selectedAgent?.hierarchyLevel ?? 'specialist'}</span>
+              <span className="info-chip">Parent {selectedAgent?.parentAuthority ?? 'genio-central'}</span>
             </div>
             <div className="tag-row">
               {selectedAgent?.capabilities.map((capability) => (
@@ -343,6 +377,7 @@ export default function LabPage() {
               <span className="info-chip">Risk {selectedTool?.riskLevel}</span>
               <span className="info-chip">{selectedTool?.requiresApproval ? 'Approval required' : 'Proposal safe'}</span>
               <span className="info-chip">{selectedTool?.outputType}</span>
+              <span className="info-chip">Governed by GENIO</span>
             </div>
 
             <label className="field-label" htmlFor="lab-input">
@@ -384,6 +419,7 @@ export default function LabPage() {
                     <span className="info-chip">
                       {result.requiresHumanApproval ? 'Human approval required' : 'Safe proposal'}
                     </span>
+                    <span className="info-chip">Simulation only</span>
                   </div>
                 </section>
 
@@ -398,6 +434,7 @@ export default function LabPage() {
                         {result.approval.requiresHumanApproval ? 'Needs owner review' : 'No owner review needed'}
                       </span>
                       <span className="info-chip">Action performed: no</span>
+                      <span className="info-chip">GENIO observed</span>
                     </div>
                   </section>
                 ) : null}
@@ -429,26 +466,42 @@ export default function LabPage() {
                 ) : null}
 
                 <section className="result-state">
-                  <p className="result-eyebrow">Audit events</p>
+                  <p className="result-eyebrow">Governance observability</p>
                   <h3>{auditEvents.length} events in memory</h3>
                   {auditEvents.slice(-6).map((event) => (
                     <div className="response-meta" key={event.id}>
                       <span className="info-chip">{event.actionType ?? event.type}</span>
-                      {event.approvalStatus ?? event.decision ? (
-                        <span className="info-chip">{event.approvalStatus ?? event.decision}</span>
+                      {event.approvalDecision ?? event.approvalStatus ?? event.decision ? (
+                        <span className="info-chip">{event.approvalDecision ?? event.approvalStatus ?? event.decision}</span>
                       ) : null}
                       {event.riskLevel ? <span className="info-chip">Risk {event.riskLevel}</span> : null}
+                      {event.governanceSource ? <span className="info-chip">{event.governanceSource}</span> : null}
+                      {event.hierarchyLevel ? <span className="info-chip">{event.hierarchyLevel}</span> : null}
                       {event.toolId ? <span className="info-chip">{event.toolId}</span> : null}
+                      <span className="info-chip">{event.simulationOnly ? 'Simulation only' : 'Proposal only'}</span>
                     </div>
                   ))}
                 </section>
               </>
             ) : (
-              <section className="result-state">
-                <p className="result-eyebrow">Waiting</p>
-                <h3>Private lab proposal will appear here</h3>
-                <p>Unlock the lab, choose an agent and tool, then submit a controlled request.</p>
-              </section>
+              <>
+                <section className="result-state">
+                  <p className="result-eyebrow">Waiting</p>
+                  <h3>Private lab proposal will appear here</h3>
+                  <p>Unlock the lab, choose an agent and tool, then submit a controlled request.</p>
+                </section>
+                <section className="result-state">
+                  <p className="result-eyebrow">Future readiness</p>
+                  <h3>Metadata only</h3>
+                  <div className="tag-row">
+                    {governance.centralProfile.futureCapabilities.map((capability) => (
+                      <span className="tech-pill" key={capability.id}>
+                        {capability.label}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              </>
             )}
           </aside>
         </section>

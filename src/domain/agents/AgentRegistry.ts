@@ -1,4 +1,5 @@
 import { AgentId, AgentProfile } from './AgentProfile'
+import type { AgentGovernanceMetadata, AgentHierarchyLevel } from '../governance/GovernanceProfile'
 
 const DEFAULT_AGENT_ID: AgentId = 'tutor'
 
@@ -220,18 +221,71 @@ const AGENTS: Record<AgentId, AgentProfile> = {
   }
 }
 
+function hierarchyFor(agent: AgentProfile): AgentHierarchyLevel {
+  switch (agent.id) {
+    case 'architect':
+    case 'architect-agent':
+    case 'operator-agent':
+      return 'supervisor'
+    case 'coder-agent':
+    case 'reviewer-agent':
+    case 'debugger-agent':
+    case 'course-generator':
+    case 'cuba-education-assistant':
+      return 'specialist'
+    case 'tutor':
+    case 'mentor':
+    case 'tutor-agent':
+      return 'utility'
+  }
+}
+
+function governanceFor(agent: AgentProfile): AgentGovernanceMetadata {
+  const hierarchyLevel = agent.hierarchyLevel ?? hierarchyFor(agent)
+  const approvalRequirements =
+    agent.approvalRequirements ??
+    (agent.riskProfile === 'high'
+      ? ['GENIO governance review required for sensitive proposals.', 'Owner approval required before any future execution.']
+      : ['GENIO governance metadata applies before future sensitive tool access.'])
+
+  return {
+    hierarchyLevel,
+    parentAuthority: agent.parentAuthority ?? 'genio-central',
+    escalationRules:
+      agent.escalationRules ??
+      [
+        'Escalate tool proposals that require approval to GENIO governance metadata.',
+        'Escalate forbidden or irreversible actions to the owner boundary.'
+      ],
+    approvalRequirements
+  }
+}
+
+function withGovernance(agent: AgentProfile): AgentProfile {
+  const governance = governanceFor(agent)
+
+  return {
+    ...agent,
+    hierarchyLevel: governance.hierarchyLevel,
+    parentAuthority: governance.parentAuthority,
+    escalationRules: governance.escalationRules,
+    approvalRequirements: governance.approvalRequirements,
+    governance
+  }
+}
+
 export class AgentRegistry {
   static defaultAgent(): AgentProfile {
-    return AGENTS[DEFAULT_AGENT_ID]
+    return withGovernance(AGENTS[DEFAULT_AGENT_ID])
   }
 
   static list(): AgentProfile[] {
-    return Object.values(AGENTS)
+    return Object.values(AGENTS).map((agent) => withGovernance(agent))
   }
 
   static resolve(agentId?: string): AgentProfile {
     if (this.isAgentId(agentId)) {
-      return AGENTS[agentId]
+      return withGovernance(AGENTS[agentId])
     }
 
     return this.defaultAgent()

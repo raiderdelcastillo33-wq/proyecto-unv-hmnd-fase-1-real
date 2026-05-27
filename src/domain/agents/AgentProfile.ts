@@ -1,5 +1,6 @@
 import type { AIFeature } from '../services/AIProvider'
 import type { ToolId } from '../tools/ToolProfile'
+import type { AgentGovernanceMetadata, AgentHierarchyLevel } from '../governance/GovernanceProfile'
 
 export type AgentId =
   | 'tutor'
@@ -32,4 +33,9 @@ export interface AgentProfile {
   safetyRules: string[]
   defaultFeature: AIFeature
   allowedTools?: ToolId[]
+  hierarchyLevel?: AgentHierarchyLevel
+  parentAuthority?: string
+  escalationRules?: string[]
+  approvalRequirements?: string[]
+  governance?: AgentGovernanceMetadata
 }

@@ -54,6 +54,8 @@ describe('LabPage', () => {
 
     expect(screen.getByText('Owner access required')).toBeInTheDocument()
     expect(screen.getByText('proposal != execution')).toBeInTheDocument()
+    expect(screen.getByText('GENIO Central Governance Layer')).toBeInTheDocument()
+    expect(screen.getAllByText('GENIO Central').length).toBeGreaterThan(0)
 
     fireEvent.change(screen.getByLabelText('Owner access code'), {
       target: { value: 'owner-code' }
@@ -64,6 +66,8 @@ describe('LabPage', () => {
     expect(screen.getByLabelText('Agent')).toHaveValue('operator-agent')
     expect(screen.getByLabelText('Tool')).toHaveValue('review-risk')
     expect(screen.getByText('Risk high')).toBeInTheDocument()
+    expect(screen.getByText('Hierarchy specialist')).toBeInTheDocument()
+    expect(screen.getByText('Parent genio-central')).toBeInTheDocument()
   })
 
   it('renders ToolResult, approval metadata, commands, and audit events', async () => {
@@ -147,6 +151,9 @@ describe('LabPage', () => {
               type: 'tool-requested',
               timestamp: '2026-05-27T00:00:00.000Z',
               actionExecuted: false,
+              simulationOnly: true,
+              governanceSource: 'genio-central',
+              hierarchyLevel: 'supervisor',
               agentId: 'operator-agent',
               toolId: 'propose-terminal-command'
             },
@@ -155,6 +162,10 @@ describe('LabPage', () => {
               type: 'approval-evaluated',
               timestamp: '2026-05-27T00:00:00.000Z',
               actionExecuted: false,
+              simulationOnly: true,
+              governanceSource: 'approval-gate',
+              hierarchyLevel: 'supervisor',
+              approvalDecision: 'requires-approval',
               decision: 'requires-approval',
               toolId: 'propose-terminal-command'
             }
@@ -186,6 +197,8 @@ describe('LabPage', () => {
     expect(screen.getByText('Suggested commands as text only')).toBeInTheDocument()
     expect(screen.getByText('npm test')).toBeInTheDocument()
     expect(screen.getByText('2 events in memory')).toBeInTheDocument()
+    expect(screen.getAllByText('Simulation only').length).toBeGreaterThan(0)
+    expect(screen.getByText('Governance observability')).toBeInTheDocument()
     expect(screen.queryByText(/systemInstructions/i)).not.toBeInTheDocument()
     expect(screen.queryByText('"executed"')).not.toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledWith(

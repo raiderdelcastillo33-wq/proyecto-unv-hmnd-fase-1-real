@@ -1,5 +1,6 @@
 import type { ActionRiskLevel, ApprovalDecision, Permission } from '../security/PermissionProfile'
 import type { ToolRiskLevel } from '../tools/ToolProfile'
+import type { AgentHierarchyLevel, GovernanceSource } from '../governance/GovernanceProfile'
 
 export type AuditEventType = 'tool-requested' | 'approval-evaluated' | 'tool-result-created' | 'tool-blocked'
 
@@ -17,8 +18,13 @@ export interface AuditEvent {
   decision?: ApprovalDecision
   approvalStatus?: ApprovalDecision
   riskLevel?: ActionRiskLevel | ToolRiskLevel
+  governanceSource?: GovernanceSource
+  hierarchyLevel?: AgentHierarchyLevel
+  approvalDecision?: ApprovalDecision
+  blockedReason?: string
   requiresHumanApproval?: boolean
   inputPreview?: string
   summary?: string
+  simulationOnly?: true
   metadata?: Record<string, string | number | boolean>
 }
