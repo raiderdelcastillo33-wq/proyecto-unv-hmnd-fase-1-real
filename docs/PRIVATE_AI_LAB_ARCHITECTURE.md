@@ -60,6 +60,16 @@ Boundaries:
 - no manipulative emotional dependency
 - no conceptual layer grants execution privileges
 
+Current MVP UI experience:
+
+- `/lab` includes an Organization Simulation Panel for the Humanity Guide OS Intelligent Organization MVP.
+- The panel uses mock-only file metadata to show chaos signals, duplicate candidates, mixed priorities, and visual overload.
+- GENIO renders a governed organization strategy.
+- GÉNESIS renders reflection observations as a contextual mirror, without user scoring or behavioral surveillance.
+- The Human-Centered Alignment Layer renders checks for clarity, no overautomation, and safe limits.
+- The before/after visualization, estimated time saved, and checklist are proposal-only previews.
+- No filesystem access, host scanning, file movement, file deletion, upload, indexing, or runtime execution exists.
+
 ## 2. GENIO Central Governance Layer
 
 Source:
@@ -581,6 +591,7 @@ Completed phases:
 15. Controlled Practical Capability Blueprint
 16. Controlled Runtime Sandbox Blueprint
 17. Read-Only File Preview Adapter Blueprint
+18. Humanity Guide OS Intelligent Organization MVP UI
 
 Future roadmap:
 

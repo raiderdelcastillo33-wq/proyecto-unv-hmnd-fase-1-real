@@ -10,6 +10,7 @@ import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/FilePreviewBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
+import { HUMANITY_GUIDE_ORGANIZATION_SIMULATION } from '../../src/domain/organization/OrganizationSimulation'
 import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
@@ -361,6 +362,24 @@ export function mockTests(): TestCase[] {
         assert.ok(alignment?.boundaries.includes('does not score humans'))
         assert.ok(blueprint.relationships.some((relationship) => relationship.to === 'genesis'))
         assert.ok(blueprint.pseudoAgiAvoidanceRules.some((rule) => rule.includes('Never claim real consciousness')))
+      }
+    },
+    {
+      name: 'Organization: Humanity Guide OS MVP simulation stays mock-only',
+      run: async () => {
+        const simulation = HUMANITY_GUIDE_ORGANIZATION_SIMULATION
+
+        assert.equal(simulation.status, 'simulation-only')
+        assert.equal(simulation.datasetSource, 'mock-only')
+        assert.equal(simulation.simulationOnly, true)
+        assert.equal(simulation.actionExecuted, false)
+        assert.ok(simulation.files.length >= 6)
+        assert.ok(simulation.chaosSignals.some((signal) => signal.type === 'duplicate-files'))
+        assert.ok(simulation.proposal.duplicateGroups.some((group) => group.actionMode === 'proposal-only'))
+        assert.equal(simulation.alignmentValidation.actionExecuted, false)
+        assert.ok(simulation.genioAnalysis.governanceBoundary.includes('cannot read, move, rename, delete, or execute'))
+        assert.ok(simulation.nonCapabilities.includes('No real filesystem access.'))
+        assert.ok(simulation.nonCapabilities.includes('No user behavior scoring.'))
       }
     },
     {

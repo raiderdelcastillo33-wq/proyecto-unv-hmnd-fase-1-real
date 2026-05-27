@@ -490,6 +490,186 @@ textarea {
   font-size: 0.82rem;
 }
 
+.organization-panel {
+  display: grid;
+  gap: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(116, 240, 186, 0.18);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.07), rgba(105, 211, 255, 0.03)),
+    rgba(6, 10, 18, 0.9);
+  padding: 22px;
+}
+
+.organization-metrics,
+.organization-card-grid,
+.before-after-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.organization-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.organization-metrics div,
+.organization-card,
+.file-column {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  border-radius: 18px;
+}
+
+.organization-metrics div {
+  min-height: 96px;
+  padding: 16px;
+}
+
+.organization-metrics span {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.organization-metrics p,
+.organization-section__heading p,
+.organization-card p,
+.organization-note p,
+.organization-check p,
+.file-row small {
+  margin: 0;
+}
+
+.organization-section {
+  display: grid;
+  gap: 14px;
+}
+
+.organization-section__heading {
+  display: grid;
+  gap: 8px;
+}
+
+.organization-section__heading h3,
+.organization-card h3,
+.organization-card h4,
+.file-column h4 {
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+.organization-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.organization-card-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.organization-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px;
+}
+
+.organization-card--accent {
+  border-color: rgba(105, 211, 255, 0.24);
+  background: linear-gradient(180deg, rgba(105, 211, 255, 0.1), rgba(8, 13, 22, 0.88));
+}
+
+.organization-note,
+.organization-check,
+.file-row {
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.11);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.organization-note {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.organization-note span {
+  color: var(--warning);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.organization-check {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.organization-check > span {
+  height: fit-content;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--success);
+  background: rgba(116, 240, 186, 0.1);
+  border: 1px solid rgba(116, 240, 186, 0.2);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.before-after-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.file-column {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.file-column--chaos {
+  border-color: rgba(244, 193, 111, 0.22);
+}
+
+.file-column--calm {
+  border-color: rgba(116, 240, 186, 0.22);
+}
+
+.file-row {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.file-row span {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.file-row small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.organization-checklist {
+  display: grid;
+  gap: 10px;
+}
+
+.organization-checklist label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.58);
+  border: 1px solid rgba(148, 163, 184, 0.11);
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -849,6 +1029,10 @@ textarea {
   .architecture-grid,
   .timeline-grid,
   .helper-grid,
+  .organization-metrics,
+  .organization-card-grid,
+  .organization-card-grid--three,
+  .before-after-grid,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {

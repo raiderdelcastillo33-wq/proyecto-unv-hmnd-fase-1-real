@@ -9,6 +9,7 @@ import {
   type PrivateLabGovernanceCatalog,
   type PrivateLabToolCatalogItem
 } from '@/lib/private-lab'
+import { OrganizationSimulationPanel } from './OrganizationSimulationPanel'
 
 type ToolResult = {
   toolId: string
@@ -464,6 +465,8 @@ export default function LabPage() {
                 ))}
               </div>
             </section>
+
+            <OrganizationSimulationPanel />
 
             <section className="result-state">
               <p className="result-eyebrow">Auth blueprint</p>

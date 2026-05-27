@@ -60,6 +60,19 @@ Limites:
 - no vigilancia humana
 - no dependencia psicologica
 
+Primera experiencia MVP en `/lab`:
+
+- Organization Simulation Panel con dataset mock.
+- Chaos Detection Summary sobre archivos simulados.
+- GENIO Analysis Card para propuesta gobernada.
+- GENESIS Reflection Card como contextual mirror no invasivo.
+- Alignment Validation Card para claridad humana y no sobreautomatizacion.
+- Before / After Visualization.
+- Estimated Time Saved y claridad estimada.
+- Organization Proposal Checklist.
+
+Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
+
 ## Stack Tecnologico
 
 - Next.js 15
@@ -776,6 +789,7 @@ Fases completadas:
 - Controlled Runtime Sandbox Blueprint
 - Read-Only File Preview Adapter Blueprint
 - Humanity Guide OS Architecture
+- Humanity Guide OS Intelligent Organization MVP UI
 
 Roadmap futuro:
 
