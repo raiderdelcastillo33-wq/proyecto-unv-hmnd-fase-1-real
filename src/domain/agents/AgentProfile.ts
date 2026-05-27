@@ -14,10 +14,20 @@ export type AgentId =
   | 'tutor-agent'
   | 'operator-agent'
 
+export type AgentCategory = 'education' | 'strategy' | 'architecture' | 'implementation' | 'review' | 'debugging' | 'operations'
+export type AgentRiskProfile = 'low' | 'medium' | 'high'
+
 export interface AgentProfile {
   id: AgentId
   name: string
+  label?: string
   purpose: string
+  description?: string
+  category?: AgentCategory
+  capabilities?: string[]
+  riskProfile?: AgentRiskProfile
+  behaviorSummary?: string
+  systemPrompt?: string
   systemInstructions: string
   safetyRules: string[]
   defaultFeature: AIFeature

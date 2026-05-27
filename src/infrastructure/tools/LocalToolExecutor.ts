@@ -282,12 +282,17 @@ export class LocalToolExecutor {
     approval?: ApprovalResult,
     result?: ToolResult
   ): void {
+    const eventId = `audit-${Date.now()}-${++this.auditSequence}`
+
     this.auditLog?.record({
-      id: `audit-${Date.now()}-${++this.auditSequence}`,
+      id: eventId,
+      eventId,
       type,
       timestamp: new Date().toISOString(),
       actionExecuted: false,
+      actionType: type,
       inputPreview: request.input,
+      summary: result?.summary ?? `Private lab event: ${type}`,
       metadata: {
         hasContext: Boolean(request.context),
         ...(result ? { sectionCount: result.sections.length, commandCount: result.commands?.length ?? 0 } : {})
@@ -299,6 +304,7 @@ export class LocalToolExecutor {
             proposalId: approval.proposalId,
             permission: approval.permission,
             decision: approval.decision,
+            approvalStatus: approval.decision,
             requiresHumanApproval: approval.requiresHumanApproval
           }
         : {}),

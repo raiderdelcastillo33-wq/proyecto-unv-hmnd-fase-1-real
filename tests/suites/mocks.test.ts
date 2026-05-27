@@ -133,6 +133,11 @@ export function mockTests(): TestCase[] {
           ]
         )
         assert.match(AgentRegistry.resolve('operator-agent').systemInstructions, /Never execute/)
+        assert.equal(AgentRegistry.resolve('operator-agent').label, 'Operator')
+        assert.equal(AgentRegistry.resolve('operator-agent').category, 'operations')
+        assert.equal(AgentRegistry.resolve('operator-agent').riskProfile, 'high')
+        assert.ok(AgentRegistry.resolve('operator-agent').capabilities?.includes('command proposal'))
+        assert.equal(AgentRegistry.resolve('operator-agent').behaviorSummary?.includes('no automatic execution'), true)
       }
     },
     {
@@ -160,6 +165,10 @@ export function mockTests(): TestCase[] {
         assert.equal(ToolRegistry.isAllowedForAgent(tutor, 'propose-terminal-command'), false)
         assert.equal(ToolRegistry.isAllowedForAgent(operator, 'tool-invalida'), false)
         assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresHumanApproval, true)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresApproval, true)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.category, 'operations')
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.outputType, 'command-proposal')
+        assert.ok(ToolRegistry.resolve('propose-terminal-command')?.forbiddenActions?.includes('execute-command'))
         assert.equal('executed' in ToolRegistry.resolve('propose-terminal-command')!, false)
       }
     },
@@ -183,6 +192,7 @@ export function mockTests(): TestCase[] {
         const storedEvents = auditLog.list()
         assert.equal(auditLog.list().length, 1)
         assert.equal(storedEvents[0]!.id, first.id)
+        assert.equal(storedEvents[0]!.eventId, first.id)
         assert.ok(first.inputPreview)
         assert.ok(first.inputPreview.length <= 120)
         assert.equal(first.inputPreview.includes('sk-test123456'), false)
@@ -267,6 +277,9 @@ export function mockTests(): TestCase[] {
         assert.ok(auditEvents.some((event) => event.type === 'tool-result-created'))
         assert.ok(auditEvents.some((event) => event.type === 'tool-blocked'))
         assert.equal(auditEvents.every((event) => event.actionExecuted === false), true)
+        assert.equal(auditEvents.every((event) => Boolean(event.eventId)), true)
+        assert.ok(auditEvents.some((event) => event.actionType === 'approval-evaluated'))
+        assert.ok(auditEvents.some((event) => event.approvalStatus === 'requires-approval'))
         assert.equal(auditEvents.every((event) => !event.inputPreview || event.inputPreview.length <= 120), true)
         assert.equal(JSON.stringify(auditEvents).includes('executed'), false)
         assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid, invalidTool]).includes('executed'), false)

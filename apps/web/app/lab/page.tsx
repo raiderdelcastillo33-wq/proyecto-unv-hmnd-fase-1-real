@@ -1,7 +1,12 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
-import { privateLabAgents, privateLabTools, type PrivateLabAgentId, type PrivateLabToolId } from '@/lib/private-lab'
+import { FormEvent, useEffect, useState } from 'react'
+import {
+  privateLabAgents,
+  privateLabTools,
+  type PrivateLabAgentCatalogItem,
+  type PrivateLabToolCatalogItem
+} from '@/lib/private-lab'
 
 type ToolResult = {
   toolId: string
@@ -31,15 +36,20 @@ type ToolResult = {
 
 type AuditEvent = {
   id: string
+  eventId?: string
   type: string
   timestamp: string
   actionExecuted: false
   agentId?: string
   toolId?: string
+  actionType?: string
+  riskLevel?: string
   decision?: string
+  approvalStatus?: string
   permission?: string
   requiresHumanApproval?: boolean
   inputPreview?: string
+  summary?: string
 }
 
 type LabResponse = {
@@ -47,6 +57,14 @@ type LabResponse = {
   data: {
     result: ToolResult
     auditEvents: AuditEvent[]
+  }
+}
+
+type LabCatalogResponse = {
+  success: true
+  data: {
+    agents: PrivateLabAgentCatalogItem[]
+    tools: PrivateLabToolCatalogItem[]
   }
 }
 
@@ -99,21 +117,58 @@ async function requestLabTool(body: Record<string, unknown>): Promise<LabRespons
   return payload as LabResponse
 }
 
+async function requestLabCatalog(ownerAccessCode: string): Promise<LabCatalogResponse> {
+  const response = await fetch('/api/lab/catalog', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    cache: 'no-store',
+    body: JSON.stringify({ ownerAccessCode })
+  })
+
+  const payload = await readJson(response)
+
+  if (!response.ok) {
+    if (isRecord(payload) && typeof payload.error === 'string') {
+      throw new Error(payload.error)
+    }
+
+    throw new Error('Private lab access denied.')
+  }
+
+  if (!isRecord(payload) || payload.success !== true || !isRecord(payload.data)) {
+    throw new Error('Unexpected private lab catalog response.')
+  }
+
+  return payload as LabCatalogResponse
+}
+
 export default function LabPage() {
   const [ownerAccessCode, setOwnerAccessCode] = useState('')
   const [unlocked, setUnlocked] = useState(false)
-  const [agentId, setAgentId] = useState<PrivateLabAgentId>('operator-agent')
-  const [toolId, setToolId] = useState<PrivateLabToolId>('review-risk')
+  const [agents, setAgents] = useState<PrivateLabAgentCatalogItem[]>([...privateLabAgents])
+  const [tools, setTools] = useState<PrivateLabToolCatalogItem[]>([...privateLabTools])
+  const [agentId, setAgentId] = useState('operator-agent')
+  const [toolId, setToolId] = useState('review-risk')
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ToolResult | null>(null)
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const selectedAgent = privateLabAgents.find((agent) => agent.id === agentId) ?? privateLabAgents[5]
-  const selectedTool = privateLabTools.find((tool) => tool.id === toolId) ?? privateLabTools[4]
+  const selectedAgent = agents.find((agent) => agent.id === agentId) ?? agents[0]
+  const availableTools = tools.filter((tool) => selectedAgent?.allowedTools.includes(tool.id))
+  const visibleTools = availableTools.length > 0 ? availableTools : tools
+  const selectedTool = visibleTools.find((tool) => tool.id === toolId) ?? visibleTools[0]
 
-  function handleUnlock(event: FormEvent<HTMLFormElement>): void {
+  useEffect(() => {
+    if (selectedTool && selectedTool.id !== toolId) {
+      setToolId(selectedTool.id)
+    }
+  }, [selectedTool, toolId])
+
+  async function handleUnlock(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
     if (!ownerAccessCode.trim()) {
@@ -121,8 +176,19 @@ export default function LabPage() {
       return
     }
 
-    setUnlocked(true)
+    setLoading(true)
     setError(null)
+
+    try {
+      const catalog = await requestLabCatalog(ownerAccessCode)
+      setAgents(catalog.data.agents)
+      setTools(catalog.data.tools)
+      setUnlocked(true)
+    } catch (currentError) {
+      setError(getErrorMessage(currentError))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -205,7 +271,7 @@ export default function LabPage() {
 
             <div className="actions">
               <button className="primary-button" type="submit">
-                Unlock lab
+                {loading ? 'Checking...' : 'Unlock lab'}
               </button>
               <span className="meta-text">Requires server-side OWNER_ACCESS_CODE</span>
             </div>
@@ -234,16 +300,27 @@ export default function LabPage() {
             <select
               className="select-input"
               id="lab-agent"
-              onChange={(event) => setAgentId(event.target.value as PrivateLabAgentId)}
+              onChange={(event) => setAgentId(event.target.value)}
               value={agentId}
             >
-              {privateLabAgents.map((agent) => (
+              {agents.map((agent) => (
                 <option key={agent.id} value={agent.id}>
                   {agent.label}
                 </option>
               ))}
             </select>
-            <p className="meta-text">{selectedAgent.description}</p>
+            <p className="meta-text">{selectedAgent?.description}</p>
+            <div className="response-meta">
+              <span className="info-chip">Category {selectedAgent?.category}</span>
+              <span className="info-chip">Risk {selectedAgent?.riskProfile}</span>
+            </div>
+            <div className="tag-row">
+              {selectedAgent?.capabilities.map((capability) => (
+                <span className="tech-pill" key={capability}>
+                  {capability}
+                </span>
+              ))}
+            </div>
 
             <label className="field-label" htmlFor="lab-tool">
               Tool
@@ -251,16 +328,22 @@ export default function LabPage() {
             <select
               className="select-input"
               id="lab-tool"
-              onChange={(event) => setToolId(event.target.value as PrivateLabToolId)}
+              onChange={(event) => setToolId(event.target.value)}
               value={toolId}
             >
-              {privateLabTools.map((tool) => (
+              {visibleTools.map((tool) => (
                 <option key={tool.id} value={tool.id}>
                   {tool.label}
                 </option>
               ))}
             </select>
-            <p className="meta-text">{selectedTool.description}</p>
+            <p className="meta-text">{selectedTool?.description}</p>
+            <div className="response-meta">
+              <span className="info-chip">Category {selectedTool?.category}</span>
+              <span className="info-chip">Risk {selectedTool?.riskLevel}</span>
+              <span className="info-chip">{selectedTool?.requiresApproval ? 'Approval required' : 'Proposal safe'}</span>
+              <span className="info-chip">{selectedTool?.outputType}</span>
+            </div>
 
             <label className="field-label" htmlFor="lab-input">
               Input
@@ -350,8 +433,11 @@ export default function LabPage() {
                   <h3>{auditEvents.length} events in memory</h3>
                   {auditEvents.slice(-6).map((event) => (
                     <div className="response-meta" key={event.id}>
-                      <span className="info-chip">{event.type}</span>
-                      {event.decision ? <span className="info-chip">{event.decision}</span> : null}
+                      <span className="info-chip">{event.actionType ?? event.type}</span>
+                      {event.approvalStatus ?? event.decision ? (
+                        <span className="info-chip">{event.approvalStatus ?? event.decision}</span>
+                      ) : null}
+                      {event.riskLevel ? <span className="info-chip">Risk {event.riskLevel}</span> : null}
                       {event.toolId ? <span className="info-chip">{event.toolId}</span> : null}
                     </div>
                   ))}

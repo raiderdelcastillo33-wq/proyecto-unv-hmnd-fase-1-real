@@ -1,6 +1,7 @@
 /** @jest-environment node */
 
 import { POST } from '@/app/api/lab/tool/route'
+import { POST as CATALOG_POST } from '@/app/api/lab/catalog/route'
 
 const ORIGINAL_ENV = process.env
 
@@ -99,6 +100,42 @@ describe('POST /api/lab/tool', () => {
     expect(payload.data.auditEvents.some((event: { type: string }) => event.type === 'tool-result-created')).toBe(true)
     expect(JSON.stringify(payload)).not.toContain('systemInstructions')
     expect(JSON.stringify(payload)).not.toContain('"executed"')
+  })
+
+  it('returns safe dynamic catalog metadata without system instructions', async () => {
+    const response = await CATALOG_POST(
+      createJsonRequest(
+        JSON.stringify({
+          ownerAccessCode: 'owner-code'
+        })
+      ) as never
+    )
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.success).toBe(true)
+    expect(payload.data.agents.some((agent: { id: string }) => agent.id === 'operator-agent')).toBe(true)
+    expect(payload.data.tools.some((tool: { id: string }) => tool.id === 'propose-terminal-command')).toBe(true)
+    expect(payload.data.agents[0]).toEqual(
+      expect.objectContaining({
+        label: expect.any(String),
+        category: expect.any(String),
+        capabilities: expect.any(Array),
+        riskProfile: expect.any(String),
+        allowedTools: expect.any(Array)
+      })
+    )
+    expect(payload.data.tools[0]).toEqual(
+      expect.objectContaining({
+        label: expect.any(String),
+        category: expect.any(String),
+        riskLevel: expect.any(String),
+        requiresApproval: expect.any(Boolean),
+        outputType: expect.any(String)
+      })
+    )
+    expect(JSON.stringify(payload)).not.toContain('systemInstructions')
+    expect(JSON.stringify(payload)).not.toContain('systemPrompt')
   })
 
   it('keeps propose-terminal-command behind approval and text-only commands', async () => {

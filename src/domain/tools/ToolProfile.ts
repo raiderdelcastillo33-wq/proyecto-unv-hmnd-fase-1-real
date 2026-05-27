@@ -10,13 +10,21 @@ export type ToolId =
   | 'create-checklist'
 
 export type ToolRiskLevel = 'low' | 'medium' | 'high'
+export type ToolCategory = 'analysis' | 'planning' | 'review' | 'debugging' | 'operations'
+export type ToolOutputType = 'summary' | 'plan' | 'risk-review' | 'checklist' | 'command-proposal' | 'debug-explanation'
 
 export interface ToolProfile {
   id: ToolId
   name: string
+  label?: string
   purpose: string
+  description?: string
+  category?: ToolCategory
   requiresHumanApproval: boolean
+  requiresApproval?: boolean
   riskLevel: ToolRiskLevel
+  forbiddenActions?: string[]
+  outputType?: ToolOutputType
 }
 
 export interface ToolRequest {

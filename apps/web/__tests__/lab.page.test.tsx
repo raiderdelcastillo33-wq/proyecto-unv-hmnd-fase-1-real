@@ -18,7 +18,38 @@ describe('LabPage', () => {
     global.fetch = jest.fn()
   })
 
-  it('renders locked initially and unlocks with local input state', () => {
+  it('renders locked initially and unlocks with local input state', async () => {
+    const fetchMock = global.fetch as jest.Mock
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          agents: [
+            {
+              id: 'operator-agent',
+              label: 'Operator',
+              description: 'Operational planning and conservative command proposals.',
+              category: 'operations',
+              capabilities: ['task coordination', 'command proposal'],
+              riskProfile: 'high',
+              allowedTools: ['review-risk', 'propose-terminal-command']
+            }
+          ],
+          tools: [
+            {
+              id: 'review-risk',
+              label: 'Review Risk',
+              description: 'Review risks, mitigations, and test coverage.',
+              category: 'review',
+              riskLevel: 'medium',
+              requiresApproval: false,
+              outputType: 'risk-review'
+            }
+          ]
+        }
+      })
+    )
+
     render(<LabPage />)
 
     expect(screen.getByText('Owner access required')).toBeInTheDocument()
@@ -29,13 +60,53 @@ describe('LabPage', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
 
-    expect(screen.getByText('Generate an auditable proposal')).toBeInTheDocument()
+    expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
     expect(screen.getByLabelText('Agent')).toHaveValue('operator-agent')
     expect(screen.getByLabelText('Tool')).toHaveValue('review-risk')
+    expect(screen.getByText('Risk high')).toBeInTheDocument()
   })
 
   it('renders ToolResult, approval metadata, commands, and audit events', async () => {
     const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          agents: [
+            {
+              id: 'operator-agent',
+              label: 'Operator',
+              description: 'Operational planning and conservative command proposals.',
+              category: 'operations',
+              capabilities: ['task coordination', 'command proposal'],
+              riskProfile: 'high',
+              allowedTools: ['review-risk', 'propose-terminal-command']
+            }
+          ],
+          tools: [
+            {
+              id: 'review-risk',
+              label: 'Review Risk',
+              description: 'Review risks, mitigations, and test coverage.',
+              category: 'review',
+              riskLevel: 'medium',
+              requiresApproval: false,
+              outputType: 'risk-review'
+            },
+            {
+              id: 'propose-terminal-command',
+              label: 'Propose Terminal Command',
+              description: 'Suggest verification commands as text only.',
+              category: 'operations',
+              riskLevel: 'medium',
+              requiresApproval: true,
+              outputType: 'command-proposal'
+            }
+          ]
+        }
+      })
+    )
 
     fetchMock.mockResolvedValueOnce(
       createJsonResponse({
@@ -99,6 +170,8 @@ describe('LabPage', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
 
+    expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
+
     fireEvent.change(screen.getByLabelText('Tool'), {
       target: { value: 'propose-terminal-command' }
     })
@@ -133,6 +206,36 @@ describe('LabPage', () => {
     const fetchMock = global.fetch as jest.Mock
 
     fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          agents: [
+            {
+              id: 'operator-agent',
+              label: 'Operator',
+              description: 'Operational planning and conservative command proposals.',
+              category: 'operations',
+              capabilities: ['task coordination', 'command proposal'],
+              riskProfile: 'high',
+              allowedTools: ['review-risk']
+            }
+          ],
+          tools: [
+            {
+              id: 'review-risk',
+              label: 'Review Risk',
+              description: 'Review risks, mitigations, and test coverage.',
+              category: 'review',
+              riskLevel: 'medium',
+              requiresApproval: false,
+              outputType: 'risk-review'
+            }
+          ]
+        }
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
       createJsonResponse(
         {
           success: false,
@@ -148,6 +251,8 @@ describe('LabPage', () => {
       target: { value: 'wrong-code' }
     })
     fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
+
+    expect(await screen.findByText('Generate an auditable proposal')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Input'), {
       target: { value: 'try private lab' }
