@@ -83,6 +83,8 @@ Primera experiencia MVP en `/lab`:
 Presentation readiness:
 
 - Home como hub de walkthrough para recruiters.
+- Recruiter Quick Start para demos, entrevistas y grabaciones.
+- Seccion `What this project demonstrates` con senales claras de producto, frontend, governance y produccion.
 - Navegacion superior conectando `/`, `/demo`, `/lab` y arquitectura.
 - Mini onboarding visual: problema, seguridad y senales tecnicas.
 - Visual architecture summary con distincion entre capacidades actuales y blueprints futuros.
@@ -90,6 +92,7 @@ Presentation readiness:
 - Project Highlights, Governance-first Architecture, Simulation-first Safety, Human-centered AI y Technical Stack visibles en la home.
 - Metadata SEO basica, manifest, icono de app y sitemap publico preparados para despliegue.
 - Responsive/focus polish para screenshots, video walkthrough y navegacion por teclado basica.
+- Guia de demo para recruiters en `docs/RECRUITER_DEMO_GUIDE.md`.
 
 Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
 
@@ -858,6 +861,7 @@ Validar:
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
 - [Humanity Guide OS Architecture](docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md)
+- [Recruiter Demo Guide](docs/RECRUITER_DEMO_GUIDE.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)

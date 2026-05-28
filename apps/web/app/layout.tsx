@@ -4,12 +4,15 @@ import Link from 'next/link'
 import { ChatWidget } from '../components/ChatWidget'
 import './globals.css'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://unv-hmnd.vercel.app'
+
 export const viewport = {
   themeColor: '#070b11',
   colorScheme: 'dark'
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Humanity Guide OS | UNV-HMND',
     template: '%s | UNV-HMND'
@@ -31,7 +34,7 @@ export const metadata: Metadata = {
     follow: true
   },
   alternates: {
-    canonical: '/'
+    canonical: siteUrl
   },
   openGraph: {
     title: 'Humanity Guide OS | UNV-HMND',

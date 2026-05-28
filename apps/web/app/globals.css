@@ -380,7 +380,9 @@ textarea:focus-visible {
 .onboarding-grid,
 .architecture-summary,
 .capability-split,
-.showcase-grid {
+.showcase-grid,
+.quick-start-grid,
+.proof-list {
   display: grid;
   gap: 18px;
 }
@@ -448,6 +450,74 @@ textarea:focus-visible {
 
 .showcase-card--wide {
   min-height: 168px;
+}
+
+.recruiter-start {
+  border-radius: 28px;
+  border: 1px solid rgba(116, 240, 186, 0.16);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.06), rgba(105, 211, 255, 0.03)),
+    rgba(8, 13, 22, 0.66);
+  padding: 24px;
+}
+
+.quick-start-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.quick-start-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  min-height: 196px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(7, 12, 19, 0.9);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.quick-start-card h3,
+.proof-item p {
+  margin: 0;
+}
+
+.quick-start-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.18rem;
+}
+
+.quick-start-card p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.proof-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.proof-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(7, 12, 19, 0.86);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.proof-item span {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.5em;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 5px rgba(116, 240, 186, 0.08);
+}
+
+.proof-item p {
+  color: var(--muted);
+  line-height: 1.65;
 }
 
 .architecture-summary {
@@ -1579,6 +1649,8 @@ textarea:focus-visible {
   .capability-split,
   .showcase-grid,
   .showcase-grid--wide,
+  .quick-start-grid,
+  .proof-list,
   .architecture-grid,
   .timeline-grid,
   .helper-grid,

@@ -151,6 +151,36 @@ const showcaseCards = [
   }
 ]
 
+const recruiterQuickStart = [
+  {
+    step: '01',
+    title: 'Open the product story',
+    description: 'Start on this page and explain Humanity Guide OS as a governed AI organization demo, not an AGI product.'
+  },
+  {
+    step: '02',
+    title: 'Show the public demo',
+    description: 'Open `/demo` to show a safe multi-agent interaction with fallback-aware production behavior.'
+  },
+  {
+    step: '03',
+    title: 'Show the Private Lab',
+    description: 'Open `/lab` to show the guided organization simulation, safety indicators, and proposal-only workflow.'
+  },
+  {
+    step: '04',
+    title: 'Close with architecture',
+    description: 'Use `/about` and the README to separate current features from future controlled blueprints.'
+  }
+]
+
+const demonstrationPoints = [
+  'Product UX: a complex AI concept explained through a calm two-minute walkthrough.',
+  'Frontend engineering: responsive Next.js App Router UI with typed client/server boundaries.',
+  'Governance design: visible approval, audit, simulation, and no-execution constraints.',
+  'Production mindset: metadata, sitemap, manifest, tests, build checks, and deployment-oriented copy.'
+]
+
 export default function HomePage() {
   return (
     <main className="page-shell">
@@ -214,6 +244,47 @@ export default function HomePage() {
             </article>
           </div>
         </aside>
+      </section>
+
+      <section className="section-block recruiter-start" aria-labelledby="recruiter-quick-start-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Recruiter Quick Start</p>
+          <h2 className="section-title" id="recruiter-quick-start-heading">A clean walkthrough for interviews and video demos</h2>
+          <p>
+            Use this sequence for GitHub, Vercel, portfolio reviews, or a short Loom recording. It keeps the story
+            practical, safe, and easy to verify.
+          </p>
+        </div>
+
+        <div className="quick-start-grid">
+          {recruiterQuickStart.map((item) => (
+            <article className="quick-start-card" key={item.step}>
+              <span className="step-index">{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="demonstrates-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">What this project demonstrates</p>
+          <h2 className="section-title" id="demonstrates-heading">A serious product surface with explicit limits</h2>
+          <p>
+            The value is not a fake autonomous system. The value is product clarity, architecture discipline, and a
+            credible path toward controlled AI capabilities.
+          </p>
+        </div>
+
+        <div className="proof-list">
+          {demonstrationPoints.map((item) => (
+            <article className="proof-item" key={item}>
+              <span />
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="section-block presentation-band" aria-labelledby="onboarding-heading">
