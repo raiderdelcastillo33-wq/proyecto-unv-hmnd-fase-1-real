@@ -18,6 +18,9 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - blueprint de capacidades practicas controladas futuras
 - blueprint de sandbox runtime controlado futuro
 - blueprint de adapter read-only para preview futuro de archivos
+- controlled read-only organization preview con metadata de navegador
+- controlled email organization preview con dataset simulado
+- launch checklist para demos, recruiters, screenshots y Vercel readiness
 
 La regla central del sistema es:
 
@@ -165,6 +168,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - muestra blueprint de sandbox futuro sin ejecucion real ni acceso al host
 - muestra blueprint de file preview futuro sin lectura real del filesystem
 - muestra preview de organizacion de correos con dataset simulado, sin Gmail real ni acciones sobre bandeja
+- mantiene checklist de lanzamiento para demo publica, recruiter walkthrough y Vercel readiness
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -834,6 +838,7 @@ UNV-HMND/
 │  │  ├─ file-preview
 │  │  ├─ governance
 │  │  ├─ observability
+│  │  ├─ organization
 │  │  ├─ orchestration
 │  │  ├─ runtime
 │  │  ├─ security
@@ -875,6 +880,9 @@ Fases completadas:
 - Read-Only File Preview Adapter Blueprint
 - Humanity Guide OS Architecture
 - Humanity Guide OS Intelligent Organization MVP UI
+- Controlled Read-Only Organization Preview
+- Controlled Email Organization Preview
+- Demo Launch Checklist
 
 Roadmap futuro:
 
@@ -914,16 +922,18 @@ https://your-vercel-domain.example/lab
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
-- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, file preview, memory, orchestration y adapters
+- `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, file preview, memory, orchestration, adapters, read-only preview y email preview
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`
+- no hay envio real de correos, no Gmail API y no hay filesystem write/delete/move
 
 ## Documentacion
 
 - [API and AI Flow](docs/API_AND_AI_FLOW.md)
 - [Humanity Guide OS Architecture](docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md)
 - [Recruiter Demo Guide](docs/RECRUITER_DEMO_GUIDE.md)
+- [Demo Launch Checklist](docs/DEMO_LAUNCH_CHECKLIST.md)
 - [Private AI Lab Architecture](docs/PRIVATE_AI_LAB_ARCHITECTURE.md)
 - [Real Owner Auth Blueprint](docs/AUTH_BLUEPRINT.md)
 - [Persistent Audit & Observability Blueprint](docs/OBSERVABILITY_BLUEPRINT.md)

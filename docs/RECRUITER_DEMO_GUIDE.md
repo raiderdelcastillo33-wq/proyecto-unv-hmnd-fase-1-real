@@ -13,6 +13,8 @@ Recommended walkthrough:
 5. Show the controlled read-only file metadata preview and the controlled email organization preview.
 6. Close with `/about` or the README to explain architecture and roadmap.
 
+Use `docs/DEMO_LAUNCH_CHECKLIST.md` before recordings, recruiter calls, and Vercel deployment reviews.
+
 ## What Exists Today
 
 - Public `/demo` route.
@@ -20,6 +22,7 @@ Recommended walkthrough:
 - Mock organization simulation.
 - Controlled read-only file metadata preview.
 - Controlled email organization preview with a simulated inbox.
+- Demo launch checklist for screenshots, walkthroughs, and deployment readiness.
 - Proposal lifecycle metadata.
 - Local approval states.
 - In-memory audit events.
@@ -82,3 +85,16 @@ For a short video:
 7. Point at `simulation-only`, `proposal-only`, `No real filesystem access`, `emailSendAccess: false`, and `actionExecuted: false`.
 
 Keep the narration practical: product value, engineering quality, and governance discipline.
+
+## Final Launch Validation
+
+Before sharing the project publicly:
+
+- run the four verification commands from the README
+- open `/`, `/demo`, and `/lab`
+- confirm mobile and desktop layouts remain readable
+- confirm no critical console or hydration errors appear
+- confirm no broken links in the top navigation
+- confirm `/lab` still shows owner gate, safety indicators, read-only preview, and email preview
+- confirm no `NEXT_PUBLIC_OWNER_ACCESS_CODE` is exposed
+- confirm no real filesystem, terminal, Gmail, DB, auth, or autonomous execution is described as implemented

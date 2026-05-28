@@ -93,7 +93,15 @@ const architectureSummary = [
 const capabilitySplit = [
   {
     title: 'Current capabilities',
-    items: ['Public `/demo` route', 'Owner-gated `/lab` route', 'Mock organization simulation', 'Local approval metadata', 'In-memory audit events']
+    items: [
+      'Public `/demo` route',
+      'Owner-gated `/lab` route',
+      'Mock organization simulation',
+      'Read-only metadata preview',
+      'Email preview with fake inbox',
+      'Local approval metadata',
+      'In-memory audit events'
+    ]
   },
   {
     title: 'Future blueprints',
