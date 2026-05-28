@@ -2,6 +2,212 @@
 
 UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura humano + IA llamada Humanity Guide OS.
 
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6)
+![Vercel](https://img.shields.io/badge/Vercel-ready-black)
+![Governance](https://img.shields.io/badge/Governance-first-74f0ba)
+![Execution](https://img.shields.io/badge/Execution-simulation--only-f4c16f)
+
+## Executive Product Overview
+
+Humanity Guide OS is a governance-first AI product showcase for turning simulated digital chaos into clear, reviewable proposals. It is designed as a serious portfolio system: premium public landing, safe public demo, private governance lab, and owner-controlled personal organizer.
+
+The project demonstrates product engineering judgment rather than fake automation. Every sensitive flow remains proposal-first, simulation-first, auditable, reversible, and explicitly human-controlled.
+
+---
+
+## Governance Model
+
+The system is built around a strict governance contract:
+
+```text
+Proposal != Execution
+Approve != Execute
+actionExecuted: false
+```
+
+- Proposal-first: GENIO can classify, organize, simulate, and propose.
+- Human approval: approval metadata records owner decisions but does not trigger execution.
+- Auditability: sensitive flows expose risk, approval state, and governance context.
+- Simulation-only boundaries: previews and blueprints are not runtime capabilities.
+- Reversibility: the product favors reviewable plans and manual next steps over irreversible actions.
+
+## Governance & Safety Boundaries
+
+Humanity Guide OS is designed to make the safety model visible instead of hidden behind vague automation language.
+
+| Boundary | Meaning |
+| --- | --- |
+| Simulation-only execution | Sensitive workflows stop at mock data, metadata, previews, or documented blueprints. |
+| Owner-controlled approvals | Approval records owner intent but does not execute actions. |
+| Auditability | Risk, proposal, decision, and safety state remain visible for review. |
+| Reversible workflows | The product favors manual checklists and reviewable next steps over destructive automation. |
+| Proposal-first design | GENIO can propose and block; it does not perform real-world actions. |
+
+No hidden worker, filesystem action, Gmail operation, autonomous agent, or runtime execution is implied by the UX.
+
+---
+
+## Product Philosophy
+
+Humanity Guide OS follows a calm, premium, human-centered product direction inspired by clear AI interfaces and high-trust operating systems.
+
+- Responsible AI: useful assistance without overstated claims.
+- Human-centered systems: the owner remains the final authority.
+- Controlled execution: current flows stop at proposal, preview, or blueprint.
+- Trust and observability: safety state, audit metadata, and capability boundaries stay visible.
+- Enterprise realism: future directions are documented without pretending they already run.
+
+## Official Demo Flow
+
+```text
+/ -> /demo -> /lab -> /personal
+```
+
+1. `/`: product story, governance contract, recruiter framing, real vs blueprint distinction.
+2. `/demo`: safe public interaction and frontend/API boundary.
+3. `/lab`: GENIO governance, approval metadata, audit events, previews, and simulation-only execution planning.
+4. `/personal`: owner-controlled daily organizer with manual checklist and non-destructive boundaries.
+
+## Platform Experience
+
+The product experience is structured as a calm recruiter journey:
+
+1. The landing page explains the product and the governance contract.
+2. The public demo shows safe AI interaction without external actions.
+3. The lab reveals governance visibility: approval states, audit metadata, risk labels, and preview boundaries.
+4. The personal organizer shows the human-centered owner workflow: clarity, priorities, and manual next steps.
+
+Design principles:
+
+- calm visual hierarchy
+- readable cards and sections
+- visible safety language
+- premium, enterprise-like pacing
+- human-centered UX over automation spectacle
+
+---
+
+## Architecture Snapshot
+
+```text
+Humanity Guide OS
+  -> Public Landing and Demo UX
+  -> Personal Organizer Mode
+  -> Private AI Lab
+      -> GENIO Governance Layer
+      -> GENESIS Reflection Layer
+      -> Human-Centered Alignment Layer
+      -> Proposal, Approval, Audit, Preview Metadata
+  -> Node.js Domain and API Layer
+  -> Future Blueprints, not active runtime
+```
+
+Recruiter-level architecture:
+
+- Frontend: Next.js 15 App Router, React 19, TypeScript, responsive portfolio UI.
+- Backend: Node.js domain layer, typed services, API boundaries, safe provider fallbacks.
+- Orchestration: cataloged agents/tools and proposal routing as governed metadata.
+- Governance layer: GENIO centralizes risk, approval state, audit context, and safety boundaries.
+- Safety boundaries: no real runtime actions, no filesystem execution, no Gmail execution, no autonomous agents.
+
+## System Architecture Overview
+
+| Layer | Role | Current status |
+| --- | --- | --- |
+| Frontend layer | Public landing, `/demo`, `/lab`, `/personal`, recruiter navigation, responsive UI | Implemented |
+| Orchestration layer | Cataloged agents/tools, proposal routing, typed metadata, future coordination model | Metadata and simulation |
+| Governance layer | GENIO risk review, owner approval state, audit context, boundary enforcement | Implemented as governance metadata |
+| Simulation layer | Mock organization data, email preview data, execution planning preview, no real side effects | Implemented as simulation-only UX |
+| Human approval layer | Owner review, approve/reject metadata, manual next steps outside the app | Implemented as proposal-only flow |
+
+Architecture rule:
+
+```text
+Proposal -> Review -> Approval Metadata -> Manual Human Action
+```
+
+There is no automatic jump from approval metadata to real execution.
+
+## Visual Showcase
+
+> Official screenshots are planned in [Screenshot Plan](docs/assets/SCREENSHOT_PLAN.md).
+
+| Surface | Placeholder | What it should show |
+| --- | --- | --- |
+| `/demo` | ![/demo screenshot placeholder](docs/assets/placeholders/demo-placeholder.svg) | Safe public interaction, agent selection, response state, no external actions. |
+| `/lab` | ![/lab screenshot placeholder](docs/assets/placeholders/lab-placeholder.svg) | GENIO governance, proposal-only simulation, approval/audit metadata, preview guardrails. |
+| `/personal` | ![/personal screenshot placeholder](docs/assets/placeholders/personal-placeholder.svg) | Owner-controlled daily organizer, manual checklist, clarity/focus surface. |
+
+If image files are not present yet, use the table as the official capture map and keep the screenshot names aligned with `docs/assets/SCREENSHOT_PLAN.md`.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | Next.js 15, React 19, App Router |
+| Language | TypeScript |
+| Backend/domain | Node.js |
+| Testing | Jest, Testing Library |
+| Deployment target | Vercel |
+| Product model | Governance-first, simulation-first, owner-controlled |
+
+## Current Capabilities
+
+Implemented today:
+
+- public `/demo` route with safe multi-agent conversation UX
+- owner-gated `/lab` governance workspace
+- owner-facing `/personal` organizer surface
+- governed organization simulation with mock data
+- controlled read-only metadata preview
+- controlled email preview with fake inbox data
+- local approval metadata and in-memory audit events
+- recruiter demo guide, demo script, deployment checklist, screenshot plan, and release notes
+
+## Explicit Non-Claims
+
+This project does not claim or include:
+
+- no AGI
+- no autonomous execution
+- no uncontrolled runtime
+- no hidden automation
+- no filesystem execution
+- no Gmail execution
+- no background workers
+- no real DB/auth runtime
+- no OS control
+- no action outside owner review
+
+## Future Direction
+
+Future work remains realistic and governed:
+
+- advanced audit systems
+- controlled adapters
+- proposal engines
+- memory previews
+- company agents
+- sandboxed simulations
+
+These remain future directions unless explicitly implemented, tested, and documented as real capabilities.
+
+## Recruiter-Friendly Presentation
+
+This repository is intended to read like a startup-quality AI product portfolio:
+
+- clear product thesis
+- premium public landing
+- visible governance and safety model
+- typed architecture
+- test-backed implementation
+- restrained claims
+- deploy-ready public showcase
+
 ## Official Recruiter Presentation Layer
 
 Humanity Guide OS se presenta publicamente como un producto demo de IA gobernada, no como un sistema autonomo.

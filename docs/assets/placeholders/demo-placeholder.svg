@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="405" viewBox="0 0 720 405" role="img" aria-labelledby="title desc">
+  <title id="title">Demo screenshot placeholder</title>
+  <desc id="desc">Placeholder for the public demo screenshot.</desc>
+  <rect width="720" height="405" rx="24" fill="#070b11"/>
+  <rect x="28" y="28" width="664" height="349" rx="20" fill="#0b1220" stroke="#69d3ff" stroke-opacity="0.28"/>
+  <text x="56" y="86" fill="#69d3ff" font-family="Arial, sans-serif" font-size="18" font-weight="700">/demo</text>
+  <text x="56" y="132" fill="#f5f7fb" font-family="Arial, sans-serif" font-size="34" font-weight="700">Public Demo</text>
+  <text x="56" y="176" fill="#93a4b8" font-family="Arial, sans-serif" font-size="18">Safe AI conversation, typed API boundary, no external actions.</text>
+  <rect x="56" y="224" width="608" height="76" rx="14" fill="#111827" stroke="#8795aa" stroke-opacity="0.22"/>
+  <text x="82" y="272" fill="#74f0ba" font-family="Arial, sans-serif" font-size="17">proposal-only | actionExecuted: false</text>
+</svg>
