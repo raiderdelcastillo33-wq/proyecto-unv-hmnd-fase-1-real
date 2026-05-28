@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import DemoPage from '@/app/demo/page'
 
 function createJsonResponse(payload: unknown, status = 200): Response {
@@ -44,13 +44,17 @@ describe('DemoPage', () => {
     render(<DemoPage />)
 
     expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+    expect(screen.getByLabelText('Agent')).toHaveValue('tutor-agent')
+    expect(screen.getByText('Explains technical ideas step by step for learning and practice.')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
     })
     fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
+    expect(await screen.findByText('hello demo flow')).toBeInTheDocument()
     expect(await screen.findByText('Hello from the mocked backend')).toBeInTheDocument()
+    expect(screen.getByText('Derniers 12 messages en mémoire locale')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
       '/api/health',
@@ -62,7 +66,208 @@ describe('DemoPage', () => {
       2,
       '/api/v1/run',
       expect.objectContaining({
-        method: 'POST'
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello demo flow',
+          agentId: 'tutor-agent'
+        })
+      })
+    )
+  })
+
+  it('clears the local conversation without calling the backend again', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-clear',
+          response: 'Response before clear'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'clear local history' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('Response before clear')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
+
+    expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
+    expect(screen.queryByText('Response before clear')).not.toBeInTheDocument()
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('cancels typing when the local conversation is cleared', async () => {
+    jest.useFakeTimers()
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-typing',
+          response: 'Typing response should not reappear after clearing the local conversation.'
+        }
+      })
+    )
+
+    try {
+      render(<DemoPage />)
+
+      expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+      fireEvent.change(screen.getByLabelText('Message'), {
+        target: { value: 'cancel typing flow' }
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+      expect(await screen.findByRole('button', { name: 'Limpiar' })).toBeInTheDocument()
+      fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
+
+      act(() => {
+        jest.advanceTimersByTime(1000)
+      })
+
+      expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
+      expect(screen.queryByText('Typing response should not reappear after clearing the local conversation.')).not.toBeInTheDocument()
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
+  it('sends short session memory from previous local messages on the second request', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-memory-1',
+          response: 'First assistant response'
+        }
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-memory-2',
+          response: 'Second assistant response'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'first memory prompt' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    expect(await screen.findByText('First assistant response')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'second memory prompt' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    expect(await screen.findByText('Second assistant response')).toBeInTheDocument()
+
+    const secondRun = fetchMock.mock.calls[2]?.[1] as RequestInit
+    const body = JSON.parse(secondRun.body as string) as { input: string; context?: string }
+
+    expect(body.input).toBe('second memory prompt')
+    expect(body.context).toContain('User: first memory prompt')
+    expect(body.context).toContain('Assistant: First assistant response')
+    expect(body.context).not.toContain('second memory prompt')
+  })
+
+  it('sends the selected agentId with the demo request', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        status: 'ok',
+        configured: false,
+        service: 'api-server',
+        mode: 'local',
+        backend: 'http://127.0.0.1:3000'
+      })
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'run-agent',
+          response: 'Architect response'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Backend local prêt')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Agent'), {
+      target: { value: 'architect-agent' }
+    })
+    expect(screen.getByText('Analyse architecture, risks, and phased technical decisions.')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'hello architect flow' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('Architect response')).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/v1/run',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello architect flow',
+          agentId: 'architect-agent'
+        })
       })
     )
   })
@@ -90,10 +295,11 @@ describe('DemoPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
 
     expect(await screen.findByText('Please enter at least 5 characters before sending the demo request.')).toBeInTheDocument()
+    expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it('shows a controlled runtime error and disables the submit button when backend config is missing', async () => {
+  it('shows a controlled runtime warning but keeps submit enabled when backend config is missing', async () => {
     const fetchMock = global.fetch as jest.Mock
 
     fetchMock.mockResolvedValueOnce(
@@ -109,7 +315,57 @@ describe('DemoPage', () => {
 
     expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
     expect(screen.getByText('UNV_API_BASE_URL is required in production to reach the external Node API.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).not.toBeDisabled()
+  })
+
+  it('renders the safe demo fallback response when backend config is missing', async () => {
+    const fetchMock = global.fetch as jest.Mock
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse(
+        {
+          error: 'UNV_API_BASE_URL is required in production to reach the external Node API.'
+        },
+        503
+      )
+    )
+
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          id: 'demo-fallback-1',
+          response: 'Mode demo/fallback actif: aucun backend Node externe nest configure.'
+        },
+        meta: {
+          mode: 'demo-fallback',
+          agentId: 'tutor'
+        }
+      })
+    )
+
+    render(<DemoPage />)
+
+    expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText('Message'), {
+      target: { value: 'hello fallback flow' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+
+    expect(await screen.findByText('hello fallback flow')).toBeInTheDocument()
+    expect(await screen.findByText('Mode demo/fallback actif: aucun backend Node externe nest configure.')).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/v1/run',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          input: 'hello fallback flow',
+          agentId: 'tutor-agent'
+        })
+      })
+    )
   })
 
   it('renders a controlled submit error when /api/v1/run fails', async () => {
@@ -146,5 +402,6 @@ describe('DemoPage', () => {
     await waitFor(() => {
       expect(screen.getByText('UNV_API_BASE_URL is required in production to connect the demo with the Node API.')).toBeInTheDocument()
     })
+    expect(screen.getAllByText('hello demo flow').length).toBeGreaterThan(0)
   })
 })

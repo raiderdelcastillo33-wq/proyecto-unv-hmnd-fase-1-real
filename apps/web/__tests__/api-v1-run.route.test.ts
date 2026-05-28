@@ -64,6 +64,95 @@ describe('POST /api/v1/run', () => {
     )
   })
 
+  it('forwards optional agentId when provided', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-agent',
+          response: 'Agent response'
+        }
+      }
+    })
+
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello agent flow',
+          agentId: 'architect'
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    expect(JSON.parse(forwardedInit.body as string)).toEqual({
+      input: 'hello agent flow',
+      agentId: 'architect'
+    })
+  })
+
+  it('forwards optional context when provided and limits long context', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-context',
+          response: 'Context response'
+        }
+      }
+    })
+
+    const longContext = `${'a'.repeat(2100)}safe-tail`
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello context flow',
+          agentId: 'reviewer-agent',
+          context: longContext
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    const body = JSON.parse(forwardedInit.body as string) as { context: string }
+
+    expect(body.context.length).toBe(2000)
+    expect(body.context.endsWith('safe-tail')).toBe(true)
+  })
+
+  it('keeps compatibility when agentId is not provided or is not a string', async () => {
+    mockedForwardJson.mockResolvedValue({
+      status: 200,
+      payload: {
+        success: true,
+        data: {
+          id: 'run-basic',
+          response: 'Basic response'
+        }
+      }
+    })
+
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello basic flow',
+          agentId: 123,
+          context: 123
+        })
+      ) as never
+    )
+
+    expect(response.status).toBe(200)
+    const forwardedInit = mockedForwardJson.mock.calls[0]?.[1] as RequestInit
+    expect(JSON.parse(forwardedInit.body as string)).toEqual({
+      input: 'hello basic flow'
+    })
+  })
+
   it('rejects invalid JSON bodies', async () => {
     const response = await POST(createJsonRequest('{') as never)
     const payload = await response.json()
@@ -115,7 +204,7 @@ describe('POST /api/v1/run', () => {
     })
   })
 
-  it('returns a controlled 503 when production backend configuration is missing', async () => {
+  it('returns a safe demo fallback when production backend configuration is missing', async () => {
     mockedGetBackendRuntimeInfo.mockReturnValue({
       configured: false,
       mode: 'missing',
@@ -127,12 +216,45 @@ describe('POST /api/v1/run', () => {
     const response = await POST(createJsonRequest(JSON.stringify({ input: 'hello demo flow' })) as never)
     const payload = await response.json()
 
-    expect(response.status).toBe(503)
-    expect(payload).toEqual({
-      success: false,
-      error: 'UNV_API_BASE_URL is required in production to connect the demo with the Node API.',
-      code: 'BACKEND_URL_MISSING',
-      mode: 'missing'
+    expect(response.status).toBe(200)
+    expect(payload.success).toBe(true)
+    expect(payload.data.id).toContain('demo-fallback-')
+    expect(payload.data.response).toContain('Mode demo/fallback actif')
+    expect(payload.data.response).toContain('aucun backend Node externe')
+    expect(payload.meta).toEqual({
+      mode: 'demo-fallback',
+      reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
+      agentId: 'tutor',
+      contextReceived: false
     })
+    expect(JSON.stringify(payload)).not.toContain('OPENAI_API_KEY')
+  })
+
+  it('preserves agentId in the safe demo fallback', async () => {
+    mockedGetBackendRuntimeInfo.mockReturnValue({
+      configured: false,
+      mode: 'missing',
+      baseUrl: null,
+      service: 'backend-not-configured'
+    })
+    mockedForwardJson.mockRejectedValue(new Error(MISSING_BACKEND_URL_ERROR))
+
+    const response = await POST(
+      createJsonRequest(
+        JSON.stringify({
+          input: 'hello fallback agent flow',
+          agentId: 'architect',
+          context: 'User: sensitive context that should not be reflected'
+        })
+      ) as never
+    )
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.success).toBe(true)
+    expect(payload.data.response).toContain('agent architect')
+    expect(payload.meta.agentId).toBe('architect')
+    expect(payload.meta.contextReceived).toBe(true)
+    expect(JSON.stringify(payload)).not.toContain('sensitive context')
   })
 })

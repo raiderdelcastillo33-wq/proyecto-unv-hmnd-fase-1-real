@@ -4,38 +4,58 @@ import Link from 'next/link'
 import { ChatWidget } from '../components/ChatWidget'
 import './globals.css'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://unv-hmnd.vercel.app'
+
+export const viewport = {
+  themeColor: '#070b11',
+  colorScheme: 'dark'
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'UNV-HMND | Système d’Agents IA',
+    default: 'Humanity Guide OS | UNV-HMND',
     template: '%s | UNV-HMND'
   },
   description:
-    'Expérience Next.js prête pour portfolio montrant un système d’agents IA, routage API interne, fiabilité TypeScript et déploiement Vercel.',
-  keywords: ['Next.js', 'TypeScript', 'Système d’Agents IA', 'App Router', 'Vercel', 'Portfolio Frontend'],
+    'Humanity Guide OS demo built with Next.js, TypeScript, governed AI workflows, simulation-only lab UX, and production-ready portfolio architecture.',
+  keywords: ['Next.js', 'TypeScript', 'Humanity Guide OS', 'AI Governance', 'App Router', 'Vercel', 'Portfolio Frontend'],
   authors: [{ name: 'Raider del Castillo' }],
   creator: 'Raider del Castillo',
   applicationName: 'UNV-HMND',
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg'
+  },
+  category: 'technology',
   robots: {
     index: true,
     follow: true
   },
+  alternates: {
+    canonical: siteUrl
+  },
   openGraph: {
-    title: 'UNV-HMND | Système d’Agents IA',
+    title: 'Humanity Guide OS | UNV-HMND',
     description:
-      'Projet portfolio Next.js orienté production avec un flux démo en direct, proxy d’API interne et narration technique adaptée aux recruteurs.',
-    type: 'website'
+      'Production-oriented Next.js portfolio demonstrating governed AI UX, public demo flow, and simulation-only Private Lab architecture.',
+    type: 'website',
+    siteName: 'UNV-HMND'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UNV-HMND | Système d’Agents IA',
+    title: 'Humanity Guide OS | UNV-HMND',
     description:
-      'Expérience portfolio Next.js conçue pour montrer une UI soignée, une démo fonctionnelle et une architecture système déployable.'
+      'Recruiter-friendly AI product demo with a governed public demo and simulation-only Private Lab.'
   }
 }
 
 const navigationItems = [
   { href: '/', label: 'Accueil' },
   { href: '/demo', label: 'Démo' },
+  { href: '/lab', label: 'Private Lab' },
+  { href: '/personal', label: 'Personal' },
   { href: '/about', label: 'Architecture' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/gallery', label: 'Galerie' },
@@ -49,7 +69,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <header className="site-header">
           <div className="site-shell site-header__inner">
             <Link className="brand" href="/">
-              <span>AI Agent Portfolio</span>
+              <span>Humanity Guide OS</span>
               <strong>UNV-HMND</strong>
             </Link>
 

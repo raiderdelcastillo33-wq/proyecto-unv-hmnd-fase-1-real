@@ -1,11 +1,35 @@
 import assert from 'node:assert'
+import { ExecutionPlanningService } from '../../src/application/execution/ExecutionPlanningService'
 import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssistantUseCase'
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
+import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterBlueprint'
+import { REAL_OWNER_AUTH_BLUEPRINT } from '../../src/domain/auth/AuthBlueprint'
+import { CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT } from '../../src/domain/capabilities/CapabilityBlueprint'
+import { GENIO_MEMORY_CONTEXT_BLUEPRINT } from '../../src/domain/context/ContextBlueprint'
+import { HUMANITY_GUIDE_OS_BLUEPRINT } from '../../src/domain/ecosystem/HumanityGuideOSBlueprint'
 import { AIInteraction } from '../../src/domain/entities/AIInteraction'
+import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/FilePreviewBlueprint'
+import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
+import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
+import { EMAIL_ORGANIZATION_PREVIEW_SAFETY } from '../../src/domain/organization/EmailOrganizationPreview'
+import { HUMANITY_GUIDE_ORGANIZATION_SIMULATION } from '../../src/domain/organization/OrganizationSimulation'
+import { PERSONAL_ORGANIZER_MODE_POLICY } from '../../src/domain/organization/PersonalOrganizerMode'
+import { READ_ONLY_ORGANIZATION_PREVIEW_POLICY } from '../../src/domain/organization/ReadOnlyOrganizationPreview'
+import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
 import { UserRepository } from '../../src/domain/repositories/UserRepository'
 import { AIProvider, AIRequest, AIResult } from '../../src/domain/services/AIProvider'
+import { AgentRegistry } from '../../src/domain/agents/AgentRegistry'
+import { GenioGovernanceRegistry } from '../../src/domain/governance/GenioCentralProfile'
+import { approveProposal, createPendingApproval, rejectProposal } from '../../src/domain/security/OwnerApproval'
+import { ToolRegistry } from '../../src/domain/tools/ToolRegistry'
+import { ApprovalGate } from '../../src/domain/security/ApprovalGate'
+import { AIController } from '../../src/interfaces/http/controllers/AIController'
+import { FallbackAIProvider } from '../../src/infrastructure/ai/FallbackAIProvider'
+import { InMemoryAuditLog } from '../../src/infrastructure/audit/InMemoryAuditLog'
+import { LocalToolExecutor } from '../../src/infrastructure/tools/LocalToolExecutor'
+import { OpenAIProvider } from '../../src/infrastructure/ai/OpenAIProvider'
 import { TestCase } from '../helpers/testRunner'
 
 class FakeUserRepository implements UserRepository {
@@ -90,8 +114,728 @@ export function mockTests(): TestCase[] {
 
         assert.equal(provider.calls.length, 1)
         assert.equal(provider.calls[0]?.prompt, 'Construye un plan de estudio de TypeScript')
+        assert.equal(provider.calls[0]?.agent?.id, 'tutor')
         assert.equal(result.response, 'respuesta mock')
         assert.equal(interactions.saved.length, 1)
+      }
+    },
+    {
+      name: 'Agents: AgentRegistry resuelve agentes y fallback default',
+      run: async () => {
+        assert.equal(AgentRegistry.defaultAgent().id, 'tutor')
+        assert.equal(AgentRegistry.resolve('architect').id, 'architect')
+        assert.equal(AgentRegistry.resolve('architect-agent').id, 'architect-agent')
+        assert.equal(AgentRegistry.resolve('coder-agent').id, 'coder-agent')
+        assert.equal(AgentRegistry.resolve('reviewer-agent').id, 'reviewer-agent')
+        assert.equal(AgentRegistry.resolve('debugger-agent').id, 'debugger-agent')
+        assert.equal(AgentRegistry.resolve('tutor-agent').id, 'tutor-agent')
+        assert.equal(AgentRegistry.resolve('operator-agent').id, 'operator-agent')
+        assert.equal(AgentRegistry.resolve('agente-inexistente').id, 'tutor')
+        assert.equal(AgentRegistry.list().length, 11)
+        assert.deepEqual(
+          AgentRegistry.list().map((agent) => agent.id),
+          [
+            'tutor',
+            'mentor',
+            'architect',
+            'course-generator',
+            'cuba-education-assistant',
+            'architect-agent',
+            'coder-agent',
+            'reviewer-agent',
+            'debugger-agent',
+            'tutor-agent',
+            'operator-agent'
+          ]
+        )
+        assert.match(AgentRegistry.resolve('operator-agent').systemInstructions, /Never execute/)
+        assert.equal(AgentRegistry.resolve('operator-agent').label, 'Operator')
+        assert.equal(AgentRegistry.resolve('operator-agent').category, 'operations')
+        assert.equal(AgentRegistry.resolve('operator-agent').riskProfile, 'high')
+        assert.equal(AgentRegistry.resolve('operator-agent').hierarchyLevel, 'supervisor')
+        assert.equal(AgentRegistry.resolve('operator-agent').parentAuthority, 'genio-central')
+        assert.ok(AgentRegistry.resolve('operator-agent').approvalRequirements?.some((item) => item.includes('Owner approval')))
+        assert.ok(AgentRegistry.resolve('operator-agent').capabilities?.includes('command proposal'))
+        assert.equal(AgentRegistry.resolve('operator-agent').behaviorSummary?.includes('no automatic execution'), true)
+      }
+    },
+    {
+      name: 'Governance: GENIO central profile coordinates hierarchy as metadata only',
+      run: async () => {
+        const genio = GenioGovernanceRegistry.centralProfile()
+
+        assert.equal(genio.id, 'genio-central')
+        assert.equal(genio.hierarchyLevel, 'central')
+        assert.equal(genio.governanceLevel, 'central-governance')
+        assert.equal(genio.approvalAuthority, 'proposal-governance-only')
+        assert.equal(genio.simulationOnly, true)
+        assert.equal(genio.actionExecuted, false)
+        assert.ok(genio.capabilities.includes('coordinate specialist agents'))
+        assert.ok(genio.futureCapabilities.some((capability) => capability.id === 'memory-systems'))
+        assert.ok(genio.futureCapabilities.some((capability) => capability.id === 'predictive-simulation-engine'))
+        assert.ok(genio.strategicVision.personalityTraits.includes('strategic'))
+        assert.ok(genio.strategicVision.futureEngines.some((engine) => engine.id === 'life-map-intelligence'))
+        assert.ok(genio.strategicVision.reasoningPrinciples.some((principle) => principle.includes('probabilities')))
+        assert.ok(genio.strategicVision.predictionBoundaries.includes('GENIO does not know the future.'))
+        assert.ok(genio.strategicVision.predictionBoundaries.includes('GENIO does not guarantee outcomes.'))
+        assert.equal(genio.memoryContextBlueprint.id, 'genio-memory-context-blueprint')
+        assert.equal(genio.memoryContextBlueprint.futureArchitecture.vectorMemory, 'placeholder-only')
+        assert.equal(genio.memoryContextBlueprint.futureArchitecture.embeddings, 'placeholder-only')
+        assert.ok(genio.memoryContextBlueprint.memoryCategories.includes('life-map'))
+        assert.ok(genio.memoryContextBlueprint.retentionPolicies.includes('archived'))
+        assert.equal(genio.orchestrationBlueprint.id, 'strategic-multi-agent-orchestration-layer')
+        assert.ok(genio.orchestrationBlueprint.defaultFlow.coordinationPlan.participatingAgents.includes('coder-agent'))
+        assert.equal(genio.orchestrationBlueprint.simulationOnly, true)
+        assert.equal(genio.orchestrationBlueprint.actionExecuted, false)
+        assert.equal(genio.adapterBlueprint.id, 'controlled-adapter-blueprint')
+        assert.ok(genio.adapterBlueprint.adapters.some((adapter) => adapter.id === 'terminal-adapter'))
+        assert.equal(genio.adapterBlueprint.actionExecuted, false)
+        assert.equal(genio.authBlueprint.id, 'real-owner-auth-blueprint')
+        assert.equal(genio.authBlueprint.currentAuthMode, 'owner-access-code')
+        assert.equal(genio.authBlueprint.realAuthImplemented, false)
+        assert.ok(genio.authBlueprint.supportedFutureRoles.includes('owner'))
+        assert.ok(genio.authBlueprint.accessPolicies.some((policy) => policy.id === 'approve_proposal'))
+        assert.equal(genio.observabilityBlueprint.id, 'persistent-audit-observability-blueprint')
+        assert.equal(genio.observabilityBlueprint.auditTrace.traceId, 'trace-genio-blueprint')
+        assert.equal(genio.observabilityBlueprint.auditPersistenceReadiness.persistentAudit, 'placeholder-only')
+        assert.equal(genio.observabilityBlueprint.actionExecuted, false)
+        assert.equal(genio.capabilityBlueprint.id, 'controlled-practical-capability-blueprint')
+        assert.equal(genio.capabilityBlueprint.executionLifecycle.approvalStatus, 'blocked')
+        assert.equal(genio.capabilityBlueprint.actionExecuted, false)
+        assert.equal(genio.runtimeSandboxBlueprint.id, 'controlled-runtime-sandbox-blueprint')
+        assert.equal(genio.runtimeSandboxBlueprint.sandboxProfile.lifecycleState, 'blocked')
+        assert.equal(genio.runtimeSandboxBlueprint.actionExecuted, false)
+        assert.equal(genio.filePreviewBlueprint.id, 'read-only-file-preview-adapter-blueprint')
+        assert.equal(genio.filePreviewBlueprint.profile.lifecycle, 'blocked')
+        assert.equal(genio.filePreviewBlueprint.actionExecuted, false)
+        assert.equal(genio.humanityGuideOSBlueprint.id, 'humanity-guide-os-blueprint')
+        assert.equal(genio.humanityGuideOSBlueprint.productName, 'Humanity Guide OS')
+        assert.equal(genio.humanityGuideOSBlueprint.actionExecuted, false)
+        assert.ok(genio.lifeMapVision.some((capability) => capability.id === 'life-map-agent'))
+        assert.ok(genio.financialStrategyVision.some((capability) => capability.id === 'finance-strategy-agent'))
+        assert.ok(genio.governanceMetadata.safetyBoundaries.includes('Proposal != execution.'))
+      }
+    },
+    {
+      name: 'Auth: real owner auth blueprint remains metadata only',
+      run: async () => {
+        const blueprint = REAL_OWNER_AUTH_BLUEPRINT
+        const executionPolicy = blueprint.accessPolicies.find((policy) => policy.id === 'execute_controlled_action_future')
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.currentAuthMode, 'owner-access-code')
+        assert.equal(blueprint.realAuthImplemented, false)
+        assert.equal(blueprint.authBlueprintReady, true)
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.deepEqual(blueprint.supportedFutureRoles, ['owner', 'admin', 'operator', 'guest'])
+        assert.ok(blueprint.protectedSurfaces.includes('/lab'))
+        assert.ok(blueprint.protectedSurfaces.includes('future /admin'))
+        assert.equal(blueprint.sessionPolicy.status, 'not-implemented')
+        assert.ok(blueprint.sessionPolicy.currentLimitations.some((item) => item.includes('temporary shared gate')))
+        assert.equal(executionPolicy?.futureOnly, true)
+        assert.equal(executionPolicy?.implemented, false)
+        assert.equal(executionPolicy?.approvalRequired, true)
+        assert.equal(executionPolicy?.riskLevel, 'critical')
+        assert.ok(blueprint.ownerAccessCodeBoundary.includes('not real authentication'))
+        assert.ok(blueprint.ownerAccessCodeBoundary.includes('NEXT_PUBLIC_OWNER_ACCESS_CODE'))
+      }
+    },
+    {
+      name: 'Observability: persistent audit blueprint remains metadata only',
+      run: async () => {
+        const blueprint = PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.equal(blueprint.auditTrace.correlationId, 'corr-genio-blueprint')
+        assert.equal(blueprint.auditTrace.actionExecuted, false)
+        assert.ok(blueprint.eventLineage.some((lineage) => lineage.parentEventId === 'lineage-proposal-requested'))
+        assert.ok(blueprint.correlationChain.approvalChain.includes('owner-final-authority'))
+        assert.ok(blueprint.governanceCheckpoints.some((checkpoint) => checkpoint.id === 'checkpoint-sensitive-adapter'))
+        assert.equal(blueprint.executionLineage.status, 'not-implemented')
+        assert.equal(blueprint.executionLineage.blockedExecution, true)
+        assert.ok(blueprint.monitoringScopes.includes('audit-anomaly-detection'))
+        assert.ok(blueprint.retentionPolicies.includes('immutable-future'))
+        assert.equal(blueprint.auditPersistenceReadiness.persistentAudit, 'placeholder-only')
+        assert.ok(blueprint.auditPersistenceReadiness.safetyBoundary.includes('No database'))
+        assert.ok(blueprint.privacyPrinciples.some((principle) => principle.includes('invasive surveillance')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No OpenTelemetry')))
+      }
+    },
+    {
+      name: 'Capabilities: controlled practical blueprint blocks runtime execution',
+      run: async () => {
+        const blueprint = CONTROLLED_PRACTICAL_CAPABILITY_BLUEPRINT
+        const terminal = blueprint.capabilityProfiles.find(
+          (capability) => capability.id === 'future-terminal-execution-capability'
+        )
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.categories.includes('terminal-execution-future'))
+        assert.ok(blueprint.riskLevels.includes('critical-risk'))
+        assert.ok(blueprint.boundaries.includes('forbidden'))
+        assert.equal(blueprint.executionLifecycle.capabilityTraceId, 'cap-trace-genio-blueprint')
+        assert.equal(blueprint.executionLifecycle.approvalStatus, 'blocked')
+        assert.equal(blueprint.executionLifecycle.actionExecuted, false)
+        assert.equal(terminal?.executionMode, 'blocked')
+        assert.equal(terminal?.riskLevel, 'critical-risk')
+        assert.ok(terminal?.boundaries.includes('forbidden'))
+        assert.equal(terminal?.simulation.actionExecuted, false)
+        assert.equal(blueprint.problemSolverAgentBlueprint.id, 'problem-solver-agent')
+        assert.ok(blueprint.problemSolverAgentBlueprint.hierarchy.includes('GENIO Central'))
+        assert.equal(blueprint.businessBuilderBlueprint.id, 'business-builder-blueprint')
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Capability blueprint != capability runtime')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal execution')))
+      }
+    },
+    {
+      name: 'Runtime: controlled sandbox blueprint blocks host access and execution',
+      run: async () => {
+        const blueprint = CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.deepEqual(blueprint.hierarchy.slice(0, 4), [
+          'Owner',
+          'GENIO Central',
+          'Governance Layer',
+          'Runtime Sandbox'
+        ])
+        assert.equal(blueprint.sandboxProfile.executionMode, 'no-runtime')
+        assert.equal(blueprint.sandboxProfile.isolationLevel, 'simulation-only')
+        assert.equal(blueprint.sandboxProfile.lifecycleState, 'blocked')
+        assert.ok(blueprint.sandboxProfile.permissionScopes.includes('no-host-access'))
+        assert.ok(blueprint.lifecycleStates.includes('terminated'))
+        assert.equal(blueprint.emergencyStop.emergencyStopAvailable, 'metadata-only')
+        assert.equal(blueprint.emergencyStop.actionExecuted, false)
+        assert.ok(blueprint.rollbackPolicy.policies.includes('dry-run-first'))
+        assert.equal(blueprint.auditChain.traceId, 'sandbox-trace-genio-blueprint')
+        assert.equal(blueprint.capabilityRoutes[0]?.approvalStatus, 'blocked')
+        assert.ok(blueprint.capabilityRoutes[0]?.blockedPermissions.includes('terminal-blocked'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Sandbox blueprint != runtime real')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No terminal')))
+      }
+    },
+    {
+      name: 'File Preview: read-only adapter blueprint has no filesystem access',
+      run: async () => {
+        const blueprint = READ_ONLY_FILE_PREVIEW_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.supportedFutureTypes.includes('markdown'))
+        assert.ok(blueprint.supportedFutureTypes.includes('pdf-preview-future'))
+        assert.equal(blueprint.profile.lifecycle, 'blocked')
+        assert.equal(blueprint.profile.visibility, 'metadata-only')
+        assert.equal(blueprint.profile.approvalRequired, true)
+        assert.ok(blueprint.profile.permissions.includes('no-host-direct-access'))
+        assert.ok(blueprint.profile.permissions.includes('no-write'))
+        assert.equal(blueprint.profile.redactionPolicy.detectionImplemented, false)
+        assert.ok(blueprint.profile.redactionPolicy.redactionModes.includes('secret-masking'))
+        assert.equal(blueprint.profile.auditTrace.adapterId, 'file-preview-adapter')
+        assert.equal(blueprint.profile.auditTrace.actionExecuted, false)
+        assert.equal(blueprint.runtimeIntegration.runtimeSandboxId, 'controlled-runtime-sandbox-blueprint')
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('filesystem access real')))
+        assert.ok(blueprint.nonCapabilities.some((capability) => capability.includes('No fs runtime')))
+      }
+    },
+    {
+      name: 'Ecosystem: Humanity Guide OS defines bounded human-centered layers',
+      run: async () => {
+        const blueprint = HUMANITY_GUIDE_OS_BLUEPRINT
+        const genesis = blueprint.layers.find((layer) => layer.id === 'genesis')
+        const alignment = blueprint.layers.find((layer) => layer.id === 'human-centered-alignment-layer')
+
+        assert.equal(blueprint.status, 'conceptual-blueprint')
+        assert.equal(blueprint.productName, 'Humanity Guide OS')
+        assert.equal(blueprint.mvpName, 'Humanity Guide OS — Intelligent Organization MVP')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.principles.some((principle) => principle.includes('AI does not invade')))
+        assert.ok(blueprint.layers.some((layer) => layer.id === 'genio'))
+        assert.equal(genesis?.type, 'reflection-layer')
+        assert.ok(genesis?.boundaries.includes('is not AGI'))
+        assert.ok(genesis?.forbiddenClaims.includes('real consciousness'))
+        assert.equal(alignment?.type, 'alignment-validator')
+        assert.ok(alignment?.boundaries.includes('does not score humans'))
+        assert.ok(blueprint.relationships.some((relationship) => relationship.to === 'genesis'))
+        assert.ok(blueprint.pseudoAgiAvoidanceRules.some((rule) => rule.includes('Never claim real consciousness')))
+      }
+    },
+    {
+      name: 'Organization: Humanity Guide OS MVP simulation stays mock-only',
+      run: async () => {
+        const simulation = HUMANITY_GUIDE_ORGANIZATION_SIMULATION
+
+        assert.equal(simulation.status, 'simulation-only')
+        assert.equal(simulation.datasetSource, 'mock-only')
+        assert.equal(simulation.simulationOnly, true)
+        assert.equal(simulation.actionExecuted, false)
+        assert.ok(simulation.files.length >= 6)
+        assert.ok(simulation.chaosSignals.some((signal) => signal.type === 'duplicate-files'))
+        assert.ok(simulation.proposal.duplicateGroups.some((group) => group.actionMode === 'proposal-only'))
+        assert.equal(simulation.alignmentValidation.actionExecuted, false)
+        assert.ok(simulation.genioAnalysis.governanceBoundary.includes('cannot read, move, rename, delete, or execute'))
+        assert.ok(simulation.nonCapabilities.includes('No real filesystem access.'))
+        assert.ok(simulation.nonCapabilities.includes('No user behavior scoring.'))
+      }
+    },
+    {
+      name: 'Organization: read-only preview policy blocks write delete and move access',
+      run: async () => {
+        const policy = READ_ONLY_ORGANIZATION_PREVIEW_POLICY
+
+        assert.equal(policy.simulationOnly, false)
+        assert.equal(policy.executionMode, 'read-only-preview')
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.filesystemWriteAccess, false)
+        assert.equal(policy.filesystemDeleteAccess, false)
+        assert.equal(policy.filesystemMoveAccess, false)
+        assert.equal(policy.filesystemReadMode, 'browser-selected-metadata-only')
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.ownerControlled, true)
+      }
+    },
+    {
+      name: 'Organization: email preview policy blocks real mailbox actions',
+      run: async () => {
+        const policy = EMAIL_ORGANIZATION_PREVIEW_SAFETY
+
+        assert.equal(policy.simulationOnly, true)
+        assert.equal(policy.executionMode, 'email-preview-only')
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.emailSendAccess, false)
+        assert.equal(policy.emailDeleteAccess, false)
+        assert.equal(policy.emailMoveAccess, false)
+        assert.equal(policy.emailReplyAccess, false)
+        assert.equal(policy.emailDraftMode, 'preview-only')
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.ownerControlled, true)
+      }
+    },
+    {
+      name: 'Organization: personal organizer mode remains owner controlled and non destructive',
+      run: async () => {
+        const policy = PERSONAL_ORGANIZER_MODE_POLICY
+
+        assert.equal(policy.ownerControlled, true)
+        assert.equal(policy.readOnlyFirst, true)
+        assert.equal(policy.proposalFirst, true)
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.auditable, true)
+        assert.equal(policy.reversible, true)
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.filesystemWriteAccess, false)
+        assert.equal(policy.filesystemDeleteAccess, false)
+        assert.equal(policy.filesystemMoveAccess, false)
+        assert.equal(policy.emailSendAccess, false)
+        assert.equal(policy.emailDeleteAccess, false)
+        assert.equal(policy.emailMoveAccess, false)
+        assert.equal(policy.backgroundAgents, false)
+      }
+    },
+    {
+      name: 'Execution: controlled planning service creates simulation-only blocked preview',
+      run: async () => {
+        const plan = new ExecutionPlanningService().generateExecutionPreview()
+
+        assert.equal(plan.id, 'controlled-execution-planning-layer')
+        assert.equal(plan.status, 'blocked')
+        assert.equal(plan.simulationOnly, true)
+        assert.equal(plan.actionExecuted, false)
+        assert.equal(plan.boundary.simulationOnly, true)
+        assert.equal(plan.boundary.actionExecuted, false)
+        assert.equal(plan.boundary.executionBlockedByDefault, true)
+        assert.equal(plan.boundary.manualExecutionOnly, true)
+        assert.equal(plan.boundary.filesystemRuntime, false)
+        assert.equal(plan.boundary.terminalExecution, false)
+        assert.equal(plan.boundary.gmailIntegration, false)
+        assert.equal(plan.boundary.browserAutomation, false)
+        assert.equal(plan.boundary.autonomousExecution, false)
+        assert.equal(plan.boundary.backgroundExecution, false)
+        assert.ok(plan.steps.some((step) => step.label === 'Human Approval'))
+        assert.ok(plan.steps.some((step) => step.label === 'Manual Execution Recommended'))
+        assert.ok(plan.rollbackPreviews.every((rollback) => rollback.actionExecuted === false))
+        assert.ok(plan.impactPreviews.some((impact) => impact.scope === 'Safety Status'))
+        assert.equal(plan.approvalChain.at(-1)?.actor, 'Manual Human Execution')
+        assert.equal(plan.approvalChain.at(-1)?.actionExecuted, false)
+      }
+    },
+    {
+      name: 'Adapters: controlled adapter blueprint exposes future adapters without execution',
+      run: async () => {
+        const blueprint = CONTROLLED_ADAPTER_BLUEPRINT
+        const terminal = blueprint.adapters.find((adapter) => adapter.id === 'terminal-adapter')
+        const filesystem = blueprint.adapters.find((adapter) => adapter.id === 'filesystem-adapter')
+        const finance = blueprint.adapters.find((adapter) => adapter.id === 'finance-simulation-adapter')
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.equal(terminal?.executionMode, 'blocked')
+        assert.equal(terminal?.approvalRequirement, 'always-blocked')
+        assert.ok(terminal?.forbiddenActions.includes('child_process'))
+        assert.equal(filesystem?.executionMode, 'blocked')
+        assert.ok(filesystem?.forbiddenActions.includes('fs-write'))
+        assert.equal(finance?.executionMode, 'simulation-only')
+        assert.ok(finance?.forbiddenActions.includes('trade'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('Adapter blueprint != adapter real')))
+      }
+    },
+    {
+      name: 'Orchestration: strategic multi-agent blueprint remains simulation only',
+      run: async () => {
+        const blueprint = STRATEGIC_ORCHESTRATION_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.supportedRoles.includes('planner'))
+        assert.ok(blueprint.supportedStages.includes('final-proposal'))
+        assert.ok(blueprint.defaultFlow.tasks.some((task) => task.assignedAgent === 'architect-agent'))
+        assert.ok(blueprint.defaultFlow.tasks.some((task) => task.assignedAgent === 'reviewer-agent'))
+        assert.ok(blueprint.defaultFlow.pipelineSteps.some((step) => step.stageId === 'validation'))
+        assert.equal(blueprint.defaultFlow.pipelineSteps.every((step) => step.actionExecuted === false), true)
+        assert.ok(blueprint.defaultFlow.coordinationPlan.policies.blockedActions.includes('terminal-execution'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('simulation-only')))
+      }
+    },
+    {
+      name: 'Context: GENIO memory blueprint is typed metadata without persistence',
+      run: async () => {
+        const blueprint = GENIO_MEMORY_CONTEXT_BLUEPRINT
+
+        assert.equal(blueprint.status, 'metadata-only')
+        assert.equal(blueprint.simulationOnly, true)
+        assert.equal(blueprint.actionExecuted, false)
+        assert.ok(blueprint.memoryCategories.includes('technical'))
+        assert.ok(blueprint.memoryCategories.includes('company'))
+        assert.deepEqual(blueprint.retentionPolicies, ['short-term', 'mid-term', 'long-term', 'archived'])
+        assert.equal(blueprint.futureArchitecture.semanticSearch, 'placeholder-only')
+        assert.equal(blueprint.futureArchitecture.persistentMemory, 'placeholder-only')
+        assert.ok(blueprint.lifeMapPreparation.objectives.some((objective) => objective.id === 'life-objective-blueprint'))
+        assert.ok(blueprint.journalBlueprint.entries.some((entry) => entry.id === 'journal-entry-blueprint'))
+        assert.ok(blueprint.governanceRules.some((rule) => rule.includes('No database')))
+      }
+    },
+    {
+      name: 'Approvals: owner proposal lifecycle remains simulation only',
+      run: async () => {
+        const pending = createPendingApproval({
+          proposalId: 'tool-propose-terminal-command',
+          correlationId: 'corr-local',
+          sessionId: 'session-local'
+        })
+        const approved = approveProposal(pending, 'owner', '2026-05-27T00:00:00.000Z')
+        const rejected = rejectProposal(approved, 'owner', '2026-05-27T00:01:00.000Z', 'Not safe enough.')
+        const blocked = createPendingApproval(
+          {
+            proposalId: 'tool-blocked',
+            correlationId: 'corr-blocked',
+            sessionId: 'session-local'
+          },
+          true
+        )
+
+        assert.equal(pending.approvalStatus, 'pending')
+        assert.equal(approved.approvalStatus, 'approved')
+        assert.equal(rejected.approvalStatus, 'rejected')
+        assert.equal(rejected.rejectionReason, 'Not safe enough.')
+        assert.equal(approveProposal(blocked, 'owner', '2026-05-27T00:00:00.000Z').approvalStatus, 'blocked')
+        assert.equal([pending, approved, rejected, blocked].every((state) => state.actionExecuted === false), true)
+        assert.equal([pending, approved, rejected, blocked].every((state) => state.simulationOnly === true), true)
+      }
+    },
+    {
+      name: 'Tools: ToolRegistry lista, resuelve y valida permisos por agente',
+      run: async () => {
+        const tools = ToolRegistry.list()
+        const operator = AgentRegistry.resolve('operator-agent')
+        const tutor = AgentRegistry.resolve('tutor-agent')
+
+        assert.equal(tools.length, 6)
+        assert.deepEqual(
+          tools.map((tool) => tool.id),
+          [
+            'summarize-project-state',
+            'propose-terminal-command',
+            'explain-error-log',
+            'generate-implementation-plan',
+            'review-risk',
+            'create-checklist'
+          ]
+        )
+        assert.equal(ToolRegistry.resolve('review-risk')?.id, 'review-risk')
+        assert.equal(ToolRegistry.resolve('tool-invalida'), null)
+        assert.equal(ToolRegistry.isAllowedForAgent(operator, 'propose-terminal-command'), true)
+        assert.equal(ToolRegistry.isAllowedForAgent(tutor, 'propose-terminal-command'), false)
+        assert.equal(ToolRegistry.isAllowedForAgent(operator, 'tool-invalida'), false)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresHumanApproval, true)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.requiresApproval, true)
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.category, 'operations')
+        assert.equal(ToolRegistry.resolve('propose-terminal-command')?.outputType, 'command-proposal')
+        assert.ok(ToolRegistry.resolve('propose-terminal-command')?.forbiddenActions?.includes('execute-command'))
+        assert.equal('executed' in ToolRegistry.resolve('propose-terminal-command')!, false)
+      }
+    },
+    {
+      name: 'Audit: InMemoryAuditLog registra eventos seguros en memoria',
+      run: async () => {
+        const auditLog = new InMemoryAuditLog()
+
+        const first = auditLog.record({
+          id: 'audit-1',
+          type: 'tool-requested',
+          timestamp: '2026-05-27T00:00:00.000Z',
+          actionExecuted: false,
+          agentId: 'operator-agent',
+          toolId: 'propose-terminal-command',
+          inputPreview:
+            'Analizar sk-test123456 ghp_abcdef token=abc OPENAI_API_KEY=xyz password=123 secret=hidden ' +
+            'y continuar con texto largo '.repeat(10)
+        })
+
+        const storedEvents = auditLog.list()
+        assert.equal(auditLog.list().length, 1)
+        assert.equal(storedEvents[0]!.id, first.id)
+        assert.equal(storedEvents[0]!.eventId, first.id)
+        assert.ok(first.inputPreview)
+        assert.ok(first.inputPreview.length <= 120)
+        assert.equal(first.inputPreview.includes('sk-test123456'), false)
+        assert.equal(first.inputPreview.includes('ghp_abcdef'), false)
+        assert.equal(first.inputPreview.includes('OPENAI_API_KEY=xyz'), false)
+        assert.equal(first.inputPreview.includes('password=123'), false)
+        assert.equal(first.inputPreview.includes('secret=hidden'), false)
+        assert.equal(first.actionExecuted, false)
+        assert.equal(first.simulationOnly, true)
+
+        for (let index = 0; index < 105; index += 1) {
+          auditLog.record({
+            id: `audit-overflow-${index}`,
+            type: 'tool-result-created',
+            timestamp: '2026-05-27T00:00:00.000Z',
+            actionExecuted: false
+          })
+        }
+
+        assert.equal(auditLog.list().length, 100)
+        assert.equal(auditLog.list()[0]!.id, 'audit-overflow-5')
+
+        auditLog.clear()
+        assert.equal(auditLog.list().length, 0)
+      }
+    },
+    {
+      name: 'Tools: LocalToolExecutor devuelve propuestas seguras sin ejecucion',
+      run: async () => {
+        const auditLog = new InMemoryAuditLog()
+        const executor = new LocalToolExecutor(auditLog)
+
+        const allowed = await executor.execute({
+          toolId: 'review-risk',
+          agentId: 'reviewer-agent',
+          input: 'Revisar cambio de seguridad en API'
+        })
+        const commandProposal = await executor.execute({
+          toolId: 'propose-terminal-command',
+          agentId: 'operator-agent',
+          input: 'Verificar build y tests'
+        })
+        const blocked = await executor.execute({
+          toolId: 'propose-terminal-command',
+          agentId: 'tutor-agent',
+          input: 'Quiero comandos'
+        })
+        const invalid = await executor.execute({
+          toolId: 'review-risk',
+          agentId: 'operator-agent',
+          input: '   '
+        })
+        const invalidTool = await executor.execute({
+          toolId: 'tool-invalida' as never,
+          agentId: 'operator-agent',
+          input: 'Intentar usar una tool inexistente'
+        })
+
+        assert.equal(allowed.toolId, 'review-risk')
+        assert.equal(allowed.approval?.decision, 'safe')
+        assert.equal(allowed.approval?.actionExecuted, false)
+        assert.equal(allowed.ownerApproval?.approvalStatus, 'pending')
+        assert.equal(allowed.ownerApproval?.actionExecuted, false)
+        assert.equal(allowed.commands, undefined)
+        assert.equal(commandProposal.approval?.decision, 'requires-approval')
+        assert.equal(commandProposal.approval?.actionExecuted, false)
+        assert.equal(commandProposal.ownerApproval?.approvalStatus, 'pending')
+        assert.equal(commandProposal.ownerApproval?.simulationOnly, true)
+        assert.equal(commandProposal.requiresHumanApproval, true)
+        assert.ok(commandProposal.commands)
+        assert.equal(commandProposal.commands.every((command) => command.requiresConfirmation), true)
+        assert.equal(commandProposal.commands.every((command) => !('executed' in command)), true)
+        assert.equal(blocked.title, 'Tool not available')
+        assert.equal(blocked.approval?.decision, 'forbidden')
+        assert.equal(blocked.ownerApproval?.approvalStatus, 'blocked')
+        assert.equal(blocked.approval?.actionExecuted, false)
+        assert.equal(blocked.commands, undefined)
+        assert.equal(blocked.requiresHumanApproval, true)
+        assert.equal(invalid.title, 'Input required')
+        assert.equal(invalid.approval?.actionExecuted, false)
+        assert.equal(invalidTool.title, 'Tool not available')
+        assert.equal(invalidTool.approval?.decision, 'forbidden')
+        assert.equal(invalidTool.commands, undefined)
+        assert.equal(invalidTool.approval?.actionExecuted, false)
+        const auditEvents = auditLog.list()
+        assert.ok(auditEvents.some((event) => event.type === 'tool-requested'))
+        assert.ok(auditEvents.some((event) => event.type === 'approval-evaluated'))
+        assert.ok(auditEvents.some((event) => event.type === 'tool-result-created'))
+        assert.ok(auditEvents.some((event) => event.type === 'tool-blocked'))
+        assert.ok(auditEvents.some((event) => event.type === 'approval-requested'))
+        assert.equal(auditEvents.every((event) => event.actionExecuted === false), true)
+        assert.equal(auditEvents.every((event) => event.simulationOnly === true), true)
+        assert.equal(auditEvents.every((event) => Boolean(event.eventId)), true)
+        assert.ok(auditEvents.some((event) => event.actionType === 'approval-evaluated'))
+        assert.ok(auditEvents.some((event) => event.approvalStatus === 'requires-approval'))
+        assert.ok(auditEvents.some((event) => event.governanceSource === 'approval-gate'))
+        assert.ok(auditEvents.some((event) => event.hierarchyLevel === 'supervisor'))
+        assert.equal(auditEvents.every((event) => !event.inputPreview || event.inputPreview.length <= 120), true)
+        assert.equal(JSON.stringify(auditEvents).includes('executed'), false)
+        assert.equal(JSON.stringify([allowed, commandProposal, blocked, invalid, invalidTool]).includes('executed'), false)
+      }
+    },
+    {
+      name: 'Security: ApprovalGate clasifica acciones privadas sin ejecutar nada',
+      run: async () => {
+        const gate = new ApprovalGate()
+
+        const command = gate.evaluate({
+          id: 'proposal-command',
+          permission: 'execute-command',
+          title: 'Run tests',
+          summary: 'Request to execute a terminal command.',
+          riskLevel: 'high'
+        })
+        const deleteFile = gate.evaluate({
+          id: 'proposal-delete',
+          permission: 'delete-file',
+          title: 'Delete file',
+          summary: 'Request to delete a file.',
+          riskLevel: 'critical'
+        })
+        const sendEmail = gate.evaluate({
+          id: 'proposal-email',
+          permission: 'send-email',
+          title: 'Send email',
+          summary: 'Request to send an email.',
+          riskLevel: 'critical'
+        })
+        const checklist = gate.evaluate({
+          id: 'proposal-checklist',
+          permission: 'create-checklist',
+          title: 'Create checklist',
+          summary: 'Request to create a checklist.',
+          riskLevel: 'low'
+        })
+        const readSecret = gate.evaluate({
+          id: 'proposal-secret',
+          permission: 'read-secret',
+          title: 'Read secret',
+          summary: 'Request to read a secret.',
+          riskLevel: 'critical'
+        })
+
+        assert.equal(command.decision, 'requires-approval')
+        assert.equal(command.requiresHumanApproval, true)
+        assert.equal(deleteFile.decision, 'forbidden')
+        assert.equal(sendEmail.decision, 'forbidden')
+        assert.equal(checklist.decision, 'safe')
+        assert.equal(readSecret.decision, 'forbidden')
+        assert.equal([command, deleteFile, sendEmail, checklist, readSecret].every((result) => result.actionExecuted === false), true)
+      }
+    },
+    {
+      name: 'Agents: AskAIAssistantUseCase pasa agente explicito al proveedor',
+      run: async () => {
+        const userId = 'user-agent'
+        const userRepo = new FakeUserRepository([
+          {
+            id: userId,
+            email: 'agent@example.com',
+            displayName: 'Agent User',
+            role: 'student',
+            level: 'beginner',
+            goals: ['architecture'],
+            createdAt: new Date()
+          }
+        ])
+
+        const interactions = new FakeInteractionRepository()
+        const provider = new SpyAIProvider({
+          output: 'respuesta architect',
+          estimatedCostUsd: 0.2,
+          model: 'fake-model'
+        })
+
+        const useCase = new AskAIAssistantUseCase(userRepo, provider, interactions)
+        await useCase.execute({
+          ...createInput(userId),
+          agentId: 'architect'
+        })
+
+        assert.equal(provider.calls.length, 1)
+        assert.equal(provider.calls[0]?.agent?.id, 'architect')
+      }
+    },
+    {
+      name: 'Agents: AIController.run acepta agentId opcional con fallback seguro',
+      run: async () => {
+        const userId = 'demo-user'
+        const userRepo = new FakeUserRepository([
+          {
+            id: userId,
+            email: 'demo@example.com',
+            displayName: 'Demo User',
+            role: 'student',
+            level: 'beginner',
+            goals: ['demo'],
+            createdAt: new Date()
+          }
+        ])
+        const interactions = new FakeInteractionRepository()
+        const provider = new SpyAIProvider({
+          output: 'respuesta controller',
+          estimatedCostUsd: 0.1,
+          model: 'fake-model'
+        })
+        const useCase = new AskAIAssistantUseCase(userRepo, provider, interactions)
+        const controller = new AIController(useCase)
+
+        await controller.run({
+          input: 'Necesito revisar una arquitectura de backend',
+          agentId: 'architect',
+          context: 'User: contexto previo'
+        })
+        await controller.run({
+          input: 'Necesito ayuda general con mi aprendizaje',
+          agentId: 'agente-invalido',
+          context: 123
+        })
+        await controller.run({
+          input: 'Necesito ayuda sin agente explicito',
+          context: `${'a'.repeat(2100)}tail`
+        })
+
+        assert.equal(provider.calls[0]?.agent?.id, 'architect')
+        assert.equal(provider.calls[0]?.context, 'User: contexto previo')
+        assert.equal(provider.calls[1]?.agent?.id, 'tutor')
+        assert.equal(provider.calls[1]?.context, undefined)
+        assert.equal(provider.calls[2]?.agent?.id, 'tutor')
+        assert.equal(provider.calls[2]?.context?.length, 2000)
+        assert.equal(provider.calls[2]?.context?.endsWith('tail'), true)
       }
     },
     {
@@ -135,6 +879,83 @@ export function mockTests(): TestCase[] {
 
         assert.equal(failed, true)
         assert.equal(interactions.saved.length, 0)
+      }
+    },
+    {
+      name: 'Providers: FallbackAIProvider usa fallback cuando proveedor primario falla',
+      run: async () => {
+        const primary = new SpyAIProvider(
+          {
+            output: 'unused',
+            estimatedCostUsd: 0.1,
+            model: 'primary'
+          },
+          true
+        )
+        const fallback = new SpyAIProvider({
+          output: 'respuesta fallback',
+          estimatedCostUsd: 0,
+          model: 'mock'
+        })
+
+        const provider = new FallbackAIProvider(primary, fallback)
+        const result = await provider.generate({
+          feature: 'assistant',
+          prompt: 'Necesito ayuda con TypeScript'
+        })
+
+        assert.equal(primary.calls.length, 1)
+        assert.equal(fallback.calls.length, 1)
+        assert.equal(result.output, 'respuesta fallback')
+        assert.equal(result.model, 'mock')
+      }
+    },
+    {
+      name: 'Providers: OpenAIProvider normaliza respuesta exitosa',
+      run: async () => {
+        const calls: RequestInit[] = []
+        const fetchFn = (async (_url: string | URL | Request, init?: RequestInit) => {
+          calls.push(init ?? {})
+
+          return {
+            ok: true,
+            json: async () => ({
+              choices: [
+                {
+                  message: {
+                    content: '  respuesta openai  '
+                  }
+                }
+              ],
+              usage: {
+                total_tokens: 100
+              }
+            })
+          } as Response
+        }) as typeof fetch
+
+        const provider = new OpenAIProvider({
+          apiKey: 'test-key',
+          model: 'test-model',
+          fetchFn
+        })
+
+        const result = await provider.generate({
+          feature: 'code-feedback',
+          prompt: 'Revisa este componente',
+          agent: AgentRegistry.resolve('architect')
+        })
+
+        assert.equal(result.output, 'respuesta openai')
+        assert.equal(result.model, 'test-model')
+        assert.equal(result.estimatedCostUsd, 0.000015)
+        assert.equal(calls.length, 1)
+        assert.equal((calls[0]?.headers as Record<string, string>).Authorization, 'Bearer test-key')
+        const body = JSON.parse(calls[0]?.body as string) as {
+          messages: Array<{ role: string; content: string }>
+        }
+        assert.match(body.messages[0]?.content ?? '', /senior software architect/i)
+        assert.match(body.messages[0]?.content ?? '', /Task mode:/)
       }
     }
   ]

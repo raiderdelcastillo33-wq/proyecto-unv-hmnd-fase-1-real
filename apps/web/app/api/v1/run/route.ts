@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { forwardJson, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
-const BACKEND_URL_MISSING_RESPONSE = {
-  success: false,
-  error: 'UNV_API_BASE_URL is required in production to connect the demo with the Node API.',
-  code: 'BACKEND_URL_MISSING',
-  mode: 'missing' as const
-}
+const MAX_CONTEXT_CHARS = 2_000
 
 function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): number {
   if (typeof payload !== 'object' || payload === null || !('success' in payload)) {
@@ -42,12 +37,24 @@ function mapPayloadToHttpStatus(upstreamStatus: number, payload: unknown): numbe
   }
 }
 
-function validateRunBody(body: unknown): { ok: true; input: string } | { ok: false; error: string } {
+function normalizeContext(context: unknown): string | undefined {
+  if (typeof context !== 'string') {
+    return undefined
+  }
+
+  const trimmed = context.trim()
+
+  return trimmed ? trimmed.slice(-MAX_CONTEXT_CHARS) : undefined
+}
+
+function validateRunBody(body: unknown): { ok: true; input: string; agentId?: string; context?: string } | { ok: false; error: string } {
   if (typeof body !== 'object' || body === null) {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
   }
 
   const input = (body as { input?: unknown }).input
+  const agentId = (body as { agentId?: unknown }).agentId
+  const context = normalizeContext((body as { context?: unknown }).context)
 
   if (typeof input !== 'string') {
     return { ok: false, error: 'Please enter a message before sending the demo request.' }
@@ -63,7 +70,30 @@ function validateRunBody(body: unknown): { ok: true; input: string } | { ok: fal
     return { ok: false, error: 'Please enter at least 5 characters before sending the demo request.' }
   }
 
-  return { ok: true, input: trimmed }
+  return {
+    ok: true,
+    input: trimmed,
+    ...(typeof agentId === 'string' ? { agentId } : {}),
+    ...(context ? { context } : {})
+  }
+}
+
+function createDemoFallbackPayload(validation: { input: string; agentId?: string; context?: string }) {
+  const agentLabel = validation.agentId ?? 'tutor'
+
+  return {
+    success: true,
+    data: {
+      id: `demo-fallback-${Date.now()}`,
+      response: `Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel. Votre message a ete traite de facon sure par la route Next.js locale avec l'agent ${agentLabel}.`
+    },
+    meta: {
+      mode: 'demo-fallback',
+      reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
+      agentId: agentLabel,
+      contextReceived: Boolean(validation.context)
+    }
+  }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -87,7 +117,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ input: validation.input })
+      body: JSON.stringify(
+        validation.agentId
+          ? {
+              input: validation.input,
+              agentId: validation.agentId,
+              ...(validation.context ? { context: validation.context } : {})
+            }
+          : {
+              input: validation.input,
+              ...(validation.context ? { context: validation.context } : {})
+            }
+      )
     })
 
     const responseStatus = mapPayloadToHttpStatus(status, payload)
@@ -95,7 +136,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(payload, { status: responseStatus })
   } catch (error) {
     if (error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR) {
-      return NextResponse.json(BACKEND_URL_MISSING_RESPONSE, { status: 503 })
+      return NextResponse.json(createDemoFallbackPayload(validation), { status: 200 })
     }
 
     const message =

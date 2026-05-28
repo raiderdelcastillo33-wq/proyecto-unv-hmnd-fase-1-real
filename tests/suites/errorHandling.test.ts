@@ -1,7 +1,45 @@
+import assert from 'node:assert'
+import { IncomingMessage } from 'node:http'
 import { ApplicationContainer } from '../../src/app/ApplicationContainer'
+import {
+  getBodyReadErrorResponse,
+  getCorsHeaders,
+  getHealthPayload,
+  MAX_REQUEST_BODY_BYTES,
+  readBody
+} from '../../src/api/server'
+import { MAX_AI_INPUT_CHARS } from '../../src/interfaces/http/controllers/AIController'
 import { ApiResponse } from '../../src/shared/types/ApiResponse'
-import { ensureFailure } from '../helpers/apiAssertions'
+import { ensureFailure, ensureSuccess } from '../helpers/apiAssertions'
 import { TestCase } from '../helpers/testRunner'
+
+function createRequestFromBody(body: string): IncomingMessage {
+  return {
+    async *[Symbol.asyncIterator]() {
+      yield Buffer.from(body)
+    }
+  } as IncomingMessage
+}
+
+async function withEnv<T>(key: string, value: string | undefined, operation: () => Promise<T>): Promise<T> {
+  const previous = process.env[key]
+
+  if (value === undefined) {
+    delete process.env[key]
+  } else {
+    process.env[key] = value
+  }
+
+  try {
+    return await operation()
+  } finally {
+    if (previous === undefined) {
+      delete process.env[key]
+    } else {
+      process.env[key] = previous
+    }
+  }
+}
 
 export function errorHandlingTests(): TestCase[] {
   return [
@@ -60,6 +98,98 @@ export function errorHandlingTests(): TestCase[] {
         })) as ApiResponse<{ id: string; response: string }>
 
         ensureFailure(shortPrompt, 'VALIDATION_ERROR')
+      }
+    },
+    {
+      name: 'Seguridad API: JSON invalido devuelve error controlado',
+      run: async () => {
+        let errorResponse: { statusCode: number; payload: unknown } | null = null
+        try {
+          await readBody(createRequestFromBody('{"input":'))
+        } catch (error) {
+          errorResponse = getBodyReadErrorResponse(error)
+        }
+
+        const payload = errorResponse?.payload as {
+          success: boolean
+          error?: { code: string; message: string; stack?: string }
+        }
+
+        assert.equal(errorResponse?.statusCode, 400)
+        assert.equal(payload.success, false)
+        assert.equal(payload.error?.code, 'INVALID_JSON')
+        assert.equal('stack' in (payload.error ?? {}), false)
+      }
+    },
+    {
+      name: 'Seguridad API: payload demasiado grande devuelve 413',
+      run: async () => {
+        let errorResponse: { statusCode: number; payload: unknown } | null = null
+        try {
+          await readBody(createRequestFromBody('x'.repeat(MAX_REQUEST_BODY_BYTES + 1)))
+        } catch (error) {
+          errorResponse = getBodyReadErrorResponse(error)
+        }
+
+        const payload = errorResponse?.payload as {
+          success: boolean
+          error?: { code: string; message: string; stack?: string }
+        }
+
+        assert.equal(errorResponse?.statusCode, 413)
+        assert.equal(payload.success, false)
+        assert.equal(payload.error?.code, 'PAYLOAD_TOO_LARGE')
+        assert.equal('stack' in (payload.error ?? {}), false)
+      }
+    },
+    {
+      name: 'Seguridad API: input largo se rechaza y input valido sigue funcionando',
+      run: async () => {
+        const app = new ApplicationContainer()
+        await app.seedBaseResources()
+
+        const tooLong = (await app.apiV1Router.handle('/api/v1/run', {
+          input: 'a'.repeat(MAX_AI_INPUT_CHARS + 1)
+        })) as ApiResponse<{ id: string; response: string }>
+
+        ensureFailure(tooLong, 'VALIDATION_ERROR')
+
+        const valid = (await app.apiV1Router.handle('/api/v1/run', {
+          input: 'Necesito una guia segura para estudiar TypeScript'
+        })) as ApiResponse<{ id: string; response: string }>
+
+        const data = ensureSuccess(valid)
+        assert.equal(typeof data.id, 'string')
+        assert.equal(typeof data.response, 'string')
+      }
+    },
+    {
+      name: 'Seguridad API: health no filtra datos sensibles',
+      run: async () => {
+        const payload = getHealthPayload()
+        const serialized = JSON.stringify(payload)
+
+        assert.equal(payload.status, 'ok')
+        assert.equal(payload.service, 'api-server')
+        assert.equal(serialized.includes('OPENAI_API_KEY'), false)
+        assert.equal(serialized.includes('sk-'), false)
+        assert.equal(serialized.includes('token'), false)
+      }
+    },
+    {
+      name: 'Seguridad API: CORS permite origin configurado y no refleja origin no permitido',
+      run: async () => {
+        await withEnv('UNV_ALLOWED_ORIGINS', 'http://localhost:3001,https://app.unv-hmnd.example', async () => {
+          const allowedHeaders = getCorsHeaders('http://localhost:3001')
+          const blockedHeaders = getCorsHeaders('https://evil.example')
+
+          assert.equal(allowedHeaders['Access-Control-Allow-Origin'], 'http://localhost:3001')
+          assert.equal(allowedHeaders.Vary, 'Origin')
+          assert.equal(allowedHeaders['Access-Control-Allow-Methods'], 'GET,POST,OPTIONS')
+          assert.equal(allowedHeaders['Access-Control-Allow-Headers'], 'Content-Type')
+          assert.equal(blockedHeaders['Access-Control-Allow-Origin'], undefined)
+          assert.equal(blockedHeaders.Vary, undefined)
+        })
       }
     },
     {

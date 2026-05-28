@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 
 type RuntimeMode = 'local' | 'external' | 'missing'
 
@@ -16,6 +16,29 @@ type RuntimeState = {
 type RunResult = {
   id: string
   response: string
+}
+
+const agentOptions = [
+  { id: 'architect-agent', label: 'Architect', description: 'Analyse architecture, risks, and phased technical decisions.' },
+  { id: 'coder-agent', label: 'Coder', description: 'Prepares safe implementation steps and code-oriented guidance.' },
+  { id: 'reviewer-agent', label: 'Reviewer', description: 'Reviews bugs, security concerns, regressions, and missing tests.' },
+  { id: 'debugger-agent', label: 'Debugger', description: 'Investigates errors, logs, root causes, and verification steps.' },
+  { id: 'tutor-agent', label: 'Tutor', description: 'Explains technical ideas step by step for learning and practice.' },
+  { id: 'operator-agent', label: 'Operator', description: 'Coordinates lab tasks and prepares safe operational commands.' }
+] as const
+
+const MAX_CONVERSATION_MESSAGES = 12
+const MAX_CONTEXT_MESSAGES = 6
+const MAX_CONTEXT_CHARS = 2_000
+const TYPING_CHUNK_SIZE = 8
+const TYPING_INTERVAL_MS = 20
+
+type ConversationMessage = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  agentId: (typeof agentOptions)[number]['id']
+  createdAt: string
 }
 
 const flowHighlights = [
@@ -152,12 +175,44 @@ const INITIAL_RUNTIME: RuntimeState = {
   backend: null
 }
 
+function appendConversationMessage(messages: ConversationMessage[], message: ConversationMessage): ConversationMessage[] {
+  return [...messages, message].slice(-MAX_CONVERSATION_MESSAGES)
+}
+
+function buildConversationContext(messages: ConversationMessage[]): string | undefined {
+  const context = messages
+    .slice(-MAX_CONTEXT_MESSAGES)
+    .map((message) => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.content}`)
+    .join('\n')
+    .trim()
+
+  if (!context) {
+    return undefined
+  }
+
+  return context.slice(-MAX_CONTEXT_CHARS)
+}
+
 export default function DemoPage() {
   const [input, setInput] = useState('')
+  const [selectedAgentId, setSelectedAgentId] = useState<(typeof agentOptions)[number]['id']>('tutor-agent')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [runtime, setRuntime] = useState<RuntimeState>(INITIAL_RUNTIME)
-  const [result, setResult] = useState<RunResult | null>(null)
+  const [conversation, setConversation] = useState<ConversationMessage[]>([])
+  const [typing, setTyping] = useState(false)
+  const typingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  function cancelTyping(updateState = true): void {
+    if (typingTimerRef.current) {
+      clearInterval(typingTimerRef.current)
+      typingTimerRef.current = null
+    }
+
+    if (updateState) {
+      setTyping(false)
+    }
+  }
 
   async function refreshRuntime(): Promise<void> {
     setRuntime((current) => ({ ...current, status: 'checking', error: undefined }))
@@ -179,10 +234,38 @@ export default function DemoPage() {
 
   useEffect(() => {
     void refreshRuntime()
+
+    return () => {
+      cancelTyping(false)
+    }
   }, [])
+
+  function revealAssistantMessage(message: ConversationMessage, fullText: string): void {
+    cancelTyping()
+    setTyping(true)
+
+    let visibleCharacters = 0
+    setConversation((messages) => appendConversationMessage(messages, { ...message, content: '' }))
+
+    typingTimerRef.current = setInterval(() => {
+      visibleCharacters = Math.min(visibleCharacters + TYPING_CHUNK_SIZE, fullText.length)
+      const nextContent = fullText.slice(0, visibleCharacters)
+
+      setConversation((messages) =>
+        messages.map((currentMessage) =>
+          currentMessage.id === message.id ? { ...currentMessage, content: nextContent } : currentMessage
+        )
+      )
+
+      if (visibleCharacters >= fullText.length) {
+        cancelTyping()
+      }
+    }, TYPING_INTERVAL_MS)
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
+    cancelTyping()
 
     const trimmedInput = input.trim()
 
@@ -193,6 +276,15 @@ export default function DemoPage() {
 
     setLoading(true)
     setError(null)
+    const userMessage: ConversationMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: trimmedInput,
+      agentId: selectedAgentId,
+      createdAt: new Date().toISOString()
+    }
+    setConversation((messages) => appendConversationMessage(messages, userMessage))
+    const context = buildConversationContext(conversation)
 
     try {
       const payload = await requestJson<unknown>('/api/v1/run', {
@@ -200,12 +292,23 @@ export default function DemoPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ input: trimmedInput })
+        body: JSON.stringify({
+          input: trimmedInput,
+          agentId: selectedAgentId,
+          ...(context ? { context } : {})
+        })
       })
 
-      setResult(parseRunResult(payload))
+      const parsedResult = parseRunResult(payload)
+      const assistantMessage: ConversationMessage = {
+        id: parsedResult.id,
+        role: 'assistant',
+        content: '',
+        agentId: selectedAgentId,
+        createdAt: new Date().toISOString()
+      }
+      revealAssistantMessage(assistantMessage, parsedResult.response)
     } catch (currentError) {
-      setResult(null)
       setError(getErrorMessage(currentError))
     } finally {
       setLoading(false)
@@ -213,7 +316,8 @@ export default function DemoPage() {
   }
 
   const runtimePresentation = getRuntimePresentation(runtime)
-  const isSubmitDisabled = loading || (runtime.status === 'error' && runtime.mode === 'missing')
+  const isSubmitDisabled = loading || typing
+  const selectedAgent = agentOptions.find((agent) => agent.id === selectedAgentId) ?? agentOptions[4]
 
   return (
     <main className="page-shell">
@@ -320,6 +424,23 @@ const result = await aiProvider.generate({
           <label className="field-label" htmlFor="demo-input">
             Message
           </label>
+          <label className="field-label" htmlFor="agent-select">
+            Agent
+          </label>
+          <select
+            className="select-input"
+            id="agent-select"
+            onChange={(event) => setSelectedAgentId(event.target.value as typeof selectedAgentId)}
+            value={selectedAgentId}
+          >
+            {agentOptions.map((agent) => (
+              <option key={agent.id} value={agent.id}>
+                {agent.label}
+              </option>
+            ))}
+          </select>
+          <p className="meta-text">{selectedAgent.description}</p>
+
           <textarea
             id="demo-input"
             className="prompt-input"
@@ -341,24 +462,44 @@ const result = await aiProvider.generate({
         <aside className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Sortie</p>
-            <h2>Réponse</h2>
-            <p>Sortie du serveur rendue directement depuis la réponse de la route interne.</p>
+            <h2>Conversation</h2>
+            <p>Historique local de la session courante, sans base de données ni persistance.</p>
           </div>
 
-          {loading ? (
+          {loading && !typing ? (
             <section className="result-state">
               <p className="result-eyebrow">Traitement</p>
               <h3>En attente du backend</h3>
               <p>La requête passe par Next.js vers l’API Node.</p>
             </section>
-          ) : result ? (
-            <section className="result-state">
-              <p className="result-eyebrow">Réponse reçue</p>
-              <h3>{result.response}</h3>
-              <div className="response-meta">
-                <span className="info-chip">Interaction {result.id}</span>
+          ) : conversation.length > 0 ? (
+            <>
+              {conversation.map((message) => (
+                <section className="result-state" key={message.id}>
+                  <p className="result-eyebrow">{message.role === 'user' ? 'Utilisateur' : 'Assistant'}</p>
+                  <h3>{message.content}</h3>
+                  <div className="response-meta">
+                    <span className="info-chip">{message.agentId}</span>
+                    <span className="info-chip">{new Date(message.createdAt).toLocaleTimeString()}</span>
+                  </div>
+                </section>
+              ))}
+              <div className="actions">
+                <button
+                  className="secondary-button"
+                  onClick={() => {
+                    cancelTyping()
+                    setConversation([])
+                  }}
+                  type="button"
+                >
+                  Limpiar
+                </button>
+                <span className="meta-text">
+                  {typing ? 'Réponse en cours...' : `Derniers ${MAX_CONVERSATION_MESSAGES} messages en mémoire locale`}
+                </span>
               </div>
-            </section>
+            </>
           ) : (
             <section className="result-state">
               <p className="result-eyebrow">En attente</p>

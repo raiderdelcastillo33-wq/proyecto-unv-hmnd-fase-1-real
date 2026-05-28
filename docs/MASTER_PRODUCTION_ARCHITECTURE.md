@@ -1,0 +1,590 @@
+# Master Production Architecture Blueprint
+
+This blueprint defines how UNV-HMND / Humanidad_Universo should evolve from the current Private AI Lab into Humanity Guide OS: a professional, human-centered AI organization platform.
+
+This document is architectural. It does not introduce real execution, authentication, database storage, adapters, workers, or SaaS runtime behavior.
+
+Core rules:
+
+- Proposal != Execution
+- Approve != Execute
+- Blueprint != Runtime
+- Human owner remains final authority
+- AI does not invade; AI mutates with permission
+- Every future dangerous capability must be approval-required, audit-first, permission-scoped, and reversible when possible
+
+## 1. What Exists Today
+
+Current implemented surfaces:
+
+- `/`: public portfolio surface
+- `/demo`: public multi-agent demo with safe fallback
+- `/lab`: owner-gated private lab using `OWNER_ACCESS_CODE`
+- `/api/v1/run`: demo-safe proxy/fallback route
+- `/api/lab/catalog`: private safe catalog route
+- `/api/lab/tool`: private proposal-only tool route
+
+Current implemented architecture:
+
+- Humanity Guide OS conceptual ecosystem
+- GENIO Central Governance Layer
+- Owner Approval Flow Minimal
+- GENIO Strategic Vision Metadata
+- GENIO Memory & Context Blueprint
+- Strategic Multi-Agent Orchestration Layer
+- Controlled Adapter Blueprint
+- Real Owner Auth Blueprint
+- Persistent Audit & Observability Blueprint
+- Controlled Practical Capability Blueprint
+- Controlled Runtime Sandbox Blueprint
+- Read-Only File Preview Adapter Blueprint
+- AgentRegistry
+- ToolRegistry
+- ApprovalGate / ApprovalPolicy
+- InMemoryAuditLog
+- Proposal lifecycle metadata
+
+Current guarantees:
+
+- `simulationOnly: true`
+- `actionExecuted: false`
+- no real adapters
+- no real execution
+- no persistent memory
+- no autonomous agents
+- no real authentication runtime
+- no persistent audit or real observability runtime
+- no practical capability runtime
+- no runtime sandbox
+- no direct host access
+
+## 2. What Does Not Exist Yet
+
+The current system does not include:
+
+- real owner authentication runtime
+- database or durable storage
+- persistent audit log
+- vector memory or embeddings
+- semantic search
+- real terminal execution
+- real filesystem access
+- Gmail or email integration
+- banking, trading, or real finance integrations
+- browser automation
+- OS or local computer control
+- background jobs
+- workers or queues
+- real orchestration runtime
+- SaaS tenant management
+- company agents runtime
+- production monitoring
+- real tracing or external telemetry
+- unrestricted capability system
+- unrestricted execution or direct agent-to-host access
+- real filesystem preview or file browser
+- rate limiting
+- secrets management layer beyond environment variables
+
+## 3. Target Production Architecture
+
+Target layers:
+
+```text
+Humanity Guide OS
+  -> Intelligent Organization MVP
+  -> Human-centered UX
+  -> Context clarity
+
+Public Web
+  -> Portfolio
+  -> Public Demo
+
+Private Web
+  -> Owner Auth
+  -> Private Lab
+  -> Admin Dashboard
+
+GENIO Core
+  -> Governance
+  -> Approval
+  -> Risk
+  -> Context
+  -> Orchestration
+  -> Audit
+
+Controlled Platform Services
+  -> Persistent Audit
+  -> Secure Storage
+  -> Secure Memory
+  -> User Management
+  -> Role / Permission System
+
+World Access Layer
+  -> Read-only adapters
+  -> Draft adapters
+  -> Simulation adapters
+  -> Future execution adapters
+
+GÉNESIS Reflection Layer
+  -> Contextual mirror
+  -> Scenario simulation
+  -> Non-invasive reflection
+
+Human-Centered Alignment Layer
+  -> Policy validator
+  -> Ethics middleware
+  -> Contextual audit engine
+```
+
+## 4. Humanity Guide OS Ecosystem
+
+Humanity Guide OS is the primary product architecture and MVP direction.
+
+Responsibilities:
+
+- intelligent organization
+- clarity and chaos reduction
+- conscious productivity
+- safe simulations
+- reversible proposals
+- human-centered UX
+
+Conceptual layers:
+
+- GENIO: operational governance and policy enforcement.
+- GÉNESIS: reflection layer and contextual mirror.
+- Human-Centered Alignment Layer: policy validator and ethics middleware.
+
+Forbidden claims:
+
+- AGI
+- real consciousness
+- spiritual authority
+- human scoring
+- human surveillance
+- emotional manipulation
+- unrestricted autonomy
+
+Detailed ecosystem blueprint:
+
+```text
+docs/HUMANITY_GUIDE_OS_ARCHITECTURE.md
+src/domain/ecosystem/HumanityGuideOSBlueprint.ts
+```
+
+## 5. GENIO Master Role
+
+GENIO should act as:
+
+- central brain
+- agent coordinator
+- context controller
+- risk supervisor
+- plan generator
+- production organizer
+- logical authority before agents/tools/adapters
+- governance layer for future workflows
+
+GENIO must never act as:
+
+- irreversible executor without human approval
+- bypass around owner approval
+- autonomous production operator
+- secret reader
+- hidden background worker
+- unbounded decision engine
+
+## 6. Real Owner Auth Blueprint
+
+The current `/lab` surface uses `OWNER_ACCESS_CODE` as a temporary server-side gate.
+
+This is not production authentication.
+
+The auth blueprint prepares:
+
+- future roles: `owner`, `admin`, `operator`, `guest`
+- future protected surfaces: `/lab`, `/admin`, `/company`, adapters, audit dashboard, memory dashboard
+- future permissions such as `view_lab`, `approve_proposal`, `view_audit`, `manage_users`, and `configure_adapters`
+- future session requirements: secure cookies, expiration, revocation, identity-bound audit
+
+`execute_controlled_action_future` is documented as future-only, critical risk, approval-required, and not implemented.
+
+Detailed auth blueprint:
+
+```text
+docs/AUTH_BLUEPRINT.md
+src/domain/auth/AuthBlueprint.ts
+```
+
+## 7. Persistent Audit & Observability Blueprint
+
+GENIO now has metadata for future enterprise auditability and observability.
+
+The blueprint prepares:
+
+- audit traces
+- event lineage
+- correlation chains
+- governance checkpoints
+- execution lineage placeholders
+- system observations
+- incident signals
+- monitoring scopes
+- audit retention policies
+
+Current audit remains in-memory only. There is no persistent audit database, OpenTelemetry runtime, cloud logging, Sentry, DataDog, Prometheus, Grafana, ElasticSearch, realtime telemetry, workers, or background monitoring.
+
+Observability must be privacy-aware and owner-controlled. It must never become invasive surveillance or a bypass around approval flow.
+
+Detailed observability blueprint:
+
+```text
+docs/OBSERVABILITY_BLUEPRINT.md
+src/domain/observability/ObservabilityBlueprint.ts
+```
+
+## 8. Controlled Practical Capability Blueprint
+
+GENIO now has metadata for future practical capabilities without enabling execution.
+
+The blueprint prepares:
+
+- safe capability routing
+- capability risk levels
+- execution lifecycle metadata
+- approval chains
+- governance checkpoints
+- blocked execution status
+- problem-solver-agent metadata
+- business-builder metadata
+
+Current status:
+
+- proposal-only
+- simulation-only
+- no terminal execution
+- no filesystem write
+- no external API execution
+- no browser automation
+- no autonomous execution
+- no self-modifying or self-replicating behavior
+
+Detailed capability blueprint:
+
+```text
+docs/CAPABILITY_BLUEPRINT.md
+src/domain/capabilities/CapabilityBlueprint.ts
+```
+
+## 9. Controlled Runtime Sandbox Blueprint
+
+GENIO now has metadata for a future governed runtime sandbox.
+
+Correct hierarchy:
+
+```text
+Owner
+  -> GENIO Central
+  -> Governance Layer
+  -> Runtime Sandbox
+  -> Specialized Agents
+  -> Controlled Capabilities
+```
+
+Forbidden path:
+
+```text
+Agent
+  -> host machine directly
+```
+
+Current status:
+
+- `executionMode: no-runtime`
+- `isolationLevel: simulation-only`
+- `lifecycleState: blocked`
+- no Docker, VM, shell, terminal, filesystem, workers, queues, browser automation, or OS automation
+- no kill switch runtime because no runtime exists
+
+Detailed runtime sandbox blueprint:
+
+```text
+docs/RUNTIME_SANDBOX_BLUEPRINT.md
+src/domain/runtime/RuntimeSandboxBlueprint.ts
+```
+
+## 10. Read-Only File Preview Adapter Blueprint
+
+GENIO now has metadata for a future owner-approved read-only file preview adapter.
+
+Current status:
+
+- lifecycle: `blocked`
+- visibility: `metadata-only`
+- redaction: `metadata-only`
+- no real filesystem read
+- no uploads
+- no watchers, indexing, embeddings, OCR, parsing, shell access, file execution, traversal, or host access
+
+Detailed file preview blueprint:
+
+```text
+docs/FILE_PREVIEW_ADAPTER_BLUEPRINT.md
+src/domain/file-preview/FilePreviewBlueprint.ts
+```
+
+## 11. Production Readiness Matrix
+
+| Module | Current Status | Production Requirement | Risk Level | Next Step | Verification Method |
+| --- | --- | --- | --- | --- | --- |
+| `/demo` | Implemented public demo | Keep stable fallback, validate UX and errors | Medium | Add production smoke checklist | Build, web tests, browser manual test |
+| `/lab` | Owner-code protected private lab | Replace code gate with real auth and session security | High | Real Owner Auth runtime | Build, web tests, manual auth review |
+| GENIO governance | Metadata and catalog implemented | Persisted governance records and policy review | Medium | Governance policy hardening | Unit tests, catalog review |
+| Approval flow | Local approve/reject metadata | Durable approval records with actor identity | High | Persistent Audit Log | Domain tests, audit trail review |
+| Audit log | In-memory redacted log | Persistent append-only audit storage | High | Database-backed audit log | Unit/integration tests |
+| Memory blueprint | Typed metadata only | Secure owner-controlled storage and retrieval | High | Secure Storage / DB | Storage tests, privacy review |
+| Orchestration blueprint | Simulation-only pipeline metadata | Runtime scheduler only after auth/audit/storage | Critical | Keep simulation until prerequisites complete | Domain tests, architecture review |
+| Adapter blueprint | Metadata-only future adapters | Permission-scoped adapters with explicit approval | Critical | Start read-only file preview adapter | Adapter safety tests |
+| Capability blueprint | Metadata-only practical capability governance | Capability runtime only after auth, audit, sandbox, and owner approval | Critical | Read-only Capabilities | Capability safety tests |
+| Runtime sandbox blueprint | Metadata-only sandbox governance | Isolated runtime only after auth, audit, rollback, kill switch, and owner approval | Critical | Sandbox threat model | Sandbox safety review |
+| File preview blueprint | Metadata-only read-only preview plan | Owner-selected, redacted, audited, sandboxed preview runtime | High | File preview threat model | Preview safety review |
+| Auth | OWNER_ACCESS_CODE temporary gate plus auth blueprint | Owner auth, sessions, CSRF/session hardening | Critical | Real Owner Auth runtime | Auth tests, security review |
+| DB/storage | Not implemented | Durable encrypted data store and migrations | High | Secure Storage / DB | Migration tests, backup plan |
+| User management | Not implemented | Users, roles, owner/admin boundaries | High | Role/Permission system | RBAC tests |
+| Admin dashboard | Not implemented | Owner admin for audit, policies, users | Medium | Admin Dashboard | E2E/manual checks |
+| Deployment | Frontend Vercel-ready | Environment validation, preview/prod gates | Medium | Production deploy checklist | Vercel deploy, route smoke tests |
+| Testing | Jest/domain tests present | Add E2E smoke tests and production checklist | Medium | Production Testing Guide | CI + manual evidence |
+| Monitoring | Observability blueprint metadata only | Logs, error tracking, health checks, alerts | Medium | Persistent Audit & Observability runtime plan | Health endpoint, alert tests |
+| Security | Progressive boundaries documented | Threat model, auth, secrets, rate limits | Critical | Security hardening phase | Security checklist, review |
+
+## 12. Web Testing And Production Validation
+
+Local URLs:
+
+```text
+http://localhost:3001
+http://localhost:3001/demo
+http://localhost:3001/lab
+```
+
+Production/Vercel:
+
+```text
+https://your-vercel-domain.example
+https://your-vercel-domain.example/demo
+https://your-vercel-domain.example/lab
+```
+
+Validate `/demo`:
+
+- page loads without runtime errors
+- agent selector is visible
+- message validation works
+- `/api/v1/run` responds
+- fallback response is safe when backend is not configured
+- local conversation history appears
+- typing simulation renders
+- no critical console errors
+
+Validate `/lab`:
+
+- locked screen appears before owner code
+- `OWNER_ACCESS_CODE` is treated as temporary, not real auth
+- wrong or missing code is rejected
+- correct `OWNER_ACCESS_CODE` unlocks catalog
+- GENIO Central is visible
+- agent/tool catalog is visible
+- approval metadata is visible
+- audit events are visible
+- memory blueprint is visible
+- orchestration blueprint is visible
+- adapter blueprint is visible
+- auth blueprint is visible
+- observability blueprint is visible
+- capability blueprint is visible
+- runtime sandbox blueprint is visible
+- file preview blueprint is visible
+- approve/reject buttons update metadata only
+- no real execution happens
+
+Browser DevTools:
+
+- Console: no critical runtime errors
+- Network:
+  - `/api/v1/run`
+  - `/api/lab/catalog`
+  - `/api/lab/tool`
+- Response payloads should not expose secrets or `systemInstructions`
+
+## 13. Production Verification Checklist
+
+Run before closing a production-readiness phase:
+
+```bash
+npm --prefix apps/web run build
+npm --prefix apps/web run test
+npm run build:api
+npm test
+git status --short
+git log --oneline -5
+```
+
+Manual checklist:
+
+- Vercel deploy OK
+- `/` OK
+- `/demo` OK
+- `/lab` OK
+- Console OK
+- Network OK
+- no secrets exposed
+- no `NEXT_PUBLIC_OWNER_ACCESS_CODE`
+- `OWNER_ACCESS_CODE` only exists server-side
+- no real execution adapters
+- no real telemetry or persistent audit storage
+- no capability runtime
+- no sandbox runtime
+- no real filesystem read or file browser UI
+- no `systemInstructions` in public responses
+- no terminal/filesystem/Gmail/finance execution
+
+## 14. Future Roadmap By Phases
+
+### Phase 1: Production Architecture Blueprint
+
+- Objective: document target architecture, readiness matrix, testing, and roadmap
+- Risk: low
+- Prerequisites: current docs and blueprints
+- Verification: docs review, build/test matrix
+
+### Phase 2: Real Owner Auth
+
+- Objective: replace `OWNER_ACCESS_CODE` with secure owner authentication runtime
+- Risk: critical
+- Prerequisites: session strategy, secret management, CSRF/session review
+- Verification: auth tests, route protection checks, no public secret exposure
+
+### Phase 3: Persistent Audit Log
+
+- Objective: move from observability blueprint to append-only audit events stored durably
+- Risk: high
+- Prerequisites: DB/storage decision, migration plan, redaction policy
+- Verification: audit write/read tests, redaction tests, failure tests
+
+### Phase 4: Secure Storage / DB
+
+- Objective: add durable storage for approved metadata, users, and audit
+- Risk: high
+- Prerequisites: schema design, backups, migration workflow
+- Verification: migration tests, data isolation tests
+
+### Phase 5: Read-only File Preview Adapter
+
+- Objective: first scoped adapter for owner-selected file previews
+- Risk: high
+- Prerequisites: auth, audit, permission scopes, file selection boundary
+- Verification: adapter tests, forbidden path tests, audit checks
+
+### Capability Track: Controlled Practical Capabilities
+
+- Objective: progress from proposal-only to read-only, draft-only, sandboxed, and human-supervised capabilities
+- Risk: critical
+- Prerequisites: real auth, persistent audit, sandbox boundaries, permission scopes, rollback strategy
+- Verification: capability safety tests, approval tests, audit lineage review
+
+### Sandbox Track: Controlled Runtime Sandbox
+
+- Objective: progress from no-runtime metadata to read-only, ephemeral, restricted, and isolated future runtimes
+- Risk: critical
+- Prerequisites: real auth, persistent audit, rollback policy, emergency stop, threat model, sandbox isolation design
+- Verification: sandbox safety tests, isolation review, rollback drill, no host-access proof
+
+### File Preview Track: Read-Only File Preview Adapter
+
+- Objective: progress from metadata-only preview to owner-selected, redacted, audited read-only previews
+- Risk: high
+- Prerequisites: real auth, persistent audit, sandbox route, redaction design, type and size limits
+- Verification: preview boundary tests, redaction tests, no host traversal proof
+
+### Phase 6: Controlled Draft Adapters
+
+- Objective: draft-only email/document flows without sending or writing
+- Risk: high
+- Prerequisites: approval records, audit, content review UI
+- Verification: draft tests, no-send checks
+
+### Phase 7: Memory Retrieval System
+
+- Objective: owner-controlled memory retrieval with clear retention rules
+- Risk: high
+- Prerequisites: secure storage, privacy policy, deletion/export flows
+- Verification: retrieval tests, deletion tests, privacy review
+
+### Phase 8: Company Agents
+
+- Objective: company-scoped agents and workflows
+- Risk: critical
+- Prerequisites: users, roles, tenant boundaries, audit
+- Verification: tenant isolation tests, RBAC tests
+
+### Phase 9: SaaS Admin Dashboard
+
+- Objective: production admin UI for users, audit, policies, and billing-readiness
+- Risk: high
+- Prerequisites: auth, DB, roles, monitoring
+- Verification: E2E checks, admin permission tests
+
+### Phase 10: Controlled Execution Layer
+
+- Objective: introduce reversible, approval-gated execution adapters
+- Risk: critical
+- Prerequisites: all previous phases, threat model, rollback strategy, monitoring
+- Verification: sandbox tests, approval tests, audit tests, rollback drills
+
+## 15. World Access Layer
+
+World Access Layer is the future controlled connection between GENIO and external tools.
+
+Future connectors/adapters may include:
+
+- filesystem
+- terminal
+- documents
+- email drafts
+- calendar
+- browser
+- finance simulation
+- local computer
+- cloud APIs
+- company workflows
+
+Current status:
+
+- concept only
+- no real adapter runtime
+- no external service connection
+- no execution
+
+Required future properties:
+
+- approval-required
+- audit-first
+- permission-scoped
+- reversible when possible
+- owner-controlled
+- never bypass owner approval
+
+## 16. Release Criteria For Future Production Phases
+
+A future phase is production-ready only when:
+
+- tests pass
+- build passes
+- security boundaries are documented
+- manual browser validation is complete
+- audit behavior is verified
+- secrets are not exposed
+- rollback path exists
+- owner approval path is clear
+- no capability is overstated
