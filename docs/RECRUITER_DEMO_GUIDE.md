@@ -9,8 +9,8 @@ Recommended walkthrough:
 1. Open `/`.
 2. Explain the product in one sentence: a governed AI organization demo with explicit safety boundaries.
 3. Open `/demo` to show the public multi-agent conversation flow.
-4. Open `/personal` to show the owner-facing daily organization mode.
-5. Open `/lab` to show the private governance and blueprint workspace.
+4. Open `/lab` to show the private governance and blueprint workspace.
+5. Open `/personal` to show the owner-facing daily organization mode.
 6. Show the controlled read-only file metadata preview and the controlled email organization preview.
 7. Close with `/about` or the README to explain architecture and roadmap.
 
@@ -33,8 +33,8 @@ Recommended route order:
 
 1. `/` for the product story and recruiter framing.
 2. `/demo` for the public safe AI conversation.
-3. `/personal` for the owner daily organization surface.
-4. `/lab` for governance, approval metadata, previews, and blocked execution boundaries.
+3. `/lab` for governance, approval metadata, previews, and blocked execution boundaries.
+4. `/personal` for the owner daily organization surface.
 5. `/about` or README for architecture and roadmap separation.
 
 ## What Exists Today
@@ -105,9 +105,9 @@ For a short video:
 2. Scroll through Recruiter Quick Start.
 3. Show Current capabilities vs future blueprints.
 4. Open `/demo` and send one safe prompt.
-5. Open `/personal` and show the owner daily review surface, Visual Chaos Score, Organization Zones, and Smart Manual Checklist.
-6. Open `/lab`, unlock with the local owner code, and show the organization simulation.
-7. Show the email preview panel and point out `executionMode: email-preview-only`.
+5. Open `/lab`, unlock with the local owner code, and show the organization simulation.
+6. Show the email preview panel and point out `executionMode: email-preview-only`.
+7. Open `/personal` and show the owner daily review surface, Visual Chaos Score, Organization Zones, and Smart Manual Checklist.
 8. Point at `simulation-only`, `proposal-only`, `No real filesystem access`, `emailSendAccess: false`, and `actionExecuted: false`.
 
 Keep the narration practical: product value, engineering quality, and governance discipline.
@@ -117,8 +117,8 @@ Keep the narration practical: product value, engineering quality, and governance
 Before sharing the project publicly:
 
 - run the four verification commands from the README
-- open `/`, `/demo`, and `/lab`
-- open `/personal` and confirm it is separate from `/lab`
+- open `/`, `/demo`, `/lab`, and `/personal`
+- confirm `/personal` is separate from `/lab`
 - confirm mobile and desktop layouts remain readable
 - confirm no critical console or hydration errors appear
 - confirm no broken links in the top navigation

@@ -70,13 +70,13 @@ const walkthrough = [
   },
   {
     step: '03',
-    title: 'Open Personal Organizer Mode',
-    description: 'Use `/personal` to see the owner-facing daily surface for documents, photos, emails, and priorities.'
+    title: 'Review the Private Lab',
+    description: 'Walk through the technical governance lab, approval flow, audit metadata, and safety indicators.'
   },
   {
     step: '04',
-    title: 'Review the Private Lab',
-    description: 'Walk through the technical governance lab, approval flow, audit metadata, and safety indicators.'
+    title: 'Open Personal Organizer Mode',
+    description: 'Use `/personal` to see the owner-facing daily surface for documents, photos, emails, and priorities.'
   }
 ]
 
@@ -200,16 +200,16 @@ const demoNavigation = [
     detail: 'Shows the visible product layer, typed API boundary, fallback behavior, and a low-risk public interaction.'
   },
   {
-    href: '/personal',
-    label: 'Personal mode',
-    title: 'Then show the owner daily surface',
-    detail: 'Explains how Humanity Guide OS helps organize priorities with manual checklists and no destructive actions.'
-  },
-  {
     href: '/lab',
     label: 'Private Lab',
-    title: 'Close with governance depth',
+    title: 'Then show governance depth',
     detail: 'Reveals GENIO metadata, approval states, audit events, execution planning preview, and simulation-only safety.'
+  },
+  {
+    href: '/personal',
+    label: 'Personal mode',
+    title: 'Close with the owner daily surface',
+    detail: 'Explains how Humanity Guide OS helps organize priorities with manual checklists and no destructive actions.'
   }
 ]
 
@@ -277,8 +277,8 @@ const recruiterQuickStart = [
   },
   {
     step: '04',
-    title: 'Close with architecture',
-    description: 'Use `/about` and the README to separate current features from future controlled blueprints.'
+    title: 'Close with Personal Mode',
+    description: 'Open `/personal` to show the owner-facing daily organization surface and manual execution boundaries.'
   }
 ]
 
@@ -628,8 +628,8 @@ export default function HomePage() {
             <p className="result-eyebrow">Recommended presentation flow</p>
             <h2 className="section-title">Show the product, then show the safety model</h2>
             <p>
-              Start with `/demo`, then open `/lab` to show the guided organization simulation, and finish with the
-              architecture page for implementation details.
+              Start with `/demo`, then open `/lab` to show the guided governance simulation, and finish with
+              `/personal` to show the daily owner experience.
             </p>
           </div>
 
@@ -639,6 +639,9 @@ export default function HomePage() {
             </Link>
             <Link className="secondary-button" href="/lab">
               Open /lab
+            </Link>
+            <Link className="secondary-button" href="/personal">
+              Open /personal
             </Link>
             <Link className="secondary-button" href="/about">
               Architecture
