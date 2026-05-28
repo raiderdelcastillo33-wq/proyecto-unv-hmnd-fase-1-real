@@ -45,6 +45,14 @@ La demo debe cerrar reforzando que approval metadata no ejecuta acciones y que t
 
 Antes de compartir la URL publica, completar la checklist final en `docs/DEMO_LAUNCH_CHECKLIST.md`: `Portfolio Deployment Readiness` y `Before Sharing With Recruiters`.
 
+## Public Showcase Assets
+
+- [Recruiter Demo Guide](docs/RECRUITER_DEMO_GUIDE.md)
+- [Recruiter Demo Script](docs/RECRUITER_DEMO_SCRIPT.md)
+- [Demo Launch Checklist](docs/DEMO_LAUNCH_CHECKLIST.md)
+- [Screenshot Plan](docs/assets/SCREENSHOT_PLAN.md)
+- [Portfolio Release Notes](docs/assets/PORTFOLIO_RELEASE_NOTES.md)
+
 El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Humanity Guide OS:
 
 - portfolio frontend para reclutadores
