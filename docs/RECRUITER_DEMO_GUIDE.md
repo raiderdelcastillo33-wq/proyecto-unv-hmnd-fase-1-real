@@ -41,6 +41,7 @@ Use `docs/DEMO_LAUNCH_CHECKLIST.md` before recordings, recruiter calls, and Verc
 - Time saved and clarity estimates.
 - Email priority detection, category suggestions, and draft previews.
 - Personal daily planning UI for documents, photos, email, and priorities.
+- Personal dashboard visuals: daily operating status, chaos score, clarity score, focus score, organization zones, and smart manual checklist.
 
 These are UI and metadata demonstrations. The email preview uses fake data and does not connect to Gmail or a real mailbox.
 
@@ -83,7 +84,7 @@ For a short video:
 2. Scroll through Recruiter Quick Start.
 3. Show Current capabilities vs future blueprints.
 4. Open `/demo` and send one safe prompt.
-5. Open `/personal` and show the owner daily review surface.
+5. Open `/personal` and show the owner daily review surface, Visual Chaos Score, Organization Zones, and Smart Manual Checklist.
 6. Open `/lab`, unlock with the local owner code, and show the organization simulation.
 7. Show the email preview panel and point out `executionMode: email-preview-only`.
 8. Point at `simulation-only`, `proposal-only`, `No real filesystem access`, `emailSendAccess: false`, and `actionExecuted: false`.

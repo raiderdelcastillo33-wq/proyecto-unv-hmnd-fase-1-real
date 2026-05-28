@@ -172,6 +172,15 @@ Today's Focus responde:
 - que revisar manualmente
 - donde empezar sin abrumarme
 
+Personal Dashboard Visual Upgrade agrega:
+
+- Personal Hero Premium con estado del dia, claridad estimada, focus level y organization readiness.
+- Daily Organization Dashboard con Documents to review, Screenshots to classify, Downloads to clean, Emails pending review y Projects requiring attention.
+- Visual Chaos Score con chaos score, clarity score, focus score, progress bars y today improvement.
+- Organization Zones: Work, Personal, Finance, Learning, Projects y Archive later.
+- Smart Manual Checklist: start here, do not touch yet, review manually, low risk cleanup y high attention files.
+- Today Focus Panel con recommended first action, avoid overwhelm y estimated manual session time.
+
 Relacion con `/lab`:
 
 - `/personal` es la superficie de uso diario del owner.

@@ -1436,10 +1436,120 @@ textarea:focus-visible {
   align-items: stretch;
 }
 
+.personal-hero-kicker {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+}
+
+.personal-os-card {
+  border-color: rgba(116, 240, 186, 0.2);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.08), rgba(105, 211, 255, 0.04)),
+    rgba(7, 12, 19, 0.92);
+}
+
+.personal-dashboard,
+.personal-score-panel {
+  border: 1px solid rgba(105, 211, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.06), rgba(116, 240, 186, 0.03)),
+    rgba(8, 13, 22, 0.72);
+}
+
+.personal-dashboard-grid,
 .personal-mode-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
+}
+
+.personal-dashboard-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.personal-dashboard-card {
+  min-height: 188px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)),
+    rgba(8, 13, 22, 0.88);
+  padding: 18px;
+}
+
+.personal-dashboard-card strong {
+  display: block;
+  margin: 18px 0 8px;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+}
+
+.personal-dashboard-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.personal-dashboard-card--attention {
+  border-color: rgba(244, 193, 111, 0.22);
+}
+
+.personal-dashboard-card--safe {
+  border-color: rgba(116, 240, 186, 0.22);
+}
+
+.personal-score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.personal-score-card {
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.88);
+  padding: 18px;
+}
+
+.personal-score-card div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.personal-score-card span {
+  color: var(--muted);
+}
+
+.personal-score-card strong {
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+}
+
+.personal-score-card p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.personal-progress-track {
+  height: 10px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.personal-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--success));
 }
 
 .personal-workflow {
@@ -1555,6 +1665,56 @@ textarea:focus-visible {
 
 .personal-focus-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.personal-zone-grid,
+.personal-smart-checklist {
+  display: grid;
+  gap: 16px;
+}
+
+.personal-zone-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.personal-zone-card,
+.personal-smart-checklist article,
+.personal-focus-panel {
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.88);
+  padding: 18px;
+}
+
+.personal-zone-card h3,
+.personal-focus-panel h3,
+.personal-smart-checklist h3 {
+  margin: 12px 0 0;
+  font-family: var(--font-heading);
+  font-size: 1.16rem;
+}
+
+.personal-zone-card p,
+.personal-focus-panel p,
+.personal-smart-checklist p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.personal-focus-panel {
+  margin-bottom: 16px;
+  border-color: rgba(116, 240, 186, 0.2);
+}
+
+.personal-smart-checklist {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.personal-smart-checklist h3 {
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 0.92rem;
 }
 
 .personal-safety {
@@ -1977,10 +2137,14 @@ textarea:focus-visible {
   .email-chaos-grid,
   .email-category-grid,
   .email-preview-row,
+  .personal-dashboard-grid,
+  .personal-score-grid,
   .personal-mode-grid,
   .personal-workflow-grid,
   .personal-target-grid,
   .personal-focus-grid,
+  .personal-zone-grid,
+  .personal-smart-checklist,
   .personal-proposal-row,
   .personal-plan-details,
   .cv-grid,

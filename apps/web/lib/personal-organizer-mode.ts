@@ -61,13 +61,56 @@ export type PersonalOrganizationFocus = {
   doNotTouch: string[]
   reviewManually: string[]
   startHere: string
+  recommendedFirstAction: string
+  estimatedManualSessionTime: string
+  focusPrinciple: string
+}
+
+export type PersonalDashboardMetric = {
+  id: string
+  label: string
+  value: string
+  helper: string
+  tone: 'calm' | 'attention' | 'safe'
+}
+
+export type PersonalScoreMetric = {
+  id: string
+  label: string
+  score: number
+  helper: string
+}
+
+export type PersonalOrganizationZone = {
+  id: string
+  label: 'Work' | 'Personal' | 'Finance' | 'Learning' | 'Projects' | 'Archive later'
+  summary: string
+  suggestedAction: string
+  riskLevel: PersonalOrganizerRiskLevel
+}
+
+export type SmartManualChecklist = {
+  startHere: string[]
+  doNotTouchYet: string[]
+  reviewManually: string[]
+  lowRiskCleanup: string[]
+  highAttentionFiles: string[]
 }
 
 export type PersonalOrganizerDailyPlan = {
   id: string
   label: string
   status: PersonalOrganizerModeStatus
+  dayStatus: string
+  clarityEstimate: string
+  focusLevel: string
+  organizationReadiness: string
   safetyBoundary: PersonalOrganizerSafetyBoundary
+  dashboardMetrics: PersonalDashboardMetric[]
+  scoreMetrics: PersonalScoreMetric[]
+  todayImprovement: string
+  organizationZones: PersonalOrganizationZone[]
+  smartManualChecklist: SmartManualChecklist
   firstUseWorkflow: PersonalFirstUseStep[]
   organizationTargets: PersonalOrganizerTarget[]
   signals: PersonalOrganizerSignal[]
@@ -98,7 +141,120 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
     id: 'humanity-guide-personal-organizer-mode',
     label: 'Humanity Guide OS - Personal Organizer Mode',
     status: 'ready-for-owner-review',
+    dayStatus: 'Ready for a calm first pass',
+    clarityEstimate: '72%',
+    focusLevel: 'Focused but gentle',
+    organizationReadiness: 'Manual review ready',
     safetyBoundary: personalOrganizerSafetyBoundary,
+    dashboardMetrics: [
+      {
+        id: 'documents-review',
+        label: 'Documents to review',
+        value: '18',
+        helper: 'Invoices, drafts, notes, and exports queued for manual review.',
+        tone: 'attention'
+      },
+      {
+        id: 'screenshots-classify',
+        label: 'Screenshots to classify',
+        value: '11',
+        helper: 'Visual clutter candidates, no file movement performed.',
+        tone: 'calm'
+      },
+      {
+        id: 'downloads-clean',
+        label: 'Downloads to clean',
+        value: '24',
+        helper: 'Best place to start because it has low emotional friction.',
+        tone: 'attention'
+      },
+      {
+        id: 'emails-review',
+        label: 'Emails pending review',
+        value: '7',
+        helper: 'Reply-needed and finance-related messages remain preview-only.',
+        tone: 'safe'
+      },
+      {
+        id: 'projects-attention',
+        label: 'Projects requiring attention',
+        value: '3',
+        helper: 'Project folders should be reviewed manually before any future action.',
+        tone: 'calm'
+      }
+    ],
+    scoreMetrics: [
+      {
+        id: 'chaos-score',
+        label: 'Chaos score',
+        score: 64,
+        helper: 'Moderate clutter pressure, mostly from Downloads and screenshots.'
+      },
+      {
+        id: 'clarity-score',
+        label: 'Clarity score',
+        score: 72,
+        helper: 'Enough structure exists to start without a full reorganization.'
+      },
+      {
+        id: 'focus-score',
+        label: 'Focus score',
+        score: 81,
+        helper: 'One small manual session can create visible progress.'
+      }
+    ],
+    todayImprovement: '+18% expected clarity after one 20-minute manual pass',
+    organizationZones: [
+      {
+        id: 'zone-work',
+        label: 'Work',
+        summary: 'Drafts, client notes, exports, and project references.',
+        suggestedAction: 'Review active work files before archiving anything.',
+        riskLevel: 'medium'
+      },
+      {
+        id: 'zone-personal',
+        label: 'Personal',
+        summary: 'Photos, personal notes, and non-urgent life admin.',
+        suggestedAction: 'Separate personal memories from temporary screenshots.',
+        riskLevel: 'low'
+      },
+      {
+        id: 'zone-finance',
+        label: 'Finance',
+        summary: 'Invoices, receipts, and payment-related messages.',
+        suggestedAction: 'Review manually before moving or renaming in any future phase.',
+        riskLevel: 'medium'
+      },
+      {
+        id: 'zone-learning',
+        label: 'Learning',
+        summary: 'Courses, references, notes, and saved articles.',
+        suggestedAction: 'Group by topic, not by download date.',
+        riskLevel: 'low'
+      },
+      {
+        id: 'zone-projects',
+        label: 'Projects',
+        summary: 'Active folders and files tied to ongoing builds.',
+        suggestedAction: 'Do not touch project structure until reviewed.',
+        riskLevel: 'medium'
+      },
+      {
+        id: 'zone-archive',
+        label: 'Archive later',
+        summary: 'Old exports and low-priority reference material.',
+        suggestedAction: 'Leave for a later pass after high-attention items are reviewed.',
+        riskLevel: 'low'
+      }
+    ],
+    smartManualChecklist: {
+      startHere: ['Open Downloads manually.', 'Sort only obvious invoices and exports.', 'Stop after 20 minutes.'],
+      doNotTouchYet: ['Project folders.', 'Unknown documents.', 'Old photo libraries.'],
+      reviewManually: ['Finance files.', 'Emails waiting reply.', 'Screenshots with useful references.'],
+      lowRiskCleanup: ['Temporary exports.', 'Duplicate screenshots.', 'Newsletters and low-priority email previews.'],
+      highAttentionFiles: ['Invoices.', 'Client documents.', 'Project configuration files.']
+    },
     firstUseWorkflow: [
       {
         id: 'workflow-choose',
@@ -220,7 +376,10 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
         'Screenshots that may contain important references.',
         'Project files with unclear names.'
       ],
-      startHere: 'Begin with 20 minutes on Downloads, then stop and review the checklist.'
+      startHere: 'Begin with 20 minutes on Downloads, then stop and review the checklist.',
+      recommendedFirstAction: 'Open Downloads manually and review only obvious invoices, exports, and duplicate screenshots.',
+      estimatedManualSessionTime: '20 minutes',
+      focusPrinciple: 'One small step at a time. Do not reorganize your whole life today.'
     },
     checklist: [
       'Review today signals before any future action.',

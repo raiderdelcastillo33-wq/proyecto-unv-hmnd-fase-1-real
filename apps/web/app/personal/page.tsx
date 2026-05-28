@@ -22,8 +22,9 @@ export default function PersonalOrganizerPage() {
     <main className="page-shell personal-page">
       <section className="hero personal-hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Owner daily surface</span>
-          <h1>Humanity Guide OS - Personal Organizer Mode</h1>
+          <span className="hero-badge">Personal operating system</span>
+          <p className="personal-hero-kicker">Humanity Guide OS</p>
+          <h1>Personal Organizer Mode</h1>
           <p>
             A calm daily workspace for organizing documents, photos, emails, and priorities through governed
             proposals. It is built for clarity, not automation.
@@ -45,32 +46,77 @@ export default function PersonalOrganizerPage() {
           </div>
         </div>
 
-        <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">Daily clarity snapshot</p>
-          <h2>Review first. Decide calmly. Execute nothing here.</h2>
+        <aside className="hero-card hero-card--spotlight personal-os-card">
+          <p className="result-eyebrow">Daily operating status</p>
+          <h2>{plan.dayStatus}</h2>
           <p className="meta-text">
             This mode turns organization signals into a practical first-use plan. It does not write, delete, move,
             send, reply, scan the host, or run background agents.
           </p>
           <div className="metrics-grid">
             <article className="metric-card">
-              <strong className="metric-value">{plan.signals.length}</strong>
-              <span className="metric-label">Daily signals</span>
+              <strong className="metric-value">{plan.clarityEstimate}</strong>
+              <span className="metric-label">Estimated clarity</span>
             </article>
             <article className="metric-card">
-              <strong className="metric-value">{plan.proposals.length}</strong>
-              <span className="metric-label">Preview proposals</span>
+              <strong className="metric-value">{plan.focusLevel}</strong>
+              <span className="metric-label">Focus level</span>
+            </article>
+            <article className="metric-card">
+              <strong className="metric-value">{plan.organizationReadiness}</strong>
+              <span className="metric-label">Organization readiness</span>
             </article>
             <article className="metric-card">
               <strong className="metric-value">0</strong>
               <span className="metric-label">Real destructive actions</span>
             </article>
-            <article className="metric-card">
-              <strong className="metric-value">Owner</strong>
-              <span className="metric-label">Final authority</span>
-            </article>
           </div>
         </aside>
+      </section>
+
+      <section className="section-block personal-dashboard" aria-labelledby="daily-dashboard-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Daily Organization Dashboard</p>
+          <h2 className="section-title" id="daily-dashboard-heading">
+            Your calm command center for today
+          </h2>
+          <p>Everything here is mock/read-only guidance. The owner chooses what to do manually.</p>
+        </div>
+
+        <div className="personal-dashboard-grid">
+          {plan.dashboardMetrics.map((metric) => (
+            <article className={`personal-dashboard-card personal-dashboard-card--${metric.tone}`} key={metric.id}>
+              <span className="info-chip">{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <p>{metric.helper}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block personal-score-panel" aria-labelledby="visual-score-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Visual Chaos Score</p>
+          <h2 className="section-title" id="visual-score-heading">
+            Clarity is improving one manual pass at a time
+          </h2>
+          <p>{plan.todayImprovement}</p>
+        </div>
+
+        <div className="personal-score-grid">
+          {plan.scoreMetrics.map((metric) => (
+            <article className="personal-score-card" key={metric.id}>
+              <div>
+                <span>{metric.label}</span>
+                <strong>{metric.score}%</strong>
+              </div>
+              <div className="personal-progress-track" aria-label={`${metric.label} progress`}>
+                <span style={{ width: `${metric.score}%` }} />
+              </div>
+              <p>{metric.helper}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="section-block personal-workflow" aria-labelledby="first-use-workflow-heading">
@@ -140,6 +186,26 @@ export default function PersonalOrganizerPage() {
         </div>
       </section>
 
+      <section className="section-block" aria-labelledby="organization-zones-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Organization Zones</p>
+          <h2 className="section-title" id="organization-zones-heading">
+            Give every type of chaos a calm place
+          </h2>
+        </div>
+
+        <div className="personal-zone-grid">
+          {plan.organizationZones.map((zone) => (
+            <article className="personal-zone-card" key={zone.id}>
+              <span className="info-chip">{zone.label}</span>
+              <h3>{zone.summary}</h3>
+              <p>{zone.suggestedAction}</p>
+              <span className="info-chip">risk: {zone.riskLevel}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="section-block" aria-labelledby="proposal-heading">
         <div className="section-head">
           <p className="result-eyebrow">Personal Organization Plan</p>
@@ -189,8 +255,18 @@ export default function PersonalOrganizerPage() {
           <h2 className="section-title" id="today-focus-heading">
             Start without overwhelming yourself
           </h2>
-          <p>{plan.todayFocus.startHere}</p>
+          <p>{plan.todayFocus.focusPrinciple}</p>
         </div>
+
+        <article className="personal-focus-panel">
+          <span className="info-chip">one small step at a time</span>
+          <h3>{plan.todayFocus.recommendedFirstAction}</h3>
+          <p>{plan.todayFocus.startHere}</p>
+          <div className="response-meta">
+            <span className="info-chip">avoid overwhelm</span>
+            <span className="info-chip">estimated manual session time: {plan.todayFocus.estimatedManualSessionTime}</span>
+          </div>
+        </article>
 
         <div className="personal-focus-grid">
           <article className="showcase-card">
@@ -216,6 +292,48 @@ export default function PersonalOrganizerPage() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="smart-checklist-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Smart Manual Checklist</p>
+          <h2 className="section-title" id="smart-checklist-heading">
+            Practical steps with clear boundaries
+          </h2>
+        </div>
+
+        <div className="personal-smart-checklist">
+          <article>
+            <h3>start here</h3>
+            {plan.smartManualChecklist.startHere.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+          </article>
+          <article>
+            <h3>do not touch yet</h3>
+            {plan.smartManualChecklist.doNotTouchYet.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+          </article>
+          <article>
+            <h3>review manually</h3>
+            {plan.smartManualChecklist.reviewManually.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+          </article>
+          <article>
+            <h3>low risk cleanup</h3>
+            {plan.smartManualChecklist.lowRiskCleanup.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
+          </article>
+          <article>
+            <h3>high attention files</h3>
+            {plan.smartManualChecklist.highAttentionFiles.map((item) => (
+              <p key={item}>{item}</p>
+            ))}
           </article>
         </div>
       </section>
