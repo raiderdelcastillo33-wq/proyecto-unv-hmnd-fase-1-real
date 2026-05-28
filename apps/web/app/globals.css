@@ -2803,6 +2803,124 @@ textarea:focus-visible {
   cursor: not-allowed;
 }
 
+/* ===== Private Lab Navigator Improvements ===== */
+
+.lab-navigator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.navigator-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(105, 211, 255, 0.14);
+  background: rgba(105, 211, 255, 0.06);
+  text-decoration: none;
+  transition: all 200ms ease;
+  align-content: start;
+}
+
+.navigator-card:hover {
+  border-color: rgba(105, 211, 255, 0.28);
+  background: rgba(105, 211, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.navigator-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.navigator-card-header h4 {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.nav-category-badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(116, 240, 186, 0.1);
+  border: 1px solid rgba(116, 240, 186, 0.2);
+  color: var(--success);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.navigator-card-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ===== Getting Started Section ===== */
+
+.getting-started-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.getting-started-step {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(8, 13, 22, 0.72);
+  display: grid;
+  gap: 8px;
+}
+
+.getting-started-step h4 {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+}
+
+.getting-started-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* ===== Blueprint Groups ===== */
+
+.blueprint-group-divider {
+  margin: 40px 0 20px;
+  padding: 20px 0 0;
+  border-top: 2px solid rgba(105, 211, 255, 0.14);
+  display: grid;
+  gap: 6px;
+}
+
+.blueprint-group-divider p {
+  margin: 0;
+  color: var(--primary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.blueprint-group-divider h3 {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+}
+
 @media (max-width: 480px) {
   .page-shell {
     width: min(100% - 20px, 1200px);

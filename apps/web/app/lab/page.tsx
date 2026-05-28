@@ -585,7 +585,7 @@ export default function LabPage() {
             <div className="panel-heading">
               <p className="result-eyebrow">Governed tool request</p>
               <h2>Generate an auditable proposal</h2>
-              <p>Select a subordinate agent and a controlled tool. GENIO metadata governs risk before future tool access.</p>
+              <p>Select a subordinate agent and a controlled tool. GENIO metadata governs risk before future tool access. This generates a proposal metadata only—no real execution occurs.</p>
             </div>
 
             <section className="result-state" id="governance-overview">
@@ -622,6 +622,12 @@ export default function LabPage() {
             <ControlledReadOnlyPreviewPanel />
             <ControlledEmailPreviewPanel />
             <ControlledExecutionPlanningPanel />
+
+            {/* ===== Infrastructure & Governance ===== */}
+            <section className="blueprint-group-divider">
+              <p className="result-eyebrow">Infrastructure</p>
+              <h3>Governance, Auth & Observability</h3>
+            </section>
 
             <section className="result-state" id="safety-boundaries">
               <p className="result-eyebrow">Auth blueprint</p>
@@ -795,7 +801,7 @@ export default function LabPage() {
             <section className="result-state" id="agent-catalog">
               <p className="result-eyebrow">Agent Catalog</p>
               <h3>Available governed agents</h3>
-              <p>Choose the agent that will prepare the proposal metadata. This does not execute actions.</p>
+              <p>Choose the agent that will prepare the proposal metadata. Agents have specific roles (Operator for execution planning, Reviewer for risk assessment, Planner for strategy). This does not execute actions.</p>
             </section>
 
             <label className="field-label" htmlFor="lab-agent">
@@ -806,9 +812,10 @@ export default function LabPage() {
               id="lab-agent"
               onChange={(event) => setAgentId(event.target.value)}
               value={agentId}
+              title={`${selectedAgent?.label}: ${selectedAgent?.description}`}
             >
               {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>
+                <option key={agent.id} value={agent.id} title={agent.description}>
                   {agent.label}
                 </option>
               ))}
@@ -831,7 +838,7 @@ export default function LabPage() {
             <section className="result-state" id="tool-catalog">
               <p className="result-eyebrow">Tool Catalog</p>
               <h3>Available governed tools</h3>
-              <p>Tools generate safe proposals only. They do not access real systems.</p>
+              <p>Tools available for this agent generate safe proposals only. Each tool has specific risk assessment and approval requirements. Tools do not access real systems.</p>
             </section>
 
             <label className="field-label" htmlFor="lab-tool">
@@ -842,9 +849,10 @@ export default function LabPage() {
               id="lab-tool"
               onChange={(event) => setToolId(event.target.value)}
               value={toolId}
+              title={`${selectedTool?.label}: ${selectedTool?.description}`}
             >
               {visibleTools.map((tool) => (
-                <option key={tool.id} value={tool.id}>
+                <option key={tool.id} value={tool.id} title={tool.description}>
                   {tool.label}
                 </option>
               ))}
