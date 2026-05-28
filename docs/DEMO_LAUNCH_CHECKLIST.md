@@ -178,6 +178,40 @@ Then verify:
 - no hydration warnings
 - no secret is exposed as `NEXT_PUBLIC_OWNER_ACCESS_CODE`
 
+## Portfolio Deployment Readiness
+
+Final checklist before sharing the public URL:
+
+- production build passes: `npm --prefix apps/web run build`
+- web tests pass: `npm --prefix apps/web run test`
+- API build passes: `npm run build:api`
+- backend/domain tests pass: `npm test`
+- Vercel project is linked to the correct repository
+- Vercel root directory is set to `apps/web`
+- main public routes are verified:
+  - `/`
+  - `/demo`
+  - `/lab`
+  - `/personal`
+- official screenshots are captured and named consistently
+- README is updated with the official recruiter walkthrough
+- `docs/RECRUITER_DEMO_SCRIPT.md` is ready for a 3-5 minute demo
+- no AGI, real runtime, autonomous execution, Gmail, filesystem execution, worker, DB/auth runtime, or OS-control claims appear in public copy
+- final deployed URL has been tested in a clean browser profile or private window
+
+## Before Sharing With Recruiters
+
+Run this final human review:
+
+- review the homepage hero and first-screen governance contract
+- review CTAs: `Try public demo`, `Explore governance lab`, `View personal organizer`
+- open DevTools and confirm there are no critical console errors
+- check a basic mobile viewport for readable text and non-overlapping cards
+- review README as it appears on GitHub
+- rehearse the 3-5 minute script in `docs/RECRUITER_DEMO_SCRIPT.md`
+- confirm screenshots do not show broken placeholders, secrets, owner codes, or loading states
+- confirm the demo language stays recruiter-safe: proposal-only, preview-only, blueprint-only, and no real execution
+
 ## Launch Gate
 
 The demo is ready when:

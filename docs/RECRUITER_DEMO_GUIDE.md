@@ -16,6 +16,8 @@ Recommended walkthrough:
 
 Use `docs/DEMO_LAUNCH_CHECKLIST.md` before recordings, recruiter calls, and Vercel deployment reviews.
 
+Before sharing the deployed URL, complete the `Portfolio Deployment Readiness` and `Before Sharing With Recruiters` sections in `docs/DEMO_LAUNCH_CHECKLIST.md`.
+
 ## For Recruiters
 
 Position the project as a recruiter-safe AI product showcase, not an autonomous system.

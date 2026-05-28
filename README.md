@@ -43,6 +43,8 @@ Showcase progression:
 
 La demo debe cerrar reforzando que approval metadata no ejecuta acciones y que toda capacidad sensible sigue preview-only, blueprint-only o simulation-only.
 
+Antes de compartir la URL publica, completar la checklist final en `docs/DEMO_LAUNCH_CHECKLIST.md`: `Portfolio Deployment Readiness` y `Before Sharing With Recruiters`.
+
 El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Humanity Guide OS:
 
 - portfolio frontend para reclutadores
