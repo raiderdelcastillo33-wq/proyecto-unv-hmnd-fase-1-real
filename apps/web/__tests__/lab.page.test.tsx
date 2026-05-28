@@ -109,6 +109,16 @@ describe('LabPage', () => {
     expect(screen.getAllByText('actionExecuted: false').length).toBeGreaterThan(0)
     expect(screen.getByText('Simulation complete - no real action executed')).toBeInTheDocument()
     expect(screen.getByLabelText('Simulation complete status')).toBeInTheDocument()
+    expect(screen.getByText('Controlled Read-Only Organization Preview')).toBeInTheDocument()
+    expect(screen.getByText('Real utility, limited to browser-selected metadata.')).toBeInTheDocument()
+    expect(screen.getByText('executionMode: read-only-preview')).toBeInTheDocument()
+    expect(screen.getAllByText('actionExecuted: false').length).toBeGreaterThan(0)
+    expect(screen.getByText('No write/delete/move')).toBeInTheDocument()
+    expect(screen.getByLabelText('Read-only preview guardrails')).toBeInTheDocument()
+    expect(screen.getAllByText('Metadata only').length).toBeGreaterThan(0)
+    expect(screen.getByText('No server upload')).toBeInTheDocument()
+    expect(screen.getByLabelText('Select folder for read-only preview')).toBeInTheDocument()
+    expect(screen.getByText('No folder selected yet')).toBeInTheDocument()
     expect(screen.getByText('No overautomation')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'After' }))
     expect(screen.getByRole('button', { name: 'After' })).toHaveAttribute('aria-pressed', 'true')
@@ -151,6 +161,91 @@ describe('LabPage', () => {
     expect(screen.getByText('Risk high')).toBeInTheDocument()
     expect(screen.getByText('Hierarchy specialist')).toBeInTheDocument()
     expect(screen.getByText('Parent genio-central')).toBeInTheDocument()
+  })
+
+  it('generates a browser-only read-only organization preview from selected metadata', async () => {
+    const fetchMock = global.fetch as jest.Mock
+    fetchMock.mockResolvedValueOnce(
+      createJsonResponse({
+        success: true,
+        data: {
+          agents: [
+            {
+              id: 'operator-agent',
+              label: 'Operator',
+              description: 'Operational planning and conservative command proposals.',
+              category: 'operations',
+              capabilities: ['task coordination', 'command proposal'],
+              riskProfile: 'high',
+              allowedTools: ['review-risk']
+            }
+          ],
+          tools: [
+            {
+              id: 'review-risk',
+              label: 'Review Risk',
+              description: 'Review risks, mitigations, and test coverage.',
+              category: 'review',
+              riskLevel: 'medium',
+              requiresApproval: false,
+              outputType: 'risk-review'
+            }
+          ]
+        }
+      })
+    )
+
+    render(<LabPage />)
+
+    fireEvent.change(screen.getByLabelText('Owner access code'), {
+      target: { value: 'owner-code' }
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Unlock lab' }))
+
+    expect(await screen.findByText('Controlled Read-Only Organization Preview')).toBeInTheDocument()
+
+    const screenshot = new File(['preview'], 'Screenshot 2026-05-01.png', {
+      type: 'image/png',
+      lastModified: 1
+    })
+    const screenshotCopy = new File(['preview'], 'Screenshot 2026-05-01 copy.png', {
+      type: 'image/png',
+      lastModified: 2
+    })
+    const invoice = new File(['invoice'], 'invoice_final_FINAL_may.pdf', {
+      type: 'application/pdf',
+      lastModified: 3
+    })
+
+    Object.defineProperty(screenshot, 'webkitRelativePath', {
+      value: 'Downloads/Screenshot 2026-05-01.png'
+    })
+    Object.defineProperty(screenshotCopy, 'webkitRelativePath', {
+      value: 'Downloads/Screenshot 2026-05-01 copy.png'
+    })
+    Object.defineProperty(invoice, 'webkitRelativePath', {
+      value: 'Downloads/invoice_final_FINAL_may.pdf'
+    })
+
+    fireEvent.change(screen.getByLabelText('Select folder for read-only preview'), {
+      target: {
+        files: [screenshot, screenshotCopy, invoice]
+      }
+    })
+
+    expect(screen.getByText('Selected metadata records')).toBeInTheDocument()
+    expect(screen.getByText('Screenshots detected')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Generate read-only preview' }))
+
+    expect(screen.getByText('Organization proposal')).toBeInTheDocument()
+    expect(screen.getAllByText('Controlled Read-Only Organization Preview').length).toBeGreaterThan(0)
+    expect(screen.getByText('Preview/screenshot')).toBeInTheDocument()
+    expect(screen.getAllByText('Duplicate candidates').length).toBeGreaterThan(0)
+    expect(screen.getByText('filesystemWriteAccess: false')).toBeInTheDocument()
+    expect(screen.getByText('filesystemDeleteAccess: false')).toBeInTheDocument()
+    expect(screen.getByText('filesystemMoveAccess: false')).toBeInTheDocument()
+    expect(screen.getByText('browser-selected-metadata-only')).toBeInTheDocument()
   })
 
   it('renders ToolResult, approval metadata, commands, and audit events', async () => {

@@ -76,6 +76,17 @@ Current MVP UI experience:
 - The final CTA states `Simulation complete - no real action executed`.
 - No filesystem access, host scanning, file movement, file deletion, upload, indexing, or runtime execution exists.
 
+Controlled read-only organization preview:
+
+- `/lab` now includes a browser-only read-only preview bridge.
+- The owner manually selects a folder using the browser file picker.
+- The app analyzes only metadata exposed by the browser `FileList`: filename, relative browser path, MIME type, size, and last modified timestamp.
+- The preview detects screenshots, image groups, duplicate candidates, problematic names, and mixed categories.
+- Results produce organization proposals only.
+- No file contents are parsed, no files are uploaded, and no server filesystem API is used.
+- Required safety metadata remains visible: `simulationOnly: false`, `executionMode: read-only-preview`, `actionExecuted: false`, `filesystemWriteAccess: false`, `filesystemDeleteAccess: false`, `filesystemMoveAccess: false`.
+- Write, delete, move, rename, shell execution, host-wide scanning, and autonomous background actions remain unavailable.
+
 Presentation and navigation readiness:
 
 - `/` now works as a recruiter walkthrough hub for Humanity Guide OS.

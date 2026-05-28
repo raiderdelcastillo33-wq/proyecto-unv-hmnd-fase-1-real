@@ -9,6 +9,7 @@ import {
   type PrivateLabGovernanceCatalog,
   type PrivateLabToolCatalogItem
 } from '@/lib/private-lab'
+import { ControlledReadOnlyPreviewPanel } from './ControlledReadOnlyPreviewPanel'
 import { OrganizationSimulationPanel } from './OrganizationSimulationPanel'
 
 type ToolResult = {
@@ -467,6 +468,7 @@ export default function LabPage() {
             </section>
 
             <OrganizationSimulationPanel />
+            <ControlledReadOnlyPreviewPanel />
 
             <section className="result-state">
               <p className="result-eyebrow">Auth blueprint</p>

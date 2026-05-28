@@ -11,6 +11,7 @@ import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
 import { HUMANITY_GUIDE_ORGANIZATION_SIMULATION } from '../../src/domain/organization/OrganizationSimulation'
+import { READ_ONLY_ORGANIZATION_PREVIEW_POLICY } from '../../src/domain/organization/ReadOnlyOrganizationPreview'
 import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
 import { User } from '../../src/domain/entities/User'
 import { AIInteractionRepository } from '../../src/domain/repositories/AIInteractionRepository'
@@ -380,6 +381,22 @@ export function mockTests(): TestCase[] {
         assert.ok(simulation.genioAnalysis.governanceBoundary.includes('cannot read, move, rename, delete, or execute'))
         assert.ok(simulation.nonCapabilities.includes('No real filesystem access.'))
         assert.ok(simulation.nonCapabilities.includes('No user behavior scoring.'))
+      }
+    },
+    {
+      name: 'Organization: read-only preview policy blocks write delete and move access',
+      run: async () => {
+        const policy = READ_ONLY_ORGANIZATION_PREVIEW_POLICY
+
+        assert.equal(policy.simulationOnly, false)
+        assert.equal(policy.executionMode, 'read-only-preview')
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.filesystemWriteAccess, false)
+        assert.equal(policy.filesystemDeleteAccess, false)
+        assert.equal(policy.filesystemMoveAccess, false)
+        assert.equal(policy.filesystemReadMode, 'browser-selected-metadata-only')
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.ownerControlled, true)
       }
     },
     {

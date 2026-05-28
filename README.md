@@ -80,6 +80,16 @@ Primera experiencia MVP en `/lab`:
 - Safety indicators visibles: simulation mode, proposal-only, no filesystem access, no execution, no host scanning y no automation.
 - CTA final: `Simulation complete - no real action executed`.
 
+Controlled read-only preview:
+
+- Primer puente seguro entre simulacion y utilidad real limitada.
+- El owner puede seleccionar manualmente una carpeta desde el navegador.
+- El sistema analiza solo metadata basica entregada por `FileList`: nombre, ruta relativa de navegador, tipo, tamano y fecha.
+- Detecta screenshots, imagenes, duplicados simples, nombres problematicos y mezcla de categorias.
+- Genera propuesta de organizacion preview-only.
+- No hay upload al servidor, no lectura de contenido, no `fs`, no terminal, no shell, no background scan y no host-wide scanning.
+- Campos de seguridad visibles: `simulationOnly: false`, `executionMode: read-only-preview`, `actionExecuted: false`, `filesystemWriteAccess: false`, `filesystemDeleteAccess: false`, `filesystemMoveAccess: false`.
+
 Presentation readiness:
 
 - Home como hub de walkthrough para recruiters.

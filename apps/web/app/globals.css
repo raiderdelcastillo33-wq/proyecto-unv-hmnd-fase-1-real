@@ -1254,6 +1254,87 @@ textarea:focus-visible {
   margin: 0;
 }
 
+.read-only-preview-panel {
+  display: grid;
+  gap: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(105, 211, 255, 0.2);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.08), rgba(116, 240, 186, 0.04)),
+    rgba(6, 10, 18, 0.9);
+  padding: 22px;
+}
+
+.read-only-guardrails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(105, 211, 255, 0.18);
+  background: rgba(105, 211, 255, 0.08);
+  padding: 14px;
+  color: var(--muted);
+}
+
+.read-only-guardrails strong {
+  color: var(--primary);
+}
+
+.read-only-guardrails span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(7, 12, 19, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  font-size: 0.82rem;
+}
+
+.read-only-picker {
+  display: grid;
+  gap: 12px;
+}
+
+.file-input {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(8, 13, 22, 0.9);
+  color: var(--muted);
+  padding: 14px;
+}
+
+.read-only-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.read-only-metrics div {
+  min-height: 96px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.read-only-metrics span {
+  display: block;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.read-only-metrics p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.result-state--compact {
+  min-height: auto;
+}
+
 @keyframes softReveal {
   from {
     opacity: 0;
@@ -1663,6 +1744,7 @@ textarea:focus-visible {
   .before-after-grid,
   .clarity-score,
   .simulation-complete,
+  .read-only-metrics,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {
