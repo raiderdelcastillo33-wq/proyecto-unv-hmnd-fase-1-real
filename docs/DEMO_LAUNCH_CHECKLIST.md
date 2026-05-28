@@ -118,6 +118,43 @@ Additional capture options:
 - `/personal` Daily Organization Dashboard and Visual Chaos Score.
 - `/personal` Smart Manual Checklist, Organization Zones, and Today's Focus cards.
 
+## Official Screenshot Capture Guide
+
+Recommended capture setup:
+
+- Viewport: 1440 x 1200 for desktop screenshots.
+- Secondary viewport: 390 x 844 for mobile sanity checks.
+- Browser zoom: 100%.
+- Theme: keep dark mode consistent.
+- Console: clear before each capture and confirm no critical errors.
+
+Capture order:
+
+1. `/` homepage hero, governance contract, and recruiter presentation sections.
+2. `/demo` after one safe prompt response.
+3. `/lab` organization simulation top section.
+4. `/lab` controlled read-only or controlled email preview guardrails.
+5. `/personal` daily owner surface and manual checklist.
+
+Naming convention:
+
+```text
+01-home-governance-contract.png
+02-demo-safe-response.png
+03-lab-governance-simulation.png
+04-lab-preview-guardrails.png
+05-personal-owner-dashboard.png
+```
+
+Before exporting screenshots:
+
+- avoid broken placeholders
+- avoid loading spinners
+- keep the top navigation visible when useful
+- confirm text does not overlap on desktop or mobile
+- confirm safety chips remain visible where relevant
+- do not capture secrets, local owner codes, tokens, or private environment values
+
 ## Deployment Readiness
 
 Before deploying or recording:

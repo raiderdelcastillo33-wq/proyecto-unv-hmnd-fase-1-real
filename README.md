@@ -28,6 +28,21 @@ Que debe mirar un recruiter:
 3. `/lab`: GENIO governance, approvals, audit metadata, previews y execution planning simulation-only.
 4. `/personal`: superficie diaria del owner, checklist manual y limites no destructivos.
 
+## Official Recruiter Walkthrough
+
+```text
+Home -> /demo -> /lab -> /personal
+```
+
+Showcase progression:
+
+- Home explica la vision, el contrato de gobernanza y la diferencia entre capacidades actuales, previews y blueprints.
+- `/demo` muestra la interaccion publica segura y la frontera entre UI, API y fallback.
+- `/lab` hace visible GENIO governance, approvals, audit metadata, previews y simulation-only execution planning.
+- `/personal` muestra la experiencia owner-controlled con checklist manual y limites no destructivos.
+
+La demo debe cerrar reforzando que approval metadata no ejecuta acciones y que toda capacidad sensible sigue preview-only, blueprint-only o simulation-only.
+
 El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Humanity Guide OS:
 
 - portfolio frontend para reclutadores
