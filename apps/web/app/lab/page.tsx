@@ -268,11 +268,85 @@ export default function LabPage() {
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [labSearchQuery, setLabSearchQuery] = useState('')
 
   const selectedAgent = agents.find((agent) => agent.id === agentId) ?? agents[0]
   const availableTools = tools.filter((tool) => selectedAgent?.allowedTools.includes(tool.id))
   const visibleTools = availableTools.length > 0 ? availableTools : tools
   const selectedTool = visibleTools.find((tool) => tool.id === toolId) ?? visibleTools[0]
+
+  const labNavigatorItems = [
+    {
+      id: 'quick-start',
+      label: 'Quick Start',
+      description: 'New to the lab? Start here to understand the basics.',
+      category: 'Getting Started',
+      keywords: ['quick', 'start', 'getting', 'started', 'help', 'tutorial']
+    },
+    {
+      id: 'governance-overview',
+      label: 'Governance Overview',
+      description: 'Central governance layer, GENIO profiles, and system architecture.',
+      category: 'Governance',
+      keywords: ['governance', 'genio', 'central', 'overview', 'architecture']
+    },
+    {
+      id: 'agent-catalog',
+      label: 'Agent Catalog',
+      description: 'Available agents (Operator, Reviewer, Planner) and their capabilities.',
+      category: 'Proposals',
+      keywords: ['agent', 'catalog', 'operator', 'reviewer', 'planner', 'roles']
+    },
+    {
+      id: 'tool-catalog',
+      label: 'Tool Catalog',
+      description: 'Governed tools (Review Risk, Simulate Organization, etc.) and their risk levels.',
+      category: 'Proposals',
+      keywords: ['tool', 'catalog', 'proposal', 'review', 'risk', 'simulate', 'organization']
+    },
+    {
+      id: 'approval-preview',
+      label: 'Approval Preview',
+      description: 'Owner approval workflow for proposals. Approve ≠ Execute.',
+      category: 'Approvals',
+      keywords: ['approval', 'approve', 'reject', 'owner', 'decision', 'workflow']
+    },
+    {
+      id: 'audit-events',
+      label: 'Audit Events',
+      description: 'Real-time audit trail and observability of all lab activities.',
+      category: 'Observability',
+      keywords: ['audit', 'events', 'observability', 'trace', 'lineage', 'logging']
+    },
+    {
+      id: 'rollback-preview',
+      label: 'Rollback Preview',
+      description: 'Runtime sandbox and reversible execution planning (simulation only).',
+      category: 'Safety',
+      keywords: ['rollback', 'runtime', 'sandbox', 'reversible', 'undo', 'safety']
+    },
+    {
+      id: 'capability-blueprints',
+      label: 'Capability Blueprints',
+      description: 'Future capabilities and their approval requirements.',
+      category: 'Architecture',
+      keywords: ['capability', 'blueprint', 'future', 'profiles', 'readiness']
+    },
+    {
+      id: 'safety-boundaries',
+      label: 'Safety Boundaries',
+      description: 'What the lab cannot do: no execution, no real systems, simulation-only mode.',
+      category: 'Safety',
+      keywords: ['safety', 'boundaries', 'no execution', 'simulation', 'limitations', 'scope']
+    }
+  ]
+
+  const normalizedLabSearchQuery = labSearchQuery.trim().toLowerCase()
+  const visibleLabNavigatorItems = normalizedLabSearchQuery
+    ? labNavigatorItems.filter((item) =>
+        [item.label, item.id, ...item.keywords].some((value) => value.toLowerCase().includes(normalizedLabSearchQuery))
+      )
+    : labNavigatorItems
 
   useEffect(() => {
     if (selectedTool && selectedTool.id !== toolId) {
@@ -431,7 +505,82 @@ export default function LabPage() {
           </aside>
         </section>
       ) : (
-        <section className="workspace">
+        <>
+          <section className="panel result-state" id="quick-start">
+            <div className="panel-heading">
+              <p className="result-eyebrow">Getting Started</p>
+              <h2>Welcome to the Private Lab</h2>
+              <p>This is a controlled workspace for central governance, private agent proposals, and approval workflows. No real-world actions will be executed.</p>
+            </div>
+            
+            <div className="getting-started-grid">
+              <div className="getting-started-step">
+                <h4>1. Choose an Agent</h4>
+                <p>Select from governed agents like Operator, Reviewer, or Planner. Each agent has specific capabilities and risk profiles.</p>
+              </div>
+              <div className="getting-started-step">
+                <h4>2. Select a Tool</h4>
+                <p>Available tools are filtered based on the selected agent. Each tool generates proposals only—no execution.</p>
+              </div>
+              <div className="getting-started-step">
+                <h4>3. Submit a Request</h4>
+                <p>Provide input describing what you want to explore. The lab will generate a proposal with risk assessment and audit metadata.</p>
+              </div>
+              <div className="getting-started-step">
+                <h4>4. Review & Approve</h4>
+                <p>Review the proposal, check the audit trail, then approve or reject. Approving records your consent—it does not execute actions.</p>
+              </div>
+            </div>
+            
+            <div className="response-meta">
+              <span className="info-chip">✓ Proposal-only mode</span>
+              <span className="info-chip">✓ Human-in-the-loop</span>
+              <span className="info-chip">✓ Full audit trail</span>
+              <span className="info-chip">✓ No real execution</span>
+            </div>
+          </section>
+
+          <section className="panel result-state" id="private-lab-navigator">
+            <div className="panel-heading">
+              <p className="result-eyebrow">Private Lab Navigator</p>
+              <h2>Find the lab section you need</h2>
+              <p>Navigation only. This does not execute actions. Use the search to filter sections by name, category, or keyword.</p>
+            </div>
+            <label className="field-label" htmlFor="lab-section-search">
+              Search lab sections
+            </label>
+            <input
+              className="select-input"
+              id="lab-section-search"
+              onChange={(event) => setLabSearchQuery(event.target.value)}
+              placeholder="Search by name, category, or keyword (e.g., 'approval', 'safety', 'audit')..."
+              type="search"
+              value={labSearchQuery}
+            />
+            
+            {visibleLabNavigatorItems.length > 0 ? (
+              <div className="lab-navigator-grid">
+                {visibleLabNavigatorItems.map((item) => (
+                  <a 
+                    className="navigator-card" 
+                    href={`#${item.id}`} 
+                    key={item.id}
+                    title={item.description}
+                  >
+                    <div className="navigator-card-header">
+                      <h4>{item.label}</h4>
+                      {item.category && <span className="nav-category-badge">{item.category}</span>}
+                    </div>
+                    <p className="navigator-card-description">{item.description}</p>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="meta-text">No matching lab section found. Try searching for "governance", "agent", "tool", "approval", "audit", "rollback", or "safety".</p>
+            )}
+          </section>
+
+          <section className="workspace">
           <form className="panel" onSubmit={handleSubmit}>
             <div className="panel-heading">
               <p className="result-eyebrow">Governed tool request</p>
@@ -439,7 +588,7 @@ export default function LabPage() {
               <p>Select a subordinate agent and a controlled tool. GENIO metadata governs risk before future tool access.</p>
             </div>
 
-            <section className="result-state">
+            <section className="result-state" id="governance-overview">
               <p className="result-eyebrow">Central authority</p>
               <h3>{governance.centralProfile.label}</h3>
               <p>{governance.centralProfile.role}</p>
@@ -474,7 +623,7 @@ export default function LabPage() {
             <ControlledEmailPreviewPanel />
             <ControlledExecutionPlanningPanel />
 
-            <section className="result-state">
+            <section className="result-state" id="safety-boundaries">
               <p className="result-eyebrow">Auth blueprint</p>
               <h3>{governance.centralProfile.authBlueprint.label}</h3>
               <p>{governance.centralProfile.authBlueprint.ownerAccessCodeBoundary}</p>
@@ -513,7 +662,7 @@ export default function LabPage() {
               </div>
             </section>
 
-            <section className="result-state">
+            <section className="result-state" id="capability-blueprints">
               <p className="result-eyebrow">Capability blueprint</p>
               <h3>{governance.centralProfile.capabilityBlueprint.label}</h3>
               <p>{governance.centralProfile.capabilityBlueprint.executionLifecycle.executionBlockedReason}</p>
@@ -536,7 +685,7 @@ export default function LabPage() {
               </div>
             </section>
 
-            <section className="result-state">
+            <section className="result-state" id="rollback-preview">
               <p className="result-eyebrow">Runtime sandbox blueprint</p>
               <h3>{governance.centralProfile.runtimeSandboxBlueprint.label}</h3>
               <p>{governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.description}</p>
@@ -643,6 +792,12 @@ export default function LabPage() {
               </div>
             </section>
 
+            <section className="result-state" id="agent-catalog">
+              <p className="result-eyebrow">Agent Catalog</p>
+              <h3>Available governed agents</h3>
+              <p>Choose the agent that will prepare the proposal metadata. This does not execute actions.</p>
+            </section>
+
             <label className="field-label" htmlFor="lab-agent">
               Agent
             </label>
@@ -672,6 +827,12 @@ export default function LabPage() {
                 </span>
               ))}
             </div>
+
+            <section className="result-state" id="tool-catalog">
+              <p className="result-eyebrow">Tool Catalog</p>
+              <h3>Available governed tools</h3>
+              <p>Tools generate safe proposals only. They do not access real systems.</p>
+            </section>
 
             <label className="field-label" htmlFor="lab-tool">
               Tool
@@ -741,7 +902,7 @@ export default function LabPage() {
                 </section>
 
                 {ownerApproval ? (
-                  <section className="result-state">
+                  <section className="result-state" id="approval-preview">
                     <p className="result-eyebrow">Owner approval flow</p>
                     <h3>{ownerApproval.approvalStatus}</h3>
                     <p>Approve records owner consent for the proposal metadata only. Approve does not execute anything.</p>
@@ -825,7 +986,7 @@ export default function LabPage() {
                   </section>
                 ) : null}
 
-                <section className="result-state">
+                <section className="result-state" id="audit-events">
                   <p className="result-eyebrow">Governance observability</p>
                   <h3>{auditEvents.length} events in memory</h3>
                   {auditEvents.slice(-6).map((event) => (
@@ -847,7 +1008,7 @@ export default function LabPage() {
               </>
             ) : (
               <>
-                <section className="result-state">
+                <section className="result-state" id="approval-preview">
                   <p className="result-eyebrow">Waiting</p>
                   <h3>Private lab proposal will appear here</h3>
                   <p>Unlock the lab, choose an agent and tool, then submit a controlled request.</p>
@@ -872,7 +1033,7 @@ export default function LabPage() {
                     <span className="info-chip">No user DB</span>
                   </div>
                 </section>
-                <section className="result-state">
+                <section className="result-state" id="audit-events">
                   <p className="result-eyebrow">Audit lineage</p>
                   <h3>{governance.centralProfile.observabilityBlueprint.auditTrace.traceId}</h3>
                   <div className="response-meta">
@@ -905,7 +1066,7 @@ export default function LabPage() {
                     <span className="info-chip">Alignment: policy validator</span>
                   </div>
                 </section>
-                <section className="result-state">
+                <section className="result-state" id="rollback-preview">
                   <p className="result-eyebrow">Sandbox readiness</p>
                   <h3>{governance.centralProfile.runtimeSandboxBlueprint.sandboxProfile.lifecycleState}</h3>
                   <div className="response-meta">
@@ -967,7 +1128,8 @@ export default function LabPage() {
               </>
             )}
           </aside>
-        </section>
+          </section>
+        </>
       )}
     </main>
   )
