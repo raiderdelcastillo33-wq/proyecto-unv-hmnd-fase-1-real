@@ -90,6 +90,15 @@ Controlled read-only preview:
 - No hay upload al servidor, no lectura de contenido, no `fs`, no terminal, no shell, no background scan y no host-wide scanning.
 - Campos de seguridad visibles: `simulationOnly: false`, `executionMode: read-only-preview`, `actionExecuted: false`, `filesystemWriteAccess: false`, `filesystemDeleteAccess: false`, `filesystemMoveAccess: false`.
 
+Controlled email organization preview:
+
+- Dataset simulado de correos para demostrar organizacion de bandeja sin Gmail real.
+- Preview metadata-only sobre prioridades, facturas, trabajo, newsletters, mensajes personales y respuestas pendientes.
+- Suggested Labels / Categories: Work, Personal, Finance, Invoices, Urgent, Waiting Reply, Newsletters, Low Priority y Review Needed.
+- Priority Inbox Proposal y Draft Suggestions Preview son solo propuestas visuales.
+- No hay envio real, borrado, archivado, movimiento, etiquetado real, respuesta, forward, Gmail API ni background automation.
+- Campos de seguridad visibles: `simulationOnly: true`, `executionMode: email-preview-only`, `actionExecuted: false`, `emailSendAccess: false`, `emailDeleteAccess: false`, `emailMoveAccess: false`, `emailReplyAccess: false`, `emailDraftMode: preview-only`.
+
 Presentation readiness:
 
 - Home como hub de walkthrough para recruiters.
@@ -155,6 +164,7 @@ El Private AI Lab es una superficie privada para propuestas auditables:
 - muestra blueprint de capacidades futuras sin runtime de ejecucion
 - muestra blueprint de sandbox futuro sin ejecucion real ni acceso al host
 - muestra blueprint de file preview futuro sin lectura real del filesystem
+- muestra preview de organizacion de correos con dataset simulado, sin Gmail real ni acciones sobre bandeja
 
 `/lab` no ejecuta terminal, filesystem, Gmail, adapters, workflows ni acciones reales.
 
@@ -471,6 +481,47 @@ El estado actual es `blocked`, `visibility: metadata-only`, `simulationOnly: tru
 
 No existe todavia `fs` real, lectura real de archivos, uploads, watchers, indexing, embeddings, OCR, parsing, shell access, file execution, filesystem traversal, file browser UI ni acceso directo al host.
 
+## Controlled Email Organization Preview
+
+Humanity Guide OS incluye una demo controlada de organizacion de correos en `/lab`.
+
+Esta fase demuestra como GENIO podria ayudar a ordenar una bandeja caotica sin conectarse a una cuenta real:
+
+- dataset simulado de emails
+- Inbox Chaos Summary
+- GENIO Email Analysis Card
+- GENESIS Communication Pattern Reflection
+- Alignment Validation Card
+- Suggested Labels / Categories
+- Priority Inbox Proposal
+- Draft Suggestions Preview
+- Human Approval Required Badge
+
+Categorias sugeridas:
+
+- `Work`
+- `Personal`
+- `Finance`
+- `Invoices`
+- `Urgent`
+- `Waiting Reply`
+- `Newsletters`
+- `Low Priority`
+- `Review Needed`
+
+Campos de seguridad:
+
+- `simulationOnly: true`
+- `executionMode: email-preview-only`
+- `actionExecuted: false`
+- `emailSendAccess: false`
+- `emailDeleteAccess: false`
+- `emailMoveAccess: false`
+- `emailReplyAccess: false`
+- `emailDraftMode: preview-only`
+
+No existe todavia Gmail API, envio real, borrado real, archivado real, movimiento real, etiquetado real, reply real, forward real ni automatizacion en background. Cualquier accion futura sobre correos debera ser approval-required, audit-first y owner-controlled.
+
 ## GENIO Strategic Vision Metadata
 
 GENIO esta descrito como una inteligencia estrategica calmada, analitica y orientada al crecimiento humano.
@@ -645,13 +696,14 @@ No existen todavia:
 - host machine access
 - file preview runtime real
 - filesystem read real
+- Gmail integration
+- email send/delete/move/reply real
 - memoria vectorial
 - embeddings reales
 - autonomous agents
 - real workflows
 - background jobs
 - queues/workers
-- Gmail integration
 - finance integrations reales
 - trading
 - banking

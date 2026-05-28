@@ -87,6 +87,15 @@ Controlled read-only organization preview:
 - Required safety metadata remains visible: `simulationOnly: false`, `executionMode: read-only-preview`, `actionExecuted: false`, `filesystemWriteAccess: false`, `filesystemDeleteAccess: false`, `filesystemMoveAccess: false`.
 - Write, delete, move, rename, shell execution, host-wide scanning, and autonomous background actions remain unavailable.
 
+Controlled email organization preview:
+
+- `/lab` includes an email organization preview using a fully simulated inbox dataset.
+- The panel shows Inbox Chaos Summary, GENIO Email Analysis Card, GENESIS Communication Pattern Reflection, Alignment Validation Card, Suggested Labels / Categories, Priority Inbox Proposal, and Draft Suggestions Preview.
+- Categories include Work, Personal, Finance, Invoices, Urgent, Waiting Reply, Newsletters, Low Priority, and Review Needed.
+- Draft suggestions are preview-only copy blocks. They do not send, reply, forward, archive, label, delete, or move emails.
+- Required safety metadata remains visible: `simulationOnly: true`, `executionMode: email-preview-only`, `actionExecuted: false`, `emailSendAccess: false`, `emailDeleteAccess: false`, `emailMoveAccess: false`, `emailReplyAccess: false`, `emailDraftMode: preview-only`.
+- No Gmail API, real mailbox connection, background automation, or external email integration exists.
+
 Presentation and navigation readiness:
 
 - `/` now works as a recruiter walkthrough hub for Humanity Guide OS.

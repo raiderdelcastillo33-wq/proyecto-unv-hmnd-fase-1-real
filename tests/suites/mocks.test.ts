@@ -10,6 +10,7 @@ import { AIInteraction } from '../../src/domain/entities/AIInteraction'
 import { READ_ONLY_FILE_PREVIEW_BLUEPRINT } from '../../src/domain/file-preview/FilePreviewBlueprint'
 import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/observability/ObservabilityBlueprint'
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
+import { EMAIL_ORGANIZATION_PREVIEW_SAFETY } from '../../src/domain/organization/EmailOrganizationPreview'
 import { HUMANITY_GUIDE_ORGANIZATION_SIMULATION } from '../../src/domain/organization/OrganizationSimulation'
 import { READ_ONLY_ORGANIZATION_PREVIEW_POLICY } from '../../src/domain/organization/ReadOnlyOrganizationPreview'
 import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
@@ -395,6 +396,23 @@ export function mockTests(): TestCase[] {
         assert.equal(policy.filesystemDeleteAccess, false)
         assert.equal(policy.filesystemMoveAccess, false)
         assert.equal(policy.filesystemReadMode, 'browser-selected-metadata-only')
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.ownerControlled, true)
+      }
+    },
+    {
+      name: 'Organization: email preview policy blocks real mailbox actions',
+      run: async () => {
+        const policy = EMAIL_ORGANIZATION_PREVIEW_SAFETY
+
+        assert.equal(policy.simulationOnly, true)
+        assert.equal(policy.executionMode, 'email-preview-only')
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.emailSendAccess, false)
+        assert.equal(policy.emailDeleteAccess, false)
+        assert.equal(policy.emailMoveAccess, false)
+        assert.equal(policy.emailReplyAccess, false)
+        assert.equal(policy.emailDraftMode, 'preview-only')
         assert.equal(policy.approvalRequired, true)
         assert.equal(policy.ownerControlled, true)
       }

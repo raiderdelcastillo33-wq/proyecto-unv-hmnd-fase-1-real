@@ -9,6 +9,7 @@ import {
   type PrivateLabGovernanceCatalog,
   type PrivateLabToolCatalogItem
 } from '@/lib/private-lab'
+import { ControlledEmailPreviewPanel } from './ControlledEmailPreviewPanel'
 import { ControlledReadOnlyPreviewPanel } from './ControlledReadOnlyPreviewPanel'
 import { OrganizationSimulationPanel } from './OrganizationSimulationPanel'
 
@@ -469,6 +470,7 @@ export default function LabPage() {
 
             <OrganizationSimulationPanel />
             <ControlledReadOnlyPreviewPanel />
+            <ControlledEmailPreviewPanel />
 
             <section className="result-state">
               <p className="result-eyebrow">Auth blueprint</p>

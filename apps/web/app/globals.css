@@ -1335,6 +1335,99 @@ textarea:focus-visible {
   min-height: auto;
 }
 
+.email-preview-panel {
+  display: grid;
+  gap: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(116, 240, 186, 0.2);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.08), rgba(105, 211, 255, 0.04)),
+    rgba(6, 10, 18, 0.9);
+  padding: 22px;
+}
+
+.email-safety-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(116, 240, 186, 0.18);
+  background: rgba(116, 240, 186, 0.08);
+  padding: 14px;
+  color: var(--muted);
+}
+
+.email-safety-strip strong {
+  color: var(--primary);
+}
+
+.email-safety-strip span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(7, 12, 19, 0.72);
+  font-size: 0.82rem;
+}
+
+.email-chaos-grid,
+.email-category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.email-card {
+  min-height: 126px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.email-card strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+}
+
+.email-card p,
+.email-card span {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.email-priority-list,
+.email-draft-list {
+  display: grid;
+  gap: 12px;
+}
+
+.email-preview-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.9fr);
+  gap: 14px;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.email-preview-row strong {
+  color: var(--text);
+  font-family: var(--font-heading);
+}
+
+.email-preview-row p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 @keyframes softReveal {
   from {
     opacity: 0;
@@ -1745,6 +1838,9 @@ textarea:focus-visible {
   .clarity-score,
   .simulation-complete,
   .read-only-metrics,
+  .email-chaos-grid,
+  .email-category-grid,
+  .email-preview-row,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {
