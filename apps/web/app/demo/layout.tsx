@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 export const metadata: Metadata = {
   title: 'Demo',
   description:
-    'Interactive demo for the AI Agent System, showing internal Next.js API routing and end-to-end request execution.'
+    'Interactive demo for Humanity Guide OS, showing internal Next.js API routing, controlled responses, and safe fallback behavior.'
 }
 
 export default function DemoLayout({ children }: { children: ReactNode }) {

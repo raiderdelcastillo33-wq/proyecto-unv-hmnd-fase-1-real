@@ -50,7 +50,7 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     expect(await screen.findByText('hello demo flow')).toBeInTheDocument()
     expect(await screen.findByText('Hello from the mocked backend')).toBeInTheDocument()
@@ -105,7 +105,7 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'clear local history' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     expect(await screen.findByText('Response before clear')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
@@ -147,7 +147,7 @@ describe('DemoPage', () => {
       fireEvent.change(screen.getByLabelText('Message'), {
         target: { value: 'cancel typing flow' }
       })
-      fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
       expect(await screen.findByRole('button', { name: 'Limpiar' })).toBeInTheDocument()
       fireEvent.click(screen.getByRole('button', { name: 'Limpiar' }))
@@ -203,13 +203,13 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'first memory prompt' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
     expect(await screen.findByText('First assistant response')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'second memory prompt' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
     expect(await screen.findByText('Second assistant response')).toBeInTheDocument()
 
     const secondRun = fetchMock.mock.calls[2]?.[1] as RequestInit
@@ -256,7 +256,7 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello architect flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     expect(await screen.findByText('Architect response')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenNthCalledWith(
@@ -292,7 +292,7 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'test' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     expect(await screen.findByText('Please enter at least 5 characters before sending the demo request.')).toBeInTheDocument()
     expect(screen.getByText('Votre réponse apparaîtra ici')).toBeInTheDocument()
@@ -313,9 +313,9 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
+    expect(await screen.findByText('Backend externe non configuré')).toBeInTheDocument()
     expect(screen.getByText('UNV_API_BASE_URL is required in production to reach the external Node API.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Exécuter la démo' })).not.toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Envoyer la démo' })).not.toBeDisabled()
   })
 
   it('renders the safe demo fallback response when backend config is missing', async () => {
@@ -346,12 +346,12 @@ describe('DemoPage', () => {
 
     render(<DemoPage />)
 
-    expect(await screen.findByText('Action backend requise')).toBeInTheDocument()
+    expect(await screen.findByText('Backend externe non configuré')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello fallback flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     expect(await screen.findByText('hello fallback flow')).toBeInTheDocument()
     expect(await screen.findByText('Mode demo/fallback actif: aucun backend Node externe nest configure.')).toBeInTheDocument()
@@ -397,7 +397,7 @@ describe('DemoPage', () => {
     fireEvent.change(screen.getByLabelText('Message'), {
       target: { value: 'hello demo flow' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Exécuter la démo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Envoyer la démo' }))
 
     await waitFor(() => {
       expect(screen.getByText('UNV_API_BASE_URL is required in production to connect the demo with the Node API.')).toBeInTheDocument()

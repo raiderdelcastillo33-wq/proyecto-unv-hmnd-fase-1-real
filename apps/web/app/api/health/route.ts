@@ -8,7 +8,17 @@ export async function GET(): Promise<NextResponse> {
   const runtime = getBackendRuntimeInfo()
 
   if (runtime.mode === 'missing') {
-    return NextResponse.json({ error: MISSING_BACKEND_HEALTH_ERROR }, { status: 503 })
+    return NextResponse.json(
+      {
+        status: 'error',
+        configured: runtime.configured,
+        service: runtime.service,
+        mode: runtime.mode,
+        backend: runtime.baseUrl,
+        error: MISSING_BACKEND_HEALTH_ERROR
+      },
+      { status: 503 }
+    )
   }
 
   try {

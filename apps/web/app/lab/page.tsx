@@ -391,7 +391,7 @@ export default function LabPage() {
             <div className="panel-heading">
               <p className="result-eyebrow">Locked</p>
               <h2>Owner access required</h2>
-              <p>The access code stays in component state and is sent only to the server-side lab route.</p>
+              <p>The access code stays in component state and is used only to request the proposal-only lab catalog.</p>
             </div>
 
             <label className="field-label" htmlFor="owner-access-code">
@@ -408,7 +408,7 @@ export default function LabPage() {
             {error ? <p className="error-line">{error}</p> : null}
 
             <div className="actions">
-              <button className="primary-button" type="submit">
+              <button className="primary-button" disabled={loading} type="submit">
                 {loading ? 'Checking...' : 'Unlock lab'}
               </button>
               <span className="meta-text">Requires server-side OWNER_ACCESS_CODE</span>
@@ -722,7 +722,7 @@ export default function LabPage() {
             <div className="panel-heading">
               <p className="result-eyebrow">Private lab output</p>
               <h2>Proposal and audit trail</h2>
-              <p>Structured output from the local tool executor and approval gate.</p>
+              <p>Structured proposal output from the local lab route and approval gate. No real tool execution occurs.</p>
             </div>
 
             {result ? (

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { forwardJson, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
+import { forwardJson, getBackendRuntimeInfo, MISSING_BACKEND_URL_ERROR } from '@/lib/backend'
 
 const MAX_CONTEXT_CHARS = 2_000
 
@@ -85,7 +85,7 @@ function createDemoFallbackPayload(validation: { input: string; agentId?: string
     success: true,
     data: {
       id: `demo-fallback-${Date.now()}`,
-      response: `Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel. Votre message a ete traite de facon sure par la route Next.js locale avec l'agent ${agentLabel}.`
+      response: `Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel. Votre message a ete transforme en reponse de demonstration par la route Next.js locale avec l'agent ${agentLabel}. Aucune action externe n'a ete executee.`
     },
     meta: {
       mode: 'demo-fallback',
@@ -136,6 +136,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(payload, { status: responseStatus })
   } catch (error) {
     if (error instanceof Error && error.message === MISSING_BACKEND_URL_ERROR) {
+      return NextResponse.json(createDemoFallbackPayload(validation), { status: 200 })
+    }
+
+    const runtime = getBackendRuntimeInfo()
+
+    if (!runtime.configured && runtime.mode === 'local') {
       return NextResponse.json(createDemoFallbackPayload(validation), { status: 200 })
     }
 

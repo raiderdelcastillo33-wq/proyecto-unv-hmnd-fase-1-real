@@ -52,11 +52,11 @@ const flowHighlights = [
   },
   {
     title: 'Réponse API Node',
-    description: 'La requête est relayée vers la couche Node et la réponse finale est rendue dans l’interface.'
+    description: 'La requête est relayée vers la couche disponible et la réponse contrôlée est rendue dans l’interface.'
   }
 ]
 
-const proofPoints = ['Gestion typée des requêtes', 'Visibilité de l’état runtime', 'Messages de fallback sûrs en production']
+const proofPoints = ['Gestion typée des requêtes', 'Visibilité de l’état runtime', 'Fallback sûr sans backend externe']
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -103,6 +103,23 @@ async function requestJson<T>(url: string, init?: RequestInit): Promise<T> {
   return payload as T
 }
 
+async function requestRuntimeState(): Promise<RuntimeState> {
+  const response = await fetch('/api/health', {
+    cache: 'no-store'
+  })
+  const payload = await readJson(response)
+
+  if (response.ok || (isRecord(payload) && typeof payload.status === 'string')) {
+    return parseRuntimeState(payload)
+  }
+
+  if (isRecord(payload) && typeof payload.error === 'string') {
+    throw new Error(payload.error)
+  }
+
+  throw new Error(`Request failed with status ${response.status}.`)
+}
+
 function parseRuntimeState(payload: unknown): RuntimeState {
   if (!isRecord(payload) || typeof payload.status !== 'string') {
     throw new Error('Invalid backend runtime response.')
@@ -140,7 +157,7 @@ function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pen
     return {
       tone: 'pending',
       label: 'Vérification du backend...',
-      message: 'Validation de la connexion à l’API Node avant de lancer la démo.'
+      message: 'Validation de la connexion à l’API disponible avant de préparer la réponse de démo.'
     }
   }
 
@@ -148,7 +165,7 @@ function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pen
     return {
       tone: 'success',
       label: 'Backend externe prêt',
-      message: 'Utilisation d’une API Node externe configurée.'
+      message: 'Utilisation d’une API Node externe configurée pour produire une réponse contrôlée.'
     }
   }
 
@@ -156,14 +173,34 @@ function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pen
     return {
       tone: 'success',
       label: 'Backend local prêt',
-      message: `Utilisation de l’API Node locale sur ${runtime.backend}. Exécutez npm run dev à la racine du repository.`
+      message: `Utilisation de l’API Node locale sur ${runtime.backend}. Le flux reste limité à une réponse de démo contrôlée.`
+    }
+  }
+
+  if (runtime.mode === 'missing') {
+    return {
+      tone: 'error',
+      label: 'Backend externe non configuré',
+      message:
+        runtime.error ??
+        'UNV_API_BASE_URL manque en production. La démo reste disponible avec un fallback Next.js sûr, sans runtime autonome.'
+    }
+  }
+
+  if (runtime.mode === 'external') {
+    return {
+      tone: 'error',
+      label: 'Backend externe indisponible',
+      message: runtime.error ?? 'Le backend externe configuré ne répond pas. Aucune action autonome n’est exécutée.'
     }
   }
 
   return {
     tone: 'error',
-    label: 'Action backend requise',
-    message: runtime.error ?? 'Définissez UNV_API_BASE_URL dans Vercel pour connecter la démo à un backend Node externe.'
+    label: 'Backend local indisponible',
+    message:
+      runtime.error ??
+      'Démarrez l’API Node locale ou utilisez le fallback Next.js sûr. Aucune action autonome n’est exécutée.'
   }
 }
 
@@ -218,8 +255,7 @@ export default function DemoPage() {
     setRuntime((current) => ({ ...current, status: 'checking', error: undefined }))
 
     try {
-      const payload = await requestJson<unknown>('/api/health')
-      setRuntime(parseRuntimeState(payload))
+      setRuntime(await requestRuntimeState())
     } catch (currentError) {
       setRuntime({
         status: 'error',
@@ -327,7 +363,7 @@ export default function DemoPage() {
           <h1>Démo interactive du système</h1>
           <p>
             Un recruteur peut utiliser cette page pour valider le flux exact du produit : envoi de message,
-            routage interne, exécution backend et rendu de la réponse dans l’UI.
+            routage interne, réponse contrôlée et rendu visible dans l’UI.
           </p>
 
           <div className="tag-row">
@@ -370,8 +406,8 @@ POST /api/v1/run
               </div>
 
               <div className="code-block">
-                <h4>3. Traitement Backend</h4>
-                <pre><code>{`// API Node.js traite la requête
+                <h4>3. Réponse contrôlée</h4>
+                <pre><code>{`// API disponible prépare une réponse
 const result = await aiProvider.generate({
   feature: 'assistant',
   prompt: input
@@ -393,7 +429,7 @@ const result = await aiProvider.generate({
 
             <p className="code-summary">
               <strong>Architecture clé :</strong> Séparation claire entre UI (React), routes API (Next.js) et services backend (Node.js).
-              Chaque couche a des responsabilités bien définies avec validation typée en TypeScript.
+              Chaque couche a des responsabilités bien définies avec validation typée, fallback contrôlé et aucune action autonome.
             </p>
           </div>
         </div>
@@ -418,7 +454,7 @@ const result = await aiProvider.generate({
           <div className="panel-heading">
             <p className="result-eyebrow">Requête</p>
             <h2>Envoyer un message</h2>
-            <p>Utilisez le formulaire pour vérifier le flux Browser → Next.js → API Node avec une réponse réelle.</p>
+            <p>Utilisez le formulaire pour vérifier le flux Browser → Next.js → réponse contrôlée, avec fallback sûr si le backend externe manque.</p>
           </div>
 
           <label className="field-label" htmlFor="demo-input">
@@ -445,7 +481,7 @@ const result = await aiProvider.generate({
             id="demo-input"
             className="prompt-input"
             onChange={(event) => setInput(event.target.value)}
-            placeholder="Décrivez ce que vous souhaitez que le backend de démo traite..."
+            placeholder="Décrivez la réponse de démo que vous souhaitez prévisualiser..."
             value={input}
           />
 
@@ -453,9 +489,9 @@ const result = await aiProvider.generate({
 
           <div className="actions">
             <button className="primary-button" disabled={isSubmitDisabled} type="submit">
-              {loading ? 'Envoi...' : 'Exécuter la démo'}
+              {loading ? 'Envoi...' : 'Envoyer la démo'}
             </button>
-            <span className="meta-text">Client → /api/v1/run → API Node</span>
+            <span className="meta-text">Client → /api/v1/run → réponse contrôlée</span>
           </div>
         </form>
 
@@ -470,7 +506,7 @@ const result = await aiProvider.generate({
             <section className="result-state">
               <p className="result-eyebrow">Traitement</p>
               <h3>En attente du backend</h3>
-              <p>La requête passe par Next.js vers l’API Node.</p>
+              <p>La requête passe par Next.js vers l’API disponible ou le fallback sûr.</p>
             </section>
           ) : conversation.length > 0 ? (
             <>
