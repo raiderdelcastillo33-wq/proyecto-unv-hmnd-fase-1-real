@@ -351,7 +351,46 @@ Current boundaries:
 
 The `problem-solver-agent` and `business-builder-blueprint` are metadata only. They can describe future strategy, roadmap, product, and solution-planning behavior, but they cannot execute real actions or replace regulated professionals.
 
-## 8. Controlled Runtime Sandbox Blueprint
+## 8. Controlled Execution Planning Layer
+
+Source:
+
+```text
+src/domain/execution/ExecutionPlan.ts
+src/application/execution/ExecutionPlanningService.ts
+```
+
+The controlled execution planning layer prepares execution previews without real runtime.
+
+Prepared concepts:
+
+- `ExecutionPlan`
+- `ExecutionStep`
+- `ExecutionBoundary`
+- `ExecutionRollback`
+- `ExecutionApprovalStage`
+- `ExecutionSimulation`
+- `ExecutionImpact`
+
+Current UI:
+
+- `/lab` renders Controlled Execution Planning.
+- The timeline previews Analysis, Risk Evaluation, Human Approval, Simulation Preview, Rollback Prepared, and Manual Execution Recommended.
+- Rollback, impact scope, human verification, execution boundaries, and safety status are visible as preview cards.
+- Governance chain preview remains Owner -> GENIO Governance -> Alignment Layer -> Safety Validation -> Simulation Approval -> Manual Human Execution.
+
+Current boundaries:
+
+- execution blocked by default
+- no real execution performed
+- manual execution only
+- no filesystem runtime
+- no terminal execution
+- no Gmail integration
+- no browser automation
+- no autonomous or background execution
+
+## 9. Controlled Runtime Sandbox Blueprint
 
 Source:
 
@@ -403,7 +442,7 @@ Current sandbox state:
 
 No real sandbox, terminal, filesystem, Docker, VM, workers, queues, browser automation, OS automation, autonomous loops, self-modification, self-replication, or unrestricted execution exists.
 
-## 9. Read-Only File Preview Adapter Blueprint
+## 10. Read-Only File Preview Adapter Blueprint
 
 Source:
 
@@ -448,7 +487,7 @@ Current boundaries:
 
 No real filesystem read, upload, watcher, indexing, embeddings, OCR, parsing, shell access, file execution, filesystem traversal, file browser UI, or direct host access exists.
 
-## 10. Strategic Vision Metadata
+## 11. Strategic Vision Metadata
 
 GENIO includes strategic vision metadata inspired by the concept of a calm, wise, analytical guide. This is narrative and philosophical metadata only.
 
@@ -472,7 +511,7 @@ Boundaries:
 
 All future predictions must be framed as probabilistic scenarios with assumptions and uncertainty.
 
-## 11. Memory & Context Blueprint
+## 12. Memory & Context Blueprint
 
 Source:
 
@@ -516,7 +555,7 @@ Current limitation:
 
 No real memory is stored. There is no database, vector store, embeddings, semantic search, browser persistence, filesystem storage, or remote sync.
 
-## 12. Strategic Multi-Agent Orchestration Layer
+## 13. Strategic Multi-Agent Orchestration Layer
 
 Source:
 
@@ -546,7 +585,7 @@ GENIO
 
 This is a simulation blueprint. It does not create workers, queues, jobs, threads, workflows, or autonomous agents.
 
-## 13. Controlled Adapter Blueprint
+## 14. Controlled Adapter Blueprint
 
 Source:
 
@@ -577,7 +616,7 @@ Each adapter declares:
 
 All adapters are metadata-only. There is no real adapter runtime.
 
-## 14. Audit System
+## 15. Audit System
 
 Source:
 
@@ -605,7 +644,7 @@ Event families:
 
 All current audit events represent proposals, simulations, classification, or metadata. They do not represent real-world execution.
 
-## 15. Current Non-Capabilities
+## 16. Current Non-Capabilities
 
 The system currently does not include:
 
@@ -638,7 +677,7 @@ The system currently does not include:
 - banking
 - SaaS tenant isolation
 
-## 16. Evolution Timeline
+## 17. Evolution Timeline
 
 Completed phases:
 
@@ -677,7 +716,7 @@ Future roadmap:
 - read-only file preview adapter
 - operational monitoring
 
-## 17. Verification
+## 18. Verification
 
 Before closing a phase, run:
 
@@ -688,7 +727,7 @@ npm run build:api
 npm test
 ```
 
-## 18. Production Blueprint And Testing
+## 19. Production Blueprint And Testing
 
 Production-readiness planning lives in:
 

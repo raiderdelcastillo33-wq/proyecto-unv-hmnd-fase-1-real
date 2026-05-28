@@ -1428,6 +1428,102 @@ textarea:focus-visible {
   line-height: 1.55;
 }
 
+.execution-planning-panel {
+  display: grid;
+  gap: 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(244, 193, 111, 0.2);
+  background:
+    linear-gradient(180deg, rgba(244, 193, 111, 0.08), rgba(105, 211, 255, 0.04)),
+    rgba(6, 10, 18, 0.9);
+  padding: 22px;
+}
+
+.execution-safety-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border-radius: 18px;
+  border: 1px solid rgba(244, 193, 111, 0.18);
+  background: rgba(244, 193, 111, 0.08);
+  padding: 14px;
+  color: var(--muted);
+}
+
+.execution-safety-strip strong {
+  color: var(--warning);
+}
+
+.execution-safety-strip span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(7, 12, 19, 0.72);
+  font-size: 0.82rem;
+}
+
+.execution-timeline,
+.execution-card-grid,
+.execution-chain {
+  display: grid;
+  gap: 14px;
+}
+
+.execution-timeline {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.execution-card-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.execution-chain {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.execution-step-card,
+.execution-preview-card,
+.execution-chain-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.88);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.execution-step-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+}
+
+.execution-step-index {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(244, 193, 111, 0.14);
+  color: var(--warning);
+  font-family: var(--font-heading);
+}
+
+.execution-step-card h4,
+.execution-preview-card h4,
+.execution-chain-card strong {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-heading);
+}
+
+.execution-step-card p,
+.execution-preview-card p,
+.execution-chain-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .personal-page {
   padding-bottom: 80px;
 }
@@ -2137,6 +2233,9 @@ textarea:focus-visible {
   .email-chaos-grid,
   .email-category-grid,
   .email-preview-row,
+  .execution-timeline,
+  .execution-card-grid,
+  .execution-chain,
   .personal-dashboard-grid,
   .personal-score-grid,
   .personal-mode-grid,

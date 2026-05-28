@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import { ExecutionPlanningService } from '../../src/application/execution/ExecutionPlanningService'
 import { AskAIAssistantUseCase } from '../../src/application/use-cases/AskAIAssistantUseCase'
 import { AskAssistantInput } from '../../src/application/dto/AIDTO'
 import { CONTROLLED_ADAPTER_BLUEPRINT } from '../../src/domain/adapters/AdapterBlueprint'
@@ -437,6 +438,33 @@ export function mockTests(): TestCase[] {
         assert.equal(policy.emailDeleteAccess, false)
         assert.equal(policy.emailMoveAccess, false)
         assert.equal(policy.backgroundAgents, false)
+      }
+    },
+    {
+      name: 'Execution: controlled planning service creates simulation-only blocked preview',
+      run: async () => {
+        const plan = new ExecutionPlanningService().generateExecutionPreview()
+
+        assert.equal(plan.id, 'controlled-execution-planning-layer')
+        assert.equal(plan.status, 'blocked')
+        assert.equal(plan.simulationOnly, true)
+        assert.equal(plan.actionExecuted, false)
+        assert.equal(plan.boundary.simulationOnly, true)
+        assert.equal(plan.boundary.actionExecuted, false)
+        assert.equal(plan.boundary.executionBlockedByDefault, true)
+        assert.equal(plan.boundary.manualExecutionOnly, true)
+        assert.equal(plan.boundary.filesystemRuntime, false)
+        assert.equal(plan.boundary.terminalExecution, false)
+        assert.equal(plan.boundary.gmailIntegration, false)
+        assert.equal(plan.boundary.browserAutomation, false)
+        assert.equal(plan.boundary.autonomousExecution, false)
+        assert.equal(plan.boundary.backgroundExecution, false)
+        assert.ok(plan.steps.some((step) => step.label === 'Human Approval'))
+        assert.ok(plan.steps.some((step) => step.label === 'Manual Execution Recommended'))
+        assert.ok(plan.rollbackPreviews.every((rollback) => rollback.actionExecuted === false))
+        assert.ok(plan.impactPreviews.some((impact) => impact.scope === 'Safety Status'))
+        assert.equal(plan.approvalChain.at(-1)?.actor, 'Manual Human Execution')
+        assert.equal(plan.approvalChain.at(-1)?.actionExecuted, false)
       }
     },
     {

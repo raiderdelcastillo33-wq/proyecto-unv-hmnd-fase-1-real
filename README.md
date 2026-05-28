@@ -495,6 +495,55 @@ La fase prepara:
 
 No existe todavia runtime de capacidades, ejecucion terminal, filesystem write, browser automation, external API execution, Gmail real, trading, OS automation, self-modification, self-replication ni autonomia irrestricta.
 
+## Controlled Execution Planning Layer
+
+Humanity Guide OS prepara una capa de planificacion de ejecucion sin ejecutar nada.
+
+Tipos preparados:
+
+- `ExecutionPlan`
+- `ExecutionStep`
+- `ExecutionRiskLevel`
+- `ExecutionBoundary`
+- `ExecutionRollback`
+- `ExecutionApprovalStage`
+- `ExecutionSimulation`
+- `ExecutionImpact`
+- `ExecutionCategory`
+
+Servicio preparado:
+
+- `ExecutionPlanningService`
+
+Responsabilidades:
+
+- generar execution previews
+- generar rollback previews
+- generar governance checkpoints
+- generar impact previews
+- generar recomendaciones manuales
+
+UI en `/lab`:
+
+- Controlled Execution Planning
+- timeline visual: Analysis, Risk Evaluation, Human Approval, Simulation Preview, Rollback Prepared y Manual Execution Recommended
+- rollback preview cards
+- impact scope cards
+- governance approval chain preview
+
+Cadena de gobernanza:
+
+```text
+Owner
+-> GENIO Governance
+-> Alignment Layer
+-> Safety Validation
+-> Simulation Approval
+-> Manual Human Execution
+```
+
+El ultimo paso siempre es humano. No existe runtime real, filesystem runtime, terminal execution, Gmail integration, browser automation, autonomous execution ni background execution.
+
 ## Controlled Runtime Sandbox Blueprint
 
 GENIO queda preparado para gobernar una zona futura de ejecucion controlada, aislada y auditada.
