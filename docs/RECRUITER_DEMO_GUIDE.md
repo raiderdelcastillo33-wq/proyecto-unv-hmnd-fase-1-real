@@ -16,6 +16,27 @@ Recommended walkthrough:
 
 Use `docs/DEMO_LAUNCH_CHECKLIST.md` before recordings, recruiter calls, and Vercel deployment reviews.
 
+## For Recruiters
+
+Position the project as a recruiter-safe AI product showcase, not an autonomous system.
+
+What to look for:
+
+- Product judgment: a broad AI operating system idea is narrowed into a clear organization workflow.
+- Frontend quality: Next.js 15, React 19, App Router, responsive UI, metadata, manifest, sitemap, and Vercel readiness.
+- TypeScript architecture: UI, API routes, backend domain models, governance metadata, and tests remain separated.
+- Governance maturity: proposal-only, owner-controlled, simulation-first, reversible, auditable, and visibly bounded.
+- Responsible AI communication: no AGI claims, no hidden autonomy, no real integrations, and no implied runtime power.
+- Validation discipline: the project is expected to pass web build, web tests, API build, and backend/domain tests before sharing.
+
+Recommended route order:
+
+1. `/` for the product story and recruiter framing.
+2. `/demo` for the public safe AI conversation.
+3. `/personal` for the owner daily organization surface.
+4. `/lab` for governance, approval metadata, previews, and blocked execution boundaries.
+5. `/about` or README for architecture and roadmap separation.
+
 ## What Exists Today
 
 - Public `/demo` route.

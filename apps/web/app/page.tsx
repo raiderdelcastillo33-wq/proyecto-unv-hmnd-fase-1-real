@@ -165,6 +165,54 @@ const governanceMaturity = [
   }
 ]
 
+const recruiterValueSignals = [
+  {
+    title: 'Product engineering judgment',
+    detail: 'A complex AI idea is narrowed into a concrete, reviewable organization workflow instead of an exaggerated autonomy claim.'
+  },
+  {
+    title: 'Frontend execution',
+    detail: 'Next.js 15, React 19, App Router, responsive surfaces, metadata, manifest, sitemap, and Vercel-ready delivery.'
+  },
+  {
+    title: 'Typed architecture',
+    detail: 'TypeScript contracts connect UI, API routes, backend domain models, governance metadata, and testable service boundaries.'
+  },
+  {
+    title: 'Responsible AI UX',
+    detail: 'The interface makes limits visible: proposal-only, owner-controlled, simulation-first, auditable, and reversible.'
+  },
+  {
+    title: 'Testing discipline',
+    detail: 'The public app and backend domain are validated through Jest, Testing Library, TypeScript build checks, and API smoke coverage.'
+  },
+  {
+    title: 'Enterprise realism',
+    detail: 'Future auth, audit, adapters, sandboxing, and observability stay documented as blueprints rather than implied runtime.'
+  }
+]
+
+const demoNavigation = [
+  {
+    href: '/demo',
+    label: 'Public demo',
+    title: 'Start with the safe AI conversation',
+    detail: 'Shows the visible product layer, typed API boundary, fallback behavior, and a low-risk public interaction.'
+  },
+  {
+    href: '/personal',
+    label: 'Personal mode',
+    title: 'Then show the owner daily surface',
+    detail: 'Explains how Humanity Guide OS helps organize priorities with manual checklists and no destructive actions.'
+  },
+  {
+    href: '/lab',
+    label: 'Private Lab',
+    title: 'Close with governance depth',
+    detail: 'Reveals GENIO metadata, approval states, audit events, execution planning preview, and simulation-only safety.'
+  }
+]
+
 const projectHighlights = [
   {
     title: 'Governance-first Architecture',
@@ -347,6 +395,48 @@ export default function HomePage() {
               <h3>{item.title}</h3>
               <p>{item.description}</p>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block recruiter-value" aria-labelledby="for-recruiters-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">For recruiters</p>
+          <h2 className="section-title" id="for-recruiters-heading">What this project proves in a professional review</h2>
+          <p>
+            Humanity Guide OS is presented as a safe AI product demo: strong frontend craft, typed architecture,
+            governance maturity, and clear restraint around what is not implemented.
+          </p>
+        </div>
+
+        <div className="recruiter-value-grid">
+          {recruiterValueSignals.map((item) => (
+            <article className="recruiter-value-card" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block demo-navigation" aria-labelledby="demo-navigation-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Demo navigation</p>
+          <h2 className="section-title" id="demo-navigation-heading">What to open first, second, and third</h2>
+          <p>
+            The walkthrough is intentionally ordered from simple product proof to deeper governance review. Each
+            route shows value without claiming real automation.
+          </p>
+        </div>
+
+        <div className="demo-navigation-grid">
+          {demoNavigation.map((item, index) => (
+            <Link className="demo-navigation-card" href={item.href} key={item.href}>
+              <span className="step-index">{String(index + 1).padStart(2, '0')}</span>
+              <small>{item.label}</small>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </Link>
           ))}
         </div>
       </section>

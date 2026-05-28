@@ -107,6 +107,8 @@ Presentation readiness:
 
 - Home como hub de walkthrough para recruiters.
 - Recruiter Quick Start para demos, entrevistas y grabaciones.
+- Seccion `For recruiters` para explicar valor tecnico, governance architecture, simulation-first UX y testing discipline.
+- Demo navigation con microcopy hacia `/demo`, `/personal` y `/lab` en orden de lectura profesional.
 - Seccion `What this project demonstrates` con senales claras de producto, frontend, governance y produccion.
 - Navegacion superior conectando `/`, `/demo`, `/lab` y arquitectura.
 - Mini onboarding visual: problema, seguridad y senales tecnicas.

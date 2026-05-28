@@ -457,6 +457,8 @@ textarea:focus-visible {
 .architecture-summary,
 .capability-split,
 .maturity-grid,
+.recruiter-value-grid,
+.demo-navigation-grid,
 .showcase-grid,
 .quick-start-grid,
 .proof-list {
@@ -566,6 +568,79 @@ textarea:focus-visible {
 .quick-start-card p {
   color: var(--muted);
   line-height: 1.65;
+}
+
+.recruiter-value,
+.demo-navigation {
+  border-radius: 28px;
+  border: 1px solid rgba(105, 211, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.05), rgba(116, 240, 186, 0.025)),
+    rgba(8, 13, 22, 0.58);
+  padding: 24px;
+}
+
+.recruiter-value-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.recruiter-value-card,
+.demo-navigation-card {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0)),
+    rgba(7, 12, 19, 0.88);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.recruiter-value-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 176px;
+}
+
+.recruiter-value-card h3,
+.demo-navigation-card h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.18rem;
+}
+
+.recruiter-value-card p,
+.demo-navigation-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.demo-navigation-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.demo-navigation-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 218px;
+  color: inherit;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.demo-navigation-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(105, 211, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.08), rgba(255, 255, 255, 0)),
+    rgba(7, 12, 19, 0.92);
+}
+
+.demo-navigation-card small {
+  color: var(--success);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .proof-list {
@@ -2322,6 +2397,8 @@ textarea:focus-visible {
   .architecture-summary,
   .capability-split,
   .maturity-grid,
+  .recruiter-value-grid,
+  .demo-navigation-grid,
   .showcase-grid,
   .showcase-grid--wide,
   .quick-start-grid,
