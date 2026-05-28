@@ -351,6 +351,82 @@ textarea:focus-visible {
   margin-top: 28px;
 }
 
+.governance-contract {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 24px;
+  border: 1px solid rgba(116, 240, 186, 0.18);
+  background:
+    linear-gradient(135deg, rgba(116, 240, 186, 0.07), rgba(105, 211, 255, 0.04)),
+    rgba(6, 10, 18, 0.84);
+  border-radius: 28px;
+  padding: 24px;
+}
+
+.governance-contract__intro {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  min-height: 100%;
+}
+
+.governance-contract__intro h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 2.5vw, 2.6rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.governance-contract__intro p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.governance-contract__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.governance-contract__item {
+  display: grid;
+  gap: 8px;
+  min-height: 164px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(7, 12, 19, 0.86);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.governance-contract__item span,
+.maturity-card span {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--success);
+  background: rgba(116, 240, 186, 0.08);
+  border: 1px solid rgba(116, 240, 186, 0.18);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.governance-contract__item strong {
+  font-family: var(--font-heading);
+  font-size: 1.36rem;
+  color: var(--text);
+}
+
+.governance-contract__item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .presentation-band {
   border: 1px solid rgba(105, 211, 255, 0.14);
   background:
@@ -380,6 +456,7 @@ textarea:focus-visible {
 .onboarding-grid,
 .architecture-summary,
 .capability-split,
+.maturity-grid,
 .showcase-grid,
 .quick-start-grid,
 .proof-list {
@@ -543,6 +620,35 @@ textarea:focus-visible {
 
 .capability-split {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.maturity-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.maturity-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 190px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.05), rgba(255, 255, 255, 0)),
+    rgba(7, 12, 19, 0.9);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.maturity-card h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.22rem;
+}
+
+.maturity-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
 }
 
 .capability-column ul {
@@ -2209,10 +2315,13 @@ textarea:focus-visible {
   .hero,
   .workspace,
   .grid-3,
+  .governance-contract,
+  .governance-contract__grid,
   .signal-grid,
   .onboarding-grid,
   .architecture-summary,
   .capability-split,
+  .maturity-grid,
   .showcase-grid,
   .showcase-grid--wide,
   .quick-start-grid,

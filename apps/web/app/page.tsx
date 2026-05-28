@@ -34,6 +34,29 @@ const stackHighlights = [
   'Typed Node backend'
 ]
 
+const governanceContract = [
+  {
+    label: 'Proposal',
+    value: 'not execution',
+    detail: 'GENIO can prepare a reviewable plan, but the product never presents a proposal as completed work.'
+  },
+  {
+    label: 'Approval',
+    value: 'not execution',
+    detail: 'Owner approval is displayed as governance metadata. It does not trigger a runtime, worker, or adapter.'
+  },
+  {
+    label: 'Simulation',
+    value: 'only',
+    detail: 'Every sensitive workflow stays mock-data based, reversible, and visibly actionExecuted: false.'
+  },
+  {
+    label: 'Owner',
+    value: 'final control',
+    detail: 'The system explains options and tradeoffs while the human remains the only actor who can execute outside the app.'
+  }
+]
+
 const walkthrough = [
   {
     step: '01',
@@ -116,6 +139,29 @@ const capabilitySplit = [
   {
     title: 'Not implemented',
     items: ['No real filesystem', 'No terminal execution', 'No background workers', 'No DB/auth runtime', 'No autonomous agents']
+  }
+]
+
+const governanceMaturity = [
+  {
+    title: 'Visible governance',
+    status: 'Implemented',
+    detail: 'Safety chips, approval states, audit events, risk labels, and simulation-only boundaries appear in the UX.'
+  },
+  {
+    title: 'Execution planning',
+    status: 'Preview only',
+    detail: 'Timeline, rollback, and impact metadata are generated for review without running real actions.'
+  },
+  {
+    title: 'Enterprise realism',
+    status: 'Blueprinted',
+    detail: 'Auth, observability, adapters, sandboxing, and persistence are documented as future controlled phases.'
+  },
+  {
+    title: 'Autonomy boundary',
+    status: 'Blocked',
+    detail: 'No background jobs, no autonomous agents, no OS automation, no Gmail runtime, and no shell execution.'
   }
 ]
 
@@ -263,6 +309,27 @@ export default function HomePage() {
         </aside>
       </section>
 
+      <section className="governance-contract" aria-labelledby="governance-contract-heading">
+        <div className="governance-contract__intro">
+          <p className="result-eyebrow">Governance contract</p>
+          <h2 id="governance-contract-heading">The system is designed to stop before power becomes execution.</h2>
+          <p>
+            This first-screen contract keeps the demo recruiter-safe: proposals are inspectable, approvals are
+            explicit, and every sensitive flow remains simulation-only until a real controlled runtime exists.
+          </p>
+        </div>
+
+        <div className="governance-contract__grid">
+          {governanceContract.map((item) => (
+            <article className="governance-contract__item" key={item.label}>
+              <span>{item.label}</span>
+              <strong>{item.value}</strong>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="section-block recruiter-start" aria-labelledby="recruiter-quick-start-heading">
         <div className="section-head">
           <p className="result-eyebrow">Recruiter Quick Start</p>
@@ -376,6 +443,27 @@ export default function HomePage() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="governance-maturity-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Governance maturity</p>
+          <h2 className="section-title" id="governance-maturity-heading">A clearer view of what is ready, previewed, and blocked</h2>
+          <p>
+            The refinement layer makes the Owner and recruiter experience easier to audit without adding runtime
+            power or blurring the architecture boundary.
+          </p>
+        </div>
+
+        <div className="maturity-grid">
+          {governanceMaturity.map((item) => (
+            <article className="maturity-card" key={item.title}>
+              <span>{item.status}</span>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
             </article>
           ))}
         </div>
