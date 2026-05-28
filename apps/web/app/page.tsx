@@ -196,19 +196,19 @@ const demoNavigation = [
   {
     href: '/demo',
     label: 'Public demo',
-    title: 'Start with the safe AI conversation',
+    title: 'Try public demo',
     detail: 'Shows the visible product layer, typed API boundary, fallback behavior, and a low-risk public interaction.'
   },
   {
     href: '/lab',
     label: 'Private Lab',
-    title: 'Then show governance depth',
+    title: 'Explore governance lab',
     detail: 'Reveals GENIO metadata, approval states, audit events, execution planning preview, and simulation-only safety.'
   },
   {
     href: '/personal',
     label: 'Personal mode',
-    title: 'Close with the owner daily surface',
+    title: 'View personal organizer',
     detail: 'Explains how Humanity Guide OS helps organize priorities with manual checklists and no destructive actions.'
   }
 ]
@@ -297,8 +297,8 @@ export default function HomePage() {
           <span className="hero-badge">Humanity Guide OS - Recruiter walkthrough</span>
           <h1>Governed AI organization demo</h1>
           <p>
-            A premium portfolio experience showing how responsible AI can reduce simulated digital chaos with
-            clear governance, visible safety boundaries, and production-minded frontend architecture.
+            Humanity Guide OS is a recruiter-ready product showcase for turning simulated digital chaos into
+            reviewable proposals with visible governance, owner control, and no real execution.
           </p>
 
           <div className="tag-row">
@@ -311,13 +311,13 @@ export default function HomePage() {
 
           <div className="hero-actions">
             <Link className="primary-button" href="/demo">
-              Start public demo
+              Try public demo
             </Link>
             <Link className="secondary-button" href="/lab">
-              Open Private Lab
+              Explore governance lab
             </Link>
             <Link className="secondary-button" href="/personal">
-              Open Personal Mode
+              View personal organizer
             </Link>
             <Link className="secondary-button" href="/about">
               Review architecture
@@ -384,7 +384,7 @@ export default function HomePage() {
           <h2 className="section-title" id="recruiter-quick-start-heading">A clean walkthrough for interviews and video demos</h2>
           <p>
             Use this sequence for GitHub, Vercel, portfolio reviews, or a short Loom recording. It keeps the story
-            practical, safe, and easy to verify.
+            practical, safe, and easy to verify: Home -&gt; /demo -&gt; /lab -&gt; /personal.
           </p>
         </div>
 
@@ -424,8 +424,8 @@ export default function HomePage() {
           <p className="result-eyebrow">Demo navigation</p>
           <h2 className="section-title" id="demo-navigation-heading">What to open first, second, and third</h2>
           <p>
-            The walkthrough is intentionally ordered from simple product proof to deeper governance review. Each
-            route shows value without claiming real automation.
+            The walkthrough is intentionally ordered as Home -&gt; /demo -&gt; /lab -&gt; /personal: public proof first,
+            governance visibility second, owner-controlled daily experience third.
           </p>
         </div>
 

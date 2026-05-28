@@ -8,9 +8,9 @@ Recommended walkthrough:
 
 1. Open `/`.
 2. Explain the product in one sentence: a governed AI organization demo with explicit safety boundaries.
-3. Open `/demo` to show the public multi-agent conversation flow.
-4. Open `/lab` to show the private governance and blueprint workspace.
-5. Open `/personal` to show the owner-facing daily organization mode.
+3. Select `Try public demo` and open `/demo` to show the public multi-agent conversation flow.
+4. Select `Explore governance lab` and open `/lab` to show the private governance and blueprint workspace.
+5. Select `View personal organizer` and open `/personal` to show the owner-facing daily organization mode.
 6. Show the controlled read-only file metadata preview and the controlled email organization preview.
 7. Close with `/about` or the README to explain architecture and roadmap.
 

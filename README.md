@@ -37,9 +37,9 @@ Home -> /demo -> /lab -> /personal
 Showcase progression:
 
 - Home explica la vision, el contrato de gobernanza y la diferencia entre capacidades actuales, previews y blueprints.
-- `/demo` muestra la interaccion publica segura y la frontera entre UI, API y fallback.
-- `/lab` hace visible GENIO governance, approvals, audit metadata, previews y simulation-only execution planning.
-- `/personal` muestra la experiencia owner-controlled con checklist manual y limites no destructivos.
+- `/demo` permite probar la demo publica segura: `Try public demo`.
+- `/lab` hace visible GENIO governance, approvals, audit metadata y previews: `Explore governance lab`.
+- `/personal` muestra la experiencia owner-controlled con checklist manual: `View personal organizer`.
 
 La demo debe cerrar reforzando que approval metadata no ejecuta acciones y que toda capacidad sensible sigue preview-only, blueprint-only o simulation-only.
 
