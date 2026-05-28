@@ -1,4 +1,12 @@
 export type PersonalOrganizerArea = 'documents' | 'photos' | 'email' | 'priorities'
+export type PersonalOrganizerTarget =
+  | 'Documents'
+  | 'Downloads'
+  | 'Desktop'
+  | 'Pictures'
+  | 'Screenshots'
+  | 'Emails'
+  | 'Project files'
 export type PersonalOrganizerRiskLevel = 'low' | 'medium'
 export type PersonalOrganizerModeStatus = 'ready-for-owner-review'
 
@@ -33,8 +41,26 @@ export type PersonalOrganizerProposal = {
   area: PersonalOrganizerArea
   title: string
   recommendation: string
+  organizeFirst: string
+  rationale: string
+  estimatedTime: string
+  expectedImpact: string
   approvalMode: 'owner-review-required'
   actionMode: 'preview-only'
+}
+
+export type PersonalFirstUseStep = {
+  id: string
+  step: string
+  title: string
+  description: string
+}
+
+export type PersonalOrganizationFocus = {
+  doToday: string[]
+  doNotTouch: string[]
+  reviewManually: string[]
+  startHere: string
 }
 
 export type PersonalOrganizerDailyPlan = {
@@ -42,8 +68,11 @@ export type PersonalOrganizerDailyPlan = {
   label: string
   status: PersonalOrganizerModeStatus
   safetyBoundary: PersonalOrganizerSafetyBoundary
+  firstUseWorkflow: PersonalFirstUseStep[]
+  organizationTargets: PersonalOrganizerTarget[]
   signals: PersonalOrganizerSignal[]
   proposals: PersonalOrganizerProposal[]
+  todayFocus: PersonalOrganizationFocus
   checklist: string[]
 }
 
@@ -70,6 +99,39 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
     label: 'Humanity Guide OS - Personal Organizer Mode',
     status: 'ready-for-owner-review',
     safetyBoundary: personalOrganizerSafetyBoundary,
+    firstUseWorkflow: [
+      {
+        id: 'workflow-choose',
+        step: 'Step 1',
+        title: 'Choose what to organize',
+        description: 'Select the area that feels most noisy today. The system only prepares a plan.'
+      },
+      {
+        id: 'workflow-preview',
+        step: 'Step 2',
+        title: 'Preview chaos',
+        description: 'Review simulated clutter signals before deciding what deserves attention.'
+      },
+      {
+        id: 'workflow-proposals',
+        step: 'Step 3',
+        title: 'Review proposals',
+        description: 'Compare low-risk manual organization proposals without triggering actions.'
+      },
+      {
+        id: 'workflow-checklist',
+        step: 'Step 4',
+        title: 'Generate manual checklist',
+        description: 'Turn the proposal into a calm checklist the owner can follow outside the app.'
+      },
+      {
+        id: 'workflow-owner-executes',
+        step: 'Step 5',
+        title: 'Owner executes manually outside the app',
+        description: 'The app stops at guidance. The owner performs any real-world change manually.'
+      }
+    ],
+    organizationTargets: ['Documents', 'Downloads', 'Desktop', 'Pictures', 'Screenshots', 'Emails', 'Project files'],
     signals: [
       {
         id: 'signal-documents',
@@ -110,6 +172,10 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
         area: 'documents',
         title: 'Create a document review queue',
         recommendation: 'Review invoices first, then work drafts, then personal notes. No file operation is executed.',
+        organizeFirst: 'Downloads and Documents',
+        rationale: 'Financial and work documents usually create the most urgent decision pressure.',
+        estimatedTime: '20 minutes',
+        expectedImpact: 'High clarity, lower search time, fewer forgotten documents.',
         approvalMode: 'owner-review-required',
         actionMode: 'preview-only'
       },
@@ -118,6 +184,10 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
         area: 'photos',
         title: 'Separate screenshots from memories',
         recommendation: 'Keep screenshots in a review group and personal photos in a separate conceptual cluster.',
+        organizeFirst: 'Screenshots',
+        rationale: 'Screenshots accumulate quickly and often mix temporary references with important records.',
+        estimatedTime: '15 minutes',
+        expectedImpact: 'Cleaner picture review and less visual noise.',
         approvalMode: 'owner-review-required',
         actionMode: 'preview-only'
       },
@@ -126,10 +196,32 @@ export function createPersonalOrganizerDailyPlan(): PersonalOrganizerDailyPlan {
         area: 'email',
         title: 'Build a priority inbox proposal',
         recommendation: 'Review urgent work and finance messages before newsletters or low-priority updates.',
+        organizeFirst: 'Emails waiting reply',
+        rationale: 'Reply-needed messages carry social and operational risk if they stay hidden.',
+        estimatedTime: '12 minutes',
+        expectedImpact: 'Lower communication stress and clearer next actions.',
         approvalMode: 'owner-review-required',
         actionMode: 'preview-only'
       }
     ],
+    todayFocus: {
+      doToday: [
+        'Start with Downloads and email replies.',
+        'Review invoices and work drafts before personal cleanup.',
+        'Create one short manual checklist before touching anything.'
+      ],
+      doNotTouch: [
+        'Do not delete files today.',
+        'Do not move project folders until reviewed.',
+        'Do not send email replies from inside the app.'
+      ],
+      reviewManually: [
+        'Invoices and finance messages.',
+        'Screenshots that may contain important references.',
+        'Project files with unclear names.'
+      ],
+      startHere: 'Begin with 20 minutes on Downloads, then stop and review the checklist.'
+    },
     checklist: [
       'Review today signals before any future action.',
       'Confirm every suggested group manually.',

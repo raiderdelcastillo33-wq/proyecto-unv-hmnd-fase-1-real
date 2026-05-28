@@ -49,8 +49,8 @@ export default function PersonalOrganizerPage() {
           <p className="result-eyebrow">Daily clarity snapshot</p>
           <h2>Review first. Decide calmly. Execute nothing here.</h2>
           <p className="meta-text">
-            This mode turns simulated organization signals into a practical review plan. It does not write, delete,
-            move, send, reply, scan the host, or run background agents.
+            This mode turns organization signals into a practical first-use plan. It does not write, delete, move,
+            send, reply, scan the host, or run background agents.
           </p>
           <div className="metrics-grid">
             <article className="metric-card">
@@ -71,6 +71,47 @@ export default function PersonalOrganizerPage() {
             </article>
           </div>
         </aside>
+      </section>
+
+      <section className="section-block personal-workflow" aria-labelledby="first-use-workflow-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">First Use Workflow</p>
+          <h2 className="section-title" id="first-use-workflow-heading">
+            A guided first organization pass
+          </h2>
+          <p>
+            Start small, preview the chaos, review proposals, and then execute manually outside the app. The workflow
+            is designed to reduce overwhelm without giving the system destructive powers.
+          </p>
+        </div>
+
+        <div className="personal-workflow-grid">
+          {plan.firstUseWorkflow.map((item) => (
+            <article className="personal-workflow-card" key={item.id}>
+              <span className="info-chip">{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="organize-options-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Choose what to organize</p>
+          <h2 className="section-title" id="organize-options-heading">
+            Pick one surface, not everything
+          </h2>
+          <p>These options are planning targets only. Selecting an area does not scan, move, delete, or send anything.</p>
+        </div>
+
+        <div className="personal-target-grid" aria-label="Personal organization options">
+          {plan.organizationTargets.map((target) => (
+            <button className="personal-target-button" key={target} type="button">
+              {target}
+            </button>
+          ))}
+        </div>
       </section>
 
       <section className="section-block" aria-labelledby="personal-mode-heading">
@@ -101,9 +142,9 @@ export default function PersonalOrganizerPage() {
 
       <section className="section-block" aria-labelledby="proposal-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Organization proposals</p>
+          <p className="result-eyebrow">Personal Organization Plan</p>
           <h2 className="section-title" id="proposal-heading">
-            Suggested next actions, not executed actions
+            What to sort first, why it matters, and how to stay safe
           </h2>
         </div>
 
@@ -114,6 +155,24 @@ export default function PersonalOrganizerPage() {
                 <span className="info-chip">{areaLabels[proposal.area]}</span>
                 <h3>{proposal.title}</h3>
                 <p>{proposal.recommendation}</p>
+                <dl className="personal-plan-details">
+                  <div>
+                    <dt>Sort first</dt>
+                    <dd>{proposal.organizeFirst}</dd>
+                  </div>
+                  <div>
+                    <dt>Why</dt>
+                    <dd>{proposal.rationale}</dd>
+                  </div>
+                  <div>
+                    <dt>Estimated time</dt>
+                    <dd>{proposal.estimatedTime}</dd>
+                  </div>
+                  <div>
+                    <dt>Expected impact</dt>
+                    <dd>{proposal.expectedImpact}</dd>
+                  </div>
+                </dl>
               </div>
               <div className="response-meta">
                 <span className="info-chip">{proposal.approvalMode}</span>
@@ -121,6 +180,43 @@ export default function PersonalOrganizerPage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="section-block personal-focus" aria-labelledby="today-focus-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Today's Focus</p>
+          <h2 className="section-title" id="today-focus-heading">
+            Start without overwhelming yourself
+          </h2>
+          <p>{plan.todayFocus.startHere}</p>
+        </div>
+
+        <div className="personal-focus-grid">
+          <article className="showcase-card">
+            <span className="info-chip">What I do today</span>
+            <ul className="bullet-list">
+              {plan.todayFocus.doToday.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="showcase-card">
+            <span className="info-chip">What I do not touch</span>
+            <ul className="bullet-list">
+              {plan.todayFocus.doNotTouch.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="showcase-card">
+            <span className="info-chip">What I review manually</span>
+            <ul className="bullet-list">
+              {plan.todayFocus.reviewManually.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
         </div>
       </section>
 
@@ -142,6 +238,11 @@ export default function PersonalOrganizerPage() {
           <span>filesystemDeleteAccess: false</span>
           <span>filesystemMoveAccess: false</span>
           <span>emailSendAccess: false</span>
+          <span>No files moved</span>
+          <span>No files deleted</span>
+          <span>No email sent</span>
+          <span>Manual execution only</span>
+          <span>Owner approval required</span>
           <span>backgroundAgents: false</span>
         </div>
 

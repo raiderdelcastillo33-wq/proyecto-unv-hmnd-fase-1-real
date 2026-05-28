@@ -138,6 +138,40 @@ Objetivo:
 - reducir caos
 - crear claridad diaria
 
+First Use Workflow:
+
+1. Choose what to organize
+2. Preview chaos
+3. Review proposals
+4. Generate manual checklist
+5. Owner executes manually outside the app
+
+Opciones visibles:
+
+- Documents
+- Downloads
+- Desktop
+- Pictures
+- Screenshots
+- Emails
+- Project files
+
+Personal Organization Plan muestra:
+
+- que ordenar primero
+- por que
+- riesgo
+- tiempo estimado
+- impacto esperado
+- checklist manual
+
+Today's Focus responde:
+
+- que hago hoy
+- que NO debo tocar
+- que revisar manualmente
+- donde empezar sin abrumarme
+
 Relacion con `/lab`:
 
 - `/personal` es la superficie de uso diario del owner.
@@ -162,6 +196,11 @@ Limites visibles:
 - `emailDeleteAccess: false`
 - `emailMoveAccess: false`
 - `backgroundAgents: false`
+- No files moved
+- No files deleted
+- No email sent
+- Manual execution only
+- Owner approval required
 
 No existe automatizacion autonoma, escritura/borrado/movimiento real de archivos, envio real de correos ni background agents.
 

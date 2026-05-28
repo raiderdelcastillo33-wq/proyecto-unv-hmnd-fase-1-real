@@ -1442,6 +1442,63 @@ textarea:focus-visible {
   gap: 18px;
 }
 
+.personal-workflow {
+  border: 1px solid rgba(105, 211, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(105, 211, 255, 0.06), rgba(116, 240, 186, 0.03)),
+    rgba(8, 13, 22, 0.7);
+}
+
+.personal-workflow-grid,
+.personal-target-grid,
+.personal-focus-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.personal-workflow-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.personal-workflow-card {
+  min-height: 190px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  padding: 16px;
+}
+
+.personal-workflow-card h3 {
+  margin: 12px 0 0;
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+}
+
+.personal-workflow-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.personal-target-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.personal-target-button {
+  min-height: 74px;
+  border-radius: 18px;
+  border: 1px solid rgba(105, 211, 255, 0.18);
+  background: rgba(105, 211, 255, 0.08);
+  color: var(--text);
+  font: inherit;
+  cursor: default;
+}
+
+.personal-target-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
 .personal-proposal-list {
   display: grid;
   gap: 14px;
@@ -1468,6 +1525,36 @@ textarea:focus-visible {
   margin: 10px 0 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.personal-plan-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.personal-plan-details div {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 14px;
+  background: rgba(6, 10, 18, 0.68);
+  padding: 10px;
+}
+
+.personal-plan-details dt {
+  color: var(--primary);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+
+.personal-plan-details dd {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.personal-focus-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .personal-safety {
@@ -1891,7 +1978,11 @@ textarea:focus-visible {
   .email-category-grid,
   .email-preview-row,
   .personal-mode-grid,
+  .personal-workflow-grid,
+  .personal-target-grid,
+  .personal-focus-grid,
   .personal-proposal-row,
+  .personal-plan-details,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {

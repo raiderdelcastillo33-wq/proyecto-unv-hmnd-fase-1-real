@@ -37,7 +37,7 @@ What to avoid:
 4. Open `/demo`.
 5. Show the public multi-agent interaction and safe fallback behavior.
 6. Open `/personal`.
-7. Show the owner daily mode: documents, photos, email, priorities, and visible safety boundaries.
+7. Show the owner daily mode: First Use Workflow, organize targets, Personal Organization Plan, Today's Focus, and visible safety boundaries.
 8. Open `/lab`.
 9. Unlock with the local owner access code.
 10. Show the organization simulation: GENIO analysis, GENESIS reflection, Alignment validation, and before/after proposal.
@@ -100,6 +100,7 @@ Visible operating modes:
 - Homepage hero with Project Highlights.
 - `/demo` after a safe prompt response.
 - `/personal` daily organizer overview and safety strip.
+- `/personal` First Use Workflow and Today's Focus cards.
 - `/lab` organization simulation top section.
 - `/lab` before/after visualization.
 - `/lab` controlled read-only preview guardrails.
@@ -136,6 +137,7 @@ The demo is ready when:
 - `/` explains the product in under one minute
 - `/demo` works without unsafe claims
 - `/personal` shows a daily owner-facing organization mode without automation
+- `/personal` explains that the owner executes manually outside the app
 - `/lab` communicates value and safety in under two minutes
 - current capabilities and future blueprints are clearly separated
 - all verification commands pass
