@@ -97,6 +97,16 @@ Visible operating modes:
 
 ## Screenshot Suggestions
 
+Official screenshot set:
+
+1. Homepage recruiter presentation layer and governance contract.
+2. `/demo` with one safe prompt response.
+3. `/lab` organization simulation and safety indicators.
+4. `/lab` controlled preview or email preview guardrails.
+5. `/personal` daily owner surface and manual checklist.
+
+Additional capture options:
+
 - Homepage hero with Project Highlights.
 - `/demo` after a safe prompt response.
 - `/lab` organization simulation top section.

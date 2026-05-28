@@ -2,6 +2,32 @@
 
 UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura humano + IA llamada Humanity Guide OS.
 
+## Official Recruiter Presentation Layer
+
+Humanity Guide OS se presenta publicamente como un producto demo de IA gobernada, no como un sistema autonomo.
+
+Snapshot para recruiters:
+
+- Producto: organizacion inteligente con propuestas revisables y control humano.
+- Frontend: Next.js 15, React 19, TypeScript, App Router y Vercel readiness.
+- Arquitectura: backend Node.js modular, dominio tipado, governance metadata y boundaries visibles.
+- Seguridad: `Proposal != Execution`, `Approve != Execute`, `simulation-first`, `owner-controlled`.
+- Estado real: demo publica, Private Lab, Personal Organizer Mode, previews controlados y tests limpios.
+- Estado bloqueado: no runtime real, no filesystem execution, no Gmail real, no workers, no DB/auth real, no autonomous agents, no AGI claims.
+
+Recorrido oficial:
+
+```text
+/ -> /demo -> /lab -> /personal
+```
+
+Que debe mirar un recruiter:
+
+1. `/`: claridad del producto, governance contract, estado real vs blueprints.
+2. `/demo`: flujo publico seguro, frontera UI/API y fallback.
+3. `/lab`: GENIO governance, approvals, audit metadata, previews y execution planning simulation-only.
+4. `/personal`: superficie diaria del owner, checklist manual y limites no destructivos.
+
 El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de Humanity Guide OS:
 
 - portfolio frontend para reclutadores
