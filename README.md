@@ -1,3 +1,6 @@
+<img width="1077" height="718" alt="Imagen Madre para subir " src="https://github.com/user-attachments/assets/f0b04df9-21e8-4eaf-9bf2-aa10a869e262" />
+
+
 # UNV-HMND / Humanidad_Universo
 
 UNV-HMND es un proyecto de portfolio y laboratorio IA orientado a produccion. Combina un frontend Next.js App Router, una capa API interna, un backend Node.js modular y una arquitectura humano + IA llamada Humanity Guide OS.
