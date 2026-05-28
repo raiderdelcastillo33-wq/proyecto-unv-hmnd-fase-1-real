@@ -1428,6 +1428,55 @@ textarea:focus-visible {
   line-height: 1.55;
 }
 
+.personal-page {
+  padding-bottom: 80px;
+}
+
+.personal-hero {
+  align-items: stretch;
+}
+
+.personal-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.personal-proposal-list {
+  display: grid;
+  gap: 14px;
+}
+
+.personal-proposal-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+  gap: 16px;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(8, 13, 22, 0.86);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.personal-proposal-row h3 {
+  margin: 10px 0 0;
+  font-family: var(--font-heading);
+  font-size: 1.22rem;
+}
+
+.personal-proposal-row p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.personal-safety {
+  border: 1px solid rgba(116, 240, 186, 0.16);
+  background:
+    linear-gradient(180deg, rgba(116, 240, 186, 0.06), rgba(105, 211, 255, 0.03)),
+    rgba(8, 13, 22, 0.72);
+}
+
 @keyframes softReveal {
   from {
     opacity: 0;
@@ -1841,6 +1890,8 @@ textarea:focus-visible {
   .email-chaos-grid,
   .email-category-grid,
   .email-preview-row,
+  .personal-mode-grid,
+  .personal-proposal-row,
   .cv-grid,
   .cv-layout,
   .bullet-list--dense {

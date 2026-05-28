@@ -20,6 +20,7 @@ Core principles:
 ```text
 Owner
   -> Humanity Guide OS
+  -> /personal
   -> /lab
   -> GENIO Central Governance Layer
   -> GÉNESIS reflection metadata
@@ -31,6 +32,36 @@ Owner
 GENIO is the central governance profile. It coordinates metadata, hierarchy, risk, approval, observability, future memory, future orchestration, and future adapters.
 
 GENIO does not execute actions.
+
+## 1.0 Personal Organizer Mode
+
+Route:
+
+```text
+/personal
+apps/web/app/personal/page.tsx
+```
+
+`/personal` is the owner-facing daily organization surface. It is separate from `/lab`.
+
+Responsibilities:
+
+- organize documents conceptually
+- organize photos conceptually
+- organize email priorities conceptually
+- reduce daily priority overload
+- show owner-review proposals
+- keep safety boundaries visible
+
+Boundaries:
+
+- no filesystem write, delete, or move
+- no real email send, delete, move, reply, or forward
+- no background agents
+- no autonomous execution
+- no host scanning
+
+`/lab` remains the technical governance, audit, approval, and blueprint workspace. `/personal` is the calm daily use surface for the owner.
 
 ## 1.1 Humanity Guide OS Conceptual Ecosystem
 
@@ -100,7 +131,7 @@ Presentation and navigation readiness:
 
 - `/` now works as a recruiter walkthrough hub for Humanity Guide OS.
 - `/` includes Recruiter Quick Start and What this project demonstrates sections for short interviews and recordings.
-- Top navigation connects `/`, `/demo`, `/lab`, and architecture surfaces.
+- Top navigation connects `/`, `/demo`, `/lab`, `/personal`, and architecture surfaces.
 - The home page includes mini onboarding, a visual architecture summary, and a current-vs-future capability split.
 - The presentation explicitly separates real current behavior from future blueprints to avoid overstating capabilities.
 - The showcase adds Project Highlights, Governance-first Architecture, Simulation-first Safety, Human-centered AI, Current MVP, Future Controlled Capabilities, Technical Stack, and Architecture Principles.

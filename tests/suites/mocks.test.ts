@@ -12,6 +12,7 @@ import { PERSISTENT_AUDIT_OBSERVABILITY_BLUEPRINT } from '../../src/domain/obser
 import { STRATEGIC_ORCHESTRATION_BLUEPRINT } from '../../src/domain/orchestration/OrchestrationBlueprint'
 import { EMAIL_ORGANIZATION_PREVIEW_SAFETY } from '../../src/domain/organization/EmailOrganizationPreview'
 import { HUMANITY_GUIDE_ORGANIZATION_SIMULATION } from '../../src/domain/organization/OrganizationSimulation'
+import { PERSONAL_ORGANIZER_MODE_POLICY } from '../../src/domain/organization/PersonalOrganizerMode'
 import { READ_ONLY_ORGANIZATION_PREVIEW_POLICY } from '../../src/domain/organization/ReadOnlyOrganizationPreview'
 import { CONTROLLED_RUNTIME_SANDBOX_BLUEPRINT } from '../../src/domain/runtime/RuntimeSandboxBlueprint'
 import { User } from '../../src/domain/entities/User'
@@ -415,6 +416,27 @@ export function mockTests(): TestCase[] {
         assert.equal(policy.emailDraftMode, 'preview-only')
         assert.equal(policy.approvalRequired, true)
         assert.equal(policy.ownerControlled, true)
+      }
+    },
+    {
+      name: 'Organization: personal organizer mode remains owner controlled and non destructive',
+      run: async () => {
+        const policy = PERSONAL_ORGANIZER_MODE_POLICY
+
+        assert.equal(policy.ownerControlled, true)
+        assert.equal(policy.readOnlyFirst, true)
+        assert.equal(policy.proposalFirst, true)
+        assert.equal(policy.approvalRequired, true)
+        assert.equal(policy.auditable, true)
+        assert.equal(policy.reversible, true)
+        assert.equal(policy.actionExecuted, false)
+        assert.equal(policy.filesystemWriteAccess, false)
+        assert.equal(policy.filesystemDeleteAccess, false)
+        assert.equal(policy.filesystemMoveAccess, false)
+        assert.equal(policy.emailSendAccess, false)
+        assert.equal(policy.emailDeleteAccess, false)
+        assert.equal(policy.emailMoveAccess, false)
+        assert.equal(policy.backgroundAgents, false)
       }
     },
     {

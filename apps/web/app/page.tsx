@@ -47,8 +47,13 @@ const walkthrough = [
   },
   {
     step: '03',
+    title: 'Open Personal Organizer Mode',
+    description: 'Use `/personal` to see the owner-facing daily surface for documents, photos, emails, and priorities.'
+  },
+  {
+    step: '04',
     title: 'Review the Private Lab',
-    description: 'Walk through the simulation-only organization demo, governance badges, approval flow, and safety indicators.'
+    description: 'Walk through the technical governance lab, approval flow, audit metadata, and safety indicators.'
   }
 ]
 
@@ -96,6 +101,7 @@ const capabilitySplit = [
     items: [
       'Public `/demo` route',
       'Owner-gated `/lab` route',
+      'Owner-facing `/personal` route',
       'Mock organization simulation',
       'Read-only metadata preview',
       'Email preview with fake inbox',
@@ -215,6 +221,9 @@ export default function HomePage() {
             </Link>
             <Link className="secondary-button" href="/lab">
               Open Private Lab
+            </Link>
+            <Link className="secondary-button" href="/personal">
+              Open Personal Mode
             </Link>
             <Link className="secondary-button" href="/about">
               Review architecture

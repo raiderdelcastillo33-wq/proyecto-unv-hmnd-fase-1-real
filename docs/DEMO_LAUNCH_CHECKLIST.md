@@ -36,12 +36,14 @@ What to avoid:
 3. Point out the distinction between current capabilities and future blueprints.
 4. Open `/demo`.
 5. Show the public multi-agent interaction and safe fallback behavior.
-6. Open `/lab`.
-7. Unlock with the local owner access code.
-8. Show the organization simulation: GENIO analysis, GENESIS reflection, Alignment validation, and before/after proposal.
-9. Show the controlled read-only preview: browser-selected metadata only, no write/delete/move.
-10. Show the controlled email preview: fake inbox, preview-only labels, priority proposal, and draft suggestions.
-11. Close on safety: proposal-only, approval-required, actionExecuted false.
+6. Open `/personal`.
+7. Show the owner daily mode: documents, photos, email, priorities, and visible safety boundaries.
+8. Open `/lab`.
+9. Unlock with the local owner access code.
+10. Show the organization simulation: GENIO analysis, GENESIS reflection, Alignment validation, and before/after proposal.
+11. Show the controlled read-only preview: browser-selected metadata only, no write/delete/move.
+12. Show the controlled email preview: fake inbox, preview-only labels, priority proposal, and draft suggestions.
+13. Close on safety: proposal-only, approval-required, actionExecuted false.
 
 ## Visual Validation
 
@@ -49,6 +51,7 @@ Check these routes:
 
 - `/`
 - `/demo`
+- `/personal`
 - `/lab`
 
 Verify:
@@ -96,6 +99,7 @@ Visible operating modes:
 
 - Homepage hero with Project Highlights.
 - `/demo` after a safe prompt response.
+- `/personal` daily organizer overview and safety strip.
 - `/lab` organization simulation top section.
 - `/lab` before/after visualization.
 - `/lab` controlled read-only preview guardrails.
@@ -118,7 +122,7 @@ Then verify:
 
 - metadata and OpenGraph are coherent
 - manifest loads
-- sitemap contains `/`, `/demo`, and `/lab`
+- sitemap contains `/`, `/demo`, `/personal`, and `/lab`
 - icon renders
 - no broken public routes
 - no critical console errors
@@ -131,6 +135,7 @@ The demo is ready when:
 
 - `/` explains the product in under one minute
 - `/demo` works without unsafe claims
+- `/personal` shows a daily owner-facing organization mode without automation
 - `/lab` communicates value and safety in under two minutes
 - current capabilities and future blueprints are clearly separated
 - all verification commands pass

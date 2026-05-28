@@ -20,6 +20,7 @@ El proyecto evoluciono desde una demo publica de portfolio hacia un blueprint de
 - blueprint de adapter read-only para preview futuro de archivos
 - controlled read-only organization preview con metadata de navegador
 - controlled email organization preview con dataset simulado
+- `/personal` como superficie diaria del owner para organizacion personal controlada
 - launch checklist para demos, recruiters, screenshots y Vercel readiness
 
 La regla central del sistema es:
@@ -117,6 +118,52 @@ Presentation readiness:
 - Guia de demo para recruiters en `docs/RECRUITER_DEMO_GUIDE.md`.
 
 Todo permanece `simulation-only`: no existe lectura real de archivos, host scanning, rename, delete, move ni filesystem runtime.
+
+## Personal Organizer Mode `/personal`
+
+`/personal` es la superficie diaria usable del owner.
+
+Nombre:
+
+```text
+Humanity Guide OS — Personal Organizer Mode
+```
+
+Objetivo:
+
+- organizar documentos
+- organizar fotos
+- organizar correos
+- revisar prioridades
+- reducir caos
+- crear claridad diaria
+
+Relacion con `/lab`:
+
+- `/personal` es la superficie de uso diario del owner.
+- `/lab` sigue siendo el Private AI Lab tecnico/gobernanza.
+
+Modo operativo:
+
+- owner-controlled
+- read-only-first
+- proposal-first
+- approval-required
+- auditable
+- reversible
+- `actionExecuted: false`
+
+Limites visibles:
+
+- `filesystemWriteAccess: false`
+- `filesystemDeleteAccess: false`
+- `filesystemMoveAccess: false`
+- `emailSendAccess: false`
+- `emailDeleteAccess: false`
+- `emailMoveAccess: false`
+- `backgroundAgents: false`
+
+No existe automatizacion autonoma, escritura/borrado/movimiento real de archivos, envio real de correos ni background agents.
 
 ## Stack Tecnologico
 
@@ -909,6 +956,7 @@ Local:
 http://localhost:3001
 http://localhost:3001/demo
 http://localhost:3001/lab
+http://localhost:3001/personal
 ```
 
 Produccion/Vercel:
@@ -917,12 +965,14 @@ Produccion/Vercel:
 https://your-vercel-domain.example
 https://your-vercel-domain.example/demo
 https://your-vercel-domain.example/lab
+https://your-vercel-domain.example/personal
 ```
 
 Validar:
 
 - `/demo` carga, selector de agentes funciona, fallback seguro responde y no hay errores criticos en Console
 - `/lab` pide `OWNER_ACCESS_CODE`, muestra GENIO, approvals, audit, auth, observability, capabilities, sandbox, file preview, memory, orchestration, adapters, read-only preview y email preview
+- `/personal` muestra el modo diario del owner con documentos, fotos, emails, prioridades y safety indicators
 - Network muestra `/api/v1/run`, `/api/lab/catalog` y `/api/lab/tool` sin exponer secretos
 - approve/reject no ejecutan acciones reales
 - no existe `NEXT_PUBLIC_OWNER_ACCESS_CODE`

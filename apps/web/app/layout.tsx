@@ -55,6 +55,7 @@ const navigationItems = [
   { href: '/', label: 'Accueil' },
   { href: '/demo', label: 'Démo' },
   { href: '/lab', label: 'Private Lab' },
+  { href: '/personal', label: 'Personal' },
   { href: '/about', label: 'Architecture' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/gallery', label: 'Galerie' },
