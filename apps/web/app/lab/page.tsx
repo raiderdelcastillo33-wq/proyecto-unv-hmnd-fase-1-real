@@ -269,6 +269,7 @@ export default function LabPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [labSearchQuery, setLabSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const selectedAgent = agents.find((agent) => agent.id === agentId) ?? agents[0]
   const availableTools = tools.filter((tool) => selectedAgent?.allowedTools.includes(tool.id))
@@ -341,12 +342,24 @@ export default function LabPage() {
     }
   ]
 
+  const uniqueLabCategories = Array.from(
+    new Set(labNavigatorItems.map((item) => item.category))
+  ).sort()
+
   const normalizedLabSearchQuery = labSearchQuery.trim().toLowerCase()
-  const visibleLabNavigatorItems = normalizedLabSearchQuery
-    ? labNavigatorItems.filter((item) =>
-        [item.label, item.id, ...item.keywords].some((value) => value.toLowerCase().includes(normalizedLabSearchQuery))
+  const visibleLabNavigatorItems = labNavigatorItems.filter((item) => {
+    // Apply category filter
+    if (selectedCategory && item.category !== selectedCategory) {
+      return false
+    }
+    // Apply search filter
+    if (normalizedLabSearchQuery) {
+      return [item.label, item.id, ...item.keywords].some((value) =>
+        value.toLowerCase().includes(normalizedLabSearchQuery)
       )
-    : labNavigatorItems
+    }
+    return true
+  })
 
   useEffect(() => {
     if (selectedTool && selectedTool.id !== toolId) {
@@ -561,6 +574,49 @@ export default function LabPage() {
             <p className="meta-text">
               {visibleLabNavigatorItems.length} of {labNavigatorItems.length} sections
             </p>
+
+            {/* Category Filter Buttons */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px', marginBottom: '12px' }}>
+              <button
+                onClick={() => setSelectedCategory(null)}
+                style={{
+                  padding: '6px 12px',
+                  border: selectedCategory === null ? '1px solid #69d3ff' : '1px solid rgba(105, 211, 255, 0.3)',
+                  borderRadius: '4px',
+                  background: selectedCategory === null ? 'rgba(105, 211, 255, 0.2)' : 'transparent',
+                  color: '#69d3ff',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  fontWeight: selectedCategory === null ? 500 : 'normal',
+                  transition: 'all 150ms ease',
+                  fontFamily: 'inherit'
+                }}
+                type="button"
+              >
+                All
+              </button>
+              {uniqueLabCategories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  style={{
+                    padding: '6px 12px',
+                    border: selectedCategory === category ? '1px solid #69d3ff' : '1px solid rgba(105, 211, 255, 0.3)',
+                    borderRadius: '4px',
+                    background: selectedCategory === category ? 'rgba(105, 211, 255, 0.2)' : 'transparent',
+                    color: '#69d3ff',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    fontWeight: selectedCategory === category ? 500 : 'normal',
+                    transition: 'all 150ms ease',
+                    fontFamily: 'inherit'
+                  }}
+                  type="button"
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
             
             {visibleLabNavigatorItems.length > 0 ? (
               <div className="lab-navigator-grid">
