@@ -550,13 +550,17 @@ export default function LabPage() {
               Search lab sections
             </label>
             <input
+              autoFocus
               className="select-input"
               id="lab-section-search"
               onChange={(event) => setLabSearchQuery(event.target.value)}
-              placeholder="Search by name, category, or keyword (e.g., 'approval', 'safety', 'audit')..."
+              placeholder="Find a section..."
               type="search"
               value={labSearchQuery}
             />
+            <p className="meta-text">
+              {visibleLabNavigatorItems.length} of {labNavigatorItems.length} sections
+            </p>
             
             {visibleLabNavigatorItems.length > 0 ? (
               <div className="lab-navigator-grid">
