@@ -220,14 +220,33 @@ describe('POST /api/v1/run', () => {
     expect(payload.success).toBe(true)
     expect(payload.data.id).toContain('demo-fallback-')
     expect(payload.data.response).toContain('Mode demo/fallback actif')
-    expect(payload.data.response).toContain('aucun backend Node externe')
+    expect(payload.data.response).toContain('aucun backend Node disponible')
     expect(payload.meta).toEqual({
       mode: 'demo-fallback',
-      reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
+      reason: 'No reachable Node API is available for this demo route.',
       agentId: 'tutor',
       contextReceived: false
     })
     expect(JSON.stringify(payload)).not.toContain('OPENAI_API_KEY')
+  })
+
+  it('returns a safe demo fallback when the configured local backend is unavailable', async () => {
+    mockedGetBackendRuntimeInfo.mockReturnValue({
+      configured: true,
+      mode: 'external',
+      baseUrl: 'http://localhost:3000',
+      service: 'api-server'
+    })
+    mockedForwardJson.mockRejectedValue(new Error('Backend unavailable at http://localhost:3000'))
+
+    const response = await POST(createJsonRequest(JSON.stringify({ input: 'hello local fallback' })) as never)
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.success).toBe(true)
+    expect(payload.data.response).toContain('Mode demo/fallback actif')
+    expect(payload.data.response).toContain("Aucune action externe n'a ete executee.")
+    expect(payload.meta.mode).toBe('demo-fallback')
   })
 
   it('preserves agentId in the safe demo fallback', async () => {

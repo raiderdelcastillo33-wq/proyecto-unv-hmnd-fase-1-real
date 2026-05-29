@@ -85,14 +85,27 @@ function createDemoFallbackPayload(validation: { input: string; agentId?: string
     success: true,
     data: {
       id: `demo-fallback-${Date.now()}`,
-      response: `Mode demo/fallback actif: aucun backend Node externe n'est configure pour cette instance Vercel. Votre message a ete transforme en reponse de demonstration par la route Next.js locale avec l'agent ${agentLabel}. Aucune action externe n'a ete executee.`
+      response: `Mode demo/fallback actif: aucun backend Node disponible pour cette instance de demo. Votre message a ete transforme en reponse de demonstration par la route Next.js locale avec l'agent ${agentLabel}. Aucune action externe n'a ete executee.`
     },
     meta: {
       mode: 'demo-fallback',
-      reason: 'UNV_API_BASE_URL is not configured for an external Node API.',
+      reason: 'No reachable Node API is available for this demo route.',
       agentId: agentLabel,
       contextReceived: Boolean(validation.context)
     }
+  }
+}
+
+function isLocalConfiguredBackend(baseUrl: string | null): boolean {
+  if (!baseUrl) {
+    return false
+  }
+
+  try {
+    const url = new URL(baseUrl)
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+  } catch {
+    return false
   }
 }
 
@@ -141,7 +154,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const runtime = getBackendRuntimeInfo()
 
-    if (!runtime.configured && runtime.mode === 'local') {
+    if ((!runtime.configured && runtime.mode === 'local') || isLocalConfiguredBackend(runtime.baseUrl)) {
       return NextResponse.json(createDemoFallbackPayload(validation), { status: 200 })
     }
 

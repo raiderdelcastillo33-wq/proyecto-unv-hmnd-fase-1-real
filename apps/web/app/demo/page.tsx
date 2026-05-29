@@ -152,6 +152,19 @@ function parseRunResult(payload: unknown): RunResult {
   }
 }
 
+function isLocalBackend(backend: string | null): boolean {
+  if (!backend) {
+    return false
+  }
+
+  try {
+    const url = new URL(backend)
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+  } catch {
+    return false
+  }
+}
+
 function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pending' | 'error'; label: string; message: string } {
   if (runtime.status === 'checking') {
     return {
@@ -188,6 +201,14 @@ function getRuntimePresentation(runtime: RuntimeState): { tone: 'success' | 'pen
   }
 
   if (runtime.mode === 'external') {
+    if (isLocalBackend(runtime.backend)) {
+      return {
+        tone: 'error',
+        label: 'Backend local configuré indisponible',
+        message: runtime.error ?? 'Le backend local configuré ne répond pas. La soumission utilise un fallback Next.js sûr.'
+      }
+    }
+
     return {
       tone: 'error',
       label: 'Backend externe indisponible',
