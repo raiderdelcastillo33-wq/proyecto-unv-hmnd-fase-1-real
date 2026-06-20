@@ -94,7 +94,7 @@ export default function PersonalOrganizerPage() {
             <Link className="secondary-button" href="/demo">
               Open public demo
             </Link>
-            <Link className="tech-pill" href="/portfolio">
+            <Link className="ghost-button" href="/portfolio">
               Follow the builder journey
             </Link>
           </div>

@@ -112,7 +112,7 @@ export default function CvPage() {
               </a>
             )}
             <a className="secondary-button" href="/portfolio">View portfolio</a>
-            <a className="tech-pill" href="/demo">Try the product</a>
+            <a className="ghost-button" href="/demo">Try the product</a>
           </div>
         </div>
 

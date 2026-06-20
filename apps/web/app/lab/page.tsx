@@ -379,7 +379,7 @@ export default function LabPage() {
             <a className="secondary-button" href={unlocked ? '#agent-catalog' : '#governance'}>
               {unlocked ? 'Explore agent catalog' : 'Review governance'}
             </a>
-            <a className="tech-pill" href={unlocked ? '#future-blueprints' : '#private-access'}>
+            <a className="ghost-button" href={unlocked ? '#future-blueprints' : '#private-access'}>
               {unlocked ? 'Review blueprints' : 'Blueprints after access'}
             </a>
           </div>

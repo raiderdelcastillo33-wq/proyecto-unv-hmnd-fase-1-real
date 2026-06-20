@@ -180,10 +180,10 @@ export default function PortfolioPage() {
             <Link className="secondary-button" href="/about">
               Review architecture
             </Link>
-            <Link className="tech-pill" href="/cv">
+            <Link className="ghost-button" href="/cv">
               View CV
             </Link>
-            <a className="tech-pill" href="#journey-heading">
+            <a className="ghost-button" href="#journey-heading">
               Explore the journey
             </a>
           </div>
