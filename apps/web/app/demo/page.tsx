@@ -408,9 +408,6 @@ export default function DemoPage() {
             <a className="secondary-button" href="#agents">
               Choose an agent
             </a>
-            <a className="tech-pill" href="#capabilities-heading">
-              View current scope
-            </a>
           </div>
         </div>
         <aside className="hero-card hero-card--spotlight">
@@ -461,22 +458,6 @@ export default function DemoPage() {
             <h2>Ask {selectedAgent.label}</h2>
             <p>{selectedAgent.description}</p>
           </div>
-
-          <label className="field-label" htmlFor="agent-select">
-            Agent
-          </label>
-          <select
-            className="select-input"
-            id="agent-select"
-            onChange={(event) => setSelectedAgentId(event.target.value as typeof selectedAgentId)}
-            value={selectedAgentId}
-          >
-            {agentOptions.map((agent) => (
-              <option key={agent.id} value={agent.id}>
-                {agent.label}
-              </option>
-            ))}
-          </select>
 
           <label className="field-label" htmlFor="demo-input">
             Your message

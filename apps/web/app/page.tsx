@@ -39,24 +39,6 @@ const connectedSystems = [
   }
 ]
 
-const governanceContract = [
-  {
-    label: 'Proposal',
-    value: '!= execution',
-    detail: 'A generated plan is a reviewable suggestion, never a completed real-world action.'
-  },
-  {
-    label: 'Human approval',
-    value: 'remains mandatory',
-    detail: 'The person keeps final authority over every meaningful decision and external action.'
-  },
-  {
-    label: 'Sensitive workflows',
-    value: 'controlled only',
-    detail: 'Sensitive examples are simulated. The only local exception is user-selected, browser-only file metadata preview.'
-  }
-]
-
 const recruiterClarity = [
   {
     status: 'Exists today',
@@ -130,12 +112,6 @@ export default function HomePage() {
             <Link className="secondary-button" href="/lab">
               Explore private lab
             </Link>
-            <Link className="tech-pill" href="/about">
-              Review architecture
-            </Link>
-            <Link className="tech-pill" href="/portfolio">
-              View portfolio
-            </Link>
           </div>
         </div>
 
@@ -201,27 +177,6 @@ export default function HomePage() {
             <article className="architecture-summary__item" key={item.status}>
               <span>{item.status}</span>
               <h3>{item.title}</h3>
-              <p>{item.detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="governance-contract" aria-labelledby="governance-heading">
-        <div className="governance-contract__intro">
-          <p className="result-eyebrow">Governance boundaries</p>
-          <h2 id="governance-heading">Responsible by design</h2>
-          <p>
-            Notion is not connected to production, ChatGPT is not directly integrated, and the website does not
-            control VS Code. There are no real autonomous agents, total memory, user backend, or working agenda.
-          </p>
-        </div>
-
-        <div className="governance-contract__grid">
-          {governanceContract.map((item) => (
-            <article className="governance-contract__item" key={item.label}>
-              <span>{item.label}</span>
-              <strong>{item.value}</strong>
               <p>{item.detail}</p>
             </article>
           ))}

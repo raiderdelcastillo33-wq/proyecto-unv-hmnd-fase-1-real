@@ -2361,33 +2361,38 @@ textarea:focus-visible {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 24px;
-  margin-top: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
 }
 
 .gallery-card {
-  grid-column: span 6;
-  padding: 18px;
-  transition: transform 180ms ease, border-color 180ms ease;
+  overflow: hidden;
+  border-radius: 24px;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .gallery-card:hover {
   transform: translateY(-4px);
   border-color: rgba(105, 211, 255, 0.22);
+  box-shadow: var(--shadow);
 }
 
 .gallery-media {
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  border-radius: 22px;
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(2, 6, 23, 0.72);
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .gallery-media img {
   display: block;
-  width: 100%;
-  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   transition: transform 220ms ease, filter 220ms ease;
 }
 
@@ -2399,7 +2404,7 @@ textarea:focus-visible {
 .gallery-copy {
   display: grid;
   gap: 8px;
-  padding: 16px 4px 4px;
+  padding: 1.5rem;
 }
 
 .gallery-title-row {
@@ -2468,7 +2473,6 @@ textarea:focus-visible {
 }
 
 .cv-sidebar__identity,
-.cv-download-card,
 .cv-contact-card,
 .cv-section {
   border: 1px solid var(--panel-border);
@@ -2495,28 +2499,11 @@ textarea:focus-visible {
   line-height: 1.6;
 }
 
-.cv-download-card,
 .cv-contact-card,
 .cv-section {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
     rgba(8, 17, 31, 0.88);
-}
-
-.cv-download-button {
-  width: 100%;
-  min-height: 56px;
-}
-
-.cv-download-button--placeholder {
-  cursor: default;
-  opacity: 0.92;
-}
-
-.cv-download-note {
-  margin: 14px 0 0;
-  color: var(--muted);
-  line-height: 1.6;
 }
 
 .cv-content {
@@ -2612,10 +2599,6 @@ textarea:focus-visible {
 
   .metrics-grid {
     grid-template-columns: 1fr;
-  }
-
-  .gallery-card {
-    grid-column: span 12;
   }
 
   .story-card {
@@ -2740,113 +2723,6 @@ textarea:focus-visible {
   .file-column {
     transition: none;
   }
-}
-
-/* Gallery Styles */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
-}
-
-.gallery-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-
-.gallery-card:hover {
-  border-color: var(--primary-soft);
-  box-shadow: var(--shadow);
-}
-
-.gallery-media {
-  aspect-ratio: 16/10;
-  background: var(--bg-elevated);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-
-.gallery-media img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.gallery-copy {
-  padding: 1.5rem;
-}
-
-.gallery-copy h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.gallery-copy p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-/* Download Styles */
-.download-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
-}
-
-.download-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.download-card:hover {
-  border-color: var(--primary-soft);
-  box-shadow: var(--shadow);
-}
-
-.download-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.download-content h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.download-content p {
-  margin: 0 0 1.5rem 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.download-button {
-  display: inline-block;
-  background: var(--primary);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.download-button:hover {
-  background: var(--primary-strong);
-  transform: translateY(-1px);
 }
 
 /* Code Explanation Styles */

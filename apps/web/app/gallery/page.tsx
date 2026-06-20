@@ -20,23 +20,13 @@ const visualJourney = [
   },
   {
     step: '03',
-    title: 'Private AI Lab',
-    description: 'La recherche autour de la gouvernance, des propositions contrôlées, de l’approbation humaine et des simulations sûres.'
+    title: 'Private AI Lab & Personal Life OS',
+    description: 'La gouvernance, les propositions contrôlées et une vision plus calme de l’organisation quotidienne.'
   },
   {
     step: '04',
-    title: 'Personal Life OS',
-    description: 'Une vision plus calme de l’organisation quotidienne : priorités, projets, documents, souvenirs et croissance.'
-  },
-  {
-    step: '05',
-    title: 'Architecture',
-    description: 'Les diagrammes et flux qui rendent visibles les décisions techniques, les limites et la structure du produit.'
-  },
-  {
-    step: '06',
-    title: 'Future communauté',
-    description: 'Un espace futur pour raconter l’apprentissage en public et partager l’évolution du projet sans prétendre qu’une communauté active existe déjà.'
+    title: 'Architecture & récit public',
+    description: 'Les futurs diagrammes, flux et visuels pourront montrer les décisions techniques et l’évolution du projet.'
   }
 ]
 
@@ -120,7 +110,6 @@ export default async function GalleryPage() {
           {visualJourney.map((item) => (
             <article className="timeline-card" key={item.step}>
               <span className="step-index">{item.step}</span>
-              <p className="result-eyebrow">Emplacement visuel futur</p>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
             </article>

@@ -553,27 +553,9 @@ export default function LabPage() {
                 <p>Use the selected agent and tool to prepare a reviewable plan.</p>
               </div>
 
-              <label className="field-label" htmlFor="lab-agent">Agent</label>
-              <select
-                className="select-input"
-                id="lab-agent"
-                onChange={(event) => setAgentId(event.target.value)}
-                value={agentId}
-              >
-                {agents.map((agent) => <option key={agent.id} value={agent.id}>{agent.label}</option>)}
-              </select>
-
-              <label className="field-label" htmlFor="lab-tool">Tool</label>
-              <select
-                className="select-input"
-                id="lab-tool"
-                onChange={(event) => setToolId(event.target.value)}
-                value={toolId}
-              >
-                {visibleTools.map((tool) => <option key={tool.id} value={tool.id}>{tool.label}</option>)}
-              </select>
-
               <div className="response-meta">
+                <span className="info-chip">Agent: {selectedAgent?.label}</span>
+                <span className="info-chip">Tool: {selectedTool?.label}</span>
                 <span className="info-chip">Agent risk {selectedAgent?.riskProfile}</span>
                 <span className="info-chip">Tool risk {selectedTool?.riskLevel}</span>
                 <span className="info-chip">{selectedTool?.requiresApproval ? 'Approval required' : 'Proposal safe'}</span>

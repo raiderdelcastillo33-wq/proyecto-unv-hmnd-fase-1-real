@@ -137,31 +137,6 @@ export default function CvPage() {
             <p className="cv-title">Learning deeply, building carefully, improving continuously.</p>
           </div>
 
-          <div className="cv-download-card">
-            {hasPdf ? (
-              <a
-                className="primary-button cv-download-button"
-                download="raider-cv.pdf"
-                href="/cv/raider-cv.pdf"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Download CV
-              </a>
-            ) : (
-              <span
-                aria-disabled="true"
-                className="secondary-button cv-download-button cv-download-button--placeholder"
-                role="button"
-              >
-                Download CV
-              </span>
-            )}
-            <p className="cv-download-note">
-              {hasPdf ? 'PDF version available.' : 'PDF download will be available when the final document is added.'}
-            </p>
-          </div>
-
           <div className="cv-contact-card">
             <p className="result-eyebrow">Contact</p>
             <ul className="bullet-list">

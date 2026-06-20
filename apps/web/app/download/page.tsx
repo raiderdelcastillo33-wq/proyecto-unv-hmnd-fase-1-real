@@ -29,8 +29,6 @@ const recruiterResources = [
   }
 ]
 
-const contactPlaceholders = ['GitHub', 'LinkedIn', 'Email']
-
 export default function DownloadPage() {
   const pdfPath = path.join(process.cwd(), 'public', 'cv', 'raider-cv.pdf')
   const hasPdf = existsSync(pdfPath)
@@ -95,26 +93,6 @@ export default function DownloadPage() {
         </div>
       </section>
 
-      <section className="section-block" aria-labelledby="github-heading">
-        <article className="story-card">
-          <div>
-            <p className="result-eyebrow">GitHub & contact · Placeholders</p>
-            <h2 className="section-title" id="github-heading">Présence professionnelle en préparation</h2>
-            <p>
-              Les liens publics seront connectés lorsqu’ils seront confirmés. Aucun profil ou moyen de contact
-              externe n’est inventé ici.
-            </p>
-          </div>
-
-          <nav className="story-card__actions" aria-label="Liens professionnels à venir">
-            {contactPlaceholders.map((item) => (
-              <a aria-label={`${item} — lien à venir`} className="tech-pill" href="#" key={item}>
-                {item}
-              </a>
-            ))}
-          </nav>
-        </article>
-      </section>
     </main>
   )
 }
