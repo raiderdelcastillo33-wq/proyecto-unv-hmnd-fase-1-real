@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { createPersonalOrganizerDailyPlan } from '@/lib/personal-organizer-mode'
 
 export const metadata: Metadata = {
-  title: 'Personal Organizer Mode - Humanity Guide OS',
+  title: 'Personal Life OS - Humanity Guide OS',
   description:
-    'Owner-controlled personal organization surface for documents, photos, emails, and priorities. Read-only-first, proposal-first, and no real execution.'
+    'A calm, human-centered space for learning, priorities, projects, memories, and daily clarity.'
 }
 
 const areaLabels = {
@@ -15,6 +15,58 @@ const areaLabels = {
   priorities: 'Priorities'
 } as const
 
+const lifeAreas = [
+  {
+    title: 'Learning',
+    description: 'Bring study goals, technical practice, and future learning paths into one calm view.'
+  },
+  {
+    title: 'Projects',
+    description: 'See active ideas, Full Stack work, and next steps without losing the human purpose behind them.'
+  },
+  {
+    title: 'Family',
+    description: 'Protect space for people, shared memories, and the responsibilities that matter beyond work.'
+  },
+  {
+    title: 'Documents',
+    description: 'Turn scattered paperwork into reviewable organization zones and manual next steps.'
+  },
+  {
+    title: 'Photos',
+    description: 'Represent memories as something to care for, review, and organize without automatic file access.'
+  },
+  {
+    title: 'Emails',
+    description: 'Preview communication priorities without connecting to, reading, sending, or changing a real inbox.'
+  },
+  {
+    title: 'Daily priorities',
+    description: 'Choose a small, realistic focus for today and leave lower-value noise for later.'
+  },
+  {
+    title: 'Life clarity',
+    description: 'Connect learning, personal responsibilities, projects, and long-term growth with less overwhelm.'
+  }
+]
+
+const futureVision = [
+  'Safe memory',
+  'Learning paths',
+  'Interview workflows',
+  'Humanity Pro University',
+  'Community layer'
+]
+
+const safetyBoundaries = [
+  'No real email',
+  'No filesystem',
+  'No memory engine',
+  'No automation',
+  'No autonomous agents',
+  'Proposal != Execution'
+]
+
 export default function PersonalOrganizerPage() {
   const plan = createPersonalOrganizerDailyPlan()
 
@@ -22,19 +74,17 @@ export default function PersonalOrganizerPage() {
     <main className="page-shell personal-page">
       <section className="hero personal-hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Personal operating system</span>
-          <p className="personal-hero-kicker">Humanity Guide OS</p>
-          <h1>Personal Organizer Mode</h1>
+          <span className="hero-badge">Humanity Guide OS</span>
+          <h1>Personal Life OS</h1>
           <p>
-            A calm daily workspace for organizing documents, photos, emails, and priorities through governed
-            proposals. It is built for clarity, not automation.
+            A calm space for learning, priorities, projects, memories and daily clarity. This is the everyday-life
+            vision of Humanity Guide OS.
           </p>
           <div className="tag-row">
-            <span className="tech-pill">owner-controlled</span>
-            <span className="tech-pill">read-only-first</span>
-            <span className="tech-pill">proposal-first</span>
-            <span className="tech-pill">approval-required</span>
-            <span className="tech-pill">actionExecuted: false</span>
+            <span className="tech-pill">Calm</span>
+            <span className="tech-pill">Human-centered</span>
+            <span className="tech-pill">Long-term growth</span>
+            <span className="tech-pill">Proposal-only</span>
           </div>
           <div className="hero-actions">
             <Link className="primary-button" href="/lab">
@@ -47,11 +97,11 @@ export default function PersonalOrganizerPage() {
         </div>
 
         <aside className="hero-card hero-card--spotlight personal-os-card">
-          <p className="result-eyebrow">Daily operating status</p>
+          <p className="result-eyebrow">Today</p>
           <h2>{plan.dayStatus}</h2>
           <p className="meta-text">
-            This mode turns organization signals into a practical first-use plan. It does not write, delete, move,
-            send, reply, scan the host, or run background agents.
+            Start with one useful step. The system offers perspective and proposals while every real action stays
+            with the person.
           </p>
           <div className="metrics-grid">
             <article className="metric-card">
@@ -67,8 +117,8 @@ export default function PersonalOrganizerPage() {
               <span className="metric-label">Organization readiness</span>
             </article>
             <article className="metric-card">
-              <strong className="metric-value">0</strong>
-              <span className="metric-label">Real destructive actions</span>
+              <strong className="metric-value">Human</strong>
+              <span className="metric-label">Final authority</span>
             </article>
           </div>
         </aside>
@@ -76,11 +126,11 @@ export default function PersonalOrganizerPage() {
 
       <section className="section-block personal-dashboard" aria-labelledby="daily-dashboard-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Daily Organization Dashboard</p>
+          <p className="result-eyebrow">Daily clarity</p>
           <h2 className="section-title" id="daily-dashboard-heading">
-            Your calm command center for today
+            A gentle overview, not a command center
           </h2>
-          <p>Everything here is mock/read-only guidance. The owner chooses what to do manually.</p>
+          <p>Use the signals as guidance for a manageable day. They are not measurements of personal worth.</p>
         </div>
 
         <div className="personal-dashboard-grid">
@@ -94,81 +144,32 @@ export default function PersonalOrganizerPage() {
         </div>
       </section>
 
-      <section className="section-block personal-score-panel" aria-labelledby="visual-score-heading">
+      <section className="section-block" aria-labelledby="life-areas-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Visual Chaos Score</p>
-          <h2 className="section-title" id="visual-score-heading">
-            Clarity is improving one manual pass at a time
+          <p className="result-eyebrow">A whole-life perspective</p>
+          <h2 className="section-title" id="life-areas-heading">
+            What Personal Life OS brings together
           </h2>
-          <p>{plan.todayImprovement}</p>
+          <p>Daily organization makes more sense when learning, relationships, work, memories, and rest share context.</p>
         </div>
 
-        <div className="personal-score-grid">
-          {plan.scoreMetrics.map((metric) => (
-            <article className="personal-score-card" key={metric.id}>
-              <div>
-                <span>{metric.label}</span>
-                <strong>{metric.score}%</strong>
-              </div>
-              <div className="personal-progress-track" aria-label={`${metric.label} progress`}>
-                <span style={{ width: `${metric.score}%` }} />
-              </div>
-              <p>{metric.helper}</p>
+        <div className="showcase-grid">
+          {lifeAreas.map((area) => (
+            <article className="showcase-card" key={area.title}>
+              <h3>{area.title}</h3>
+              <p>{area.description}</p>
             </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block personal-workflow" aria-labelledby="first-use-workflow-heading">
-        <div className="section-head">
-          <p className="result-eyebrow">First Use Workflow</p>
-          <h2 className="section-title" id="first-use-workflow-heading">
-            A guided first organization pass
-          </h2>
-          <p>
-            Start small, preview the chaos, review proposals, and then execute manually outside the app. The workflow
-            is designed to reduce overwhelm without giving the system destructive powers.
-          </p>
-        </div>
-
-        <div className="personal-workflow-grid">
-          {plan.firstUseWorkflow.map((item) => (
-            <article className="personal-workflow-card" key={item.id}>
-              <span className="info-chip">{item.step}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block" aria-labelledby="organize-options-heading">
-        <div className="section-head">
-          <p className="result-eyebrow">Choose what to organize</p>
-          <h2 className="section-title" id="organize-options-heading">
-            Pick one surface, not everything
-          </h2>
-          <p>These options are planning targets only. Selecting an area does not scan, move, delete, or send anything.</p>
-        </div>
-
-        <div className="personal-target-grid" aria-label="Personal organization options">
-          {plan.organizationTargets.map((target) => (
-            <button className="personal-target-button" key={target} type="button">
-              {target}
-            </button>
           ))}
         </div>
       </section>
 
       <section className="section-block" aria-labelledby="personal-mode-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Personal organization cockpit</p>
+          <p className="result-eyebrow">Documents, photos, email and priorities</p>
           <h2 className="section-title" id="personal-mode-heading">
-            One place to reduce daily chaos
+            Current organization signals
           </h2>
-          <p>
-            `/personal` is the owner-facing mode. `/lab` remains the technical governance and blueprint surface.
-          </p>
+          <p>A read-only preview of the areas that may need attention, expressed as calm suggestions.</p>
         </div>
 
         <div className="personal-mode-grid">
@@ -188,10 +189,11 @@ export default function PersonalOrganizerPage() {
 
       <section className="section-block" aria-labelledby="organization-zones-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Organization Zones</p>
+          <p className="result-eyebrow">Organization zones</p>
           <h2 className="section-title" id="organization-zones-heading">
-            Give every type of chaos a calm place
+            Give each part of life a calmer place
           </h2>
+          <p>Zones create a useful mental map before any manual organization begins.</p>
         </div>
 
         <div className="personal-zone-grid">
@@ -200,7 +202,7 @@ export default function PersonalOrganizerPage() {
               <span className="info-chip">{zone.label}</span>
               <h3>{zone.summary}</h3>
               <p>{zone.suggestedAction}</p>
-              <span className="info-chip">risk: {zone.riskLevel}</span>
+              <span className="info-chip">Review level: {zone.riskLevel}</span>
             </article>
           ))}
         </div>
@@ -208,10 +210,11 @@ export default function PersonalOrganizerPage() {
 
       <section className="section-block" aria-labelledby="proposal-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Personal Organization Plan</p>
+          <p className="result-eyebrow">Personal organization proposals</p>
           <h2 className="section-title" id="proposal-heading">
-            What to sort first, why it matters, and how to stay safe
+            Small steps with context and purpose
           </h2>
+          <p>Each proposal explains what could help and why. The person decides whether and how to act.</p>
         </div>
 
         <div className="personal-proposal-list">
@@ -251,9 +254,9 @@ export default function PersonalOrganizerPage() {
 
       <section className="section-block personal-focus" aria-labelledby="today-focus-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Today's Focus</p>
+          <p className="result-eyebrow">Daily priorities</p>
           <h2 className="section-title" id="today-focus-heading">
-            Start without overwhelming yourself
+            Make progress without overwhelming yourself
           </h2>
           <p>{plan.todayFocus.focusPrinciple}</p>
         </div>
@@ -263,8 +266,8 @@ export default function PersonalOrganizerPage() {
           <h3>{plan.todayFocus.recommendedFirstAction}</h3>
           <p>{plan.todayFocus.startHere}</p>
           <div className="response-meta">
-            <span className="info-chip">avoid overwhelm</span>
-            <span className="info-chip">estimated manual session time: {plan.todayFocus.estimatedManualSessionTime}</span>
+            <span className="info-chip">Protect attention</span>
+            <span className="info-chip">Suggested time: {plan.todayFocus.estimatedManualSessionTime}</span>
           </div>
         </article>
 
@@ -296,80 +299,39 @@ export default function PersonalOrganizerPage() {
         </div>
       </section>
 
-      <section className="section-block" aria-labelledby="smart-checklist-heading">
+      <section className="section-block presentation-band" aria-labelledby="future-vision-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Smart Manual Checklist</p>
-          <h2 className="section-title" id="smart-checklist-heading">
-            Practical steps with clear boundaries
+          <p className="result-eyebrow">Future vision · Blueprint only</p>
+          <h2 className="section-title" id="future-vision-heading">
+            From daily clarity to lifelong learning
           </h2>
+          <p>
+            Future study plans could connect personal growth, interviews, education, and community through carefully
+            governed tools. None of these capabilities is implemented here.
+          </p>
         </div>
 
-        <div className="personal-smart-checklist">
-          <article>
-            <h3>start here</h3>
-            {plan.smartManualChecklist.startHere.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </article>
-          <article>
-            <h3>do not touch yet</h3>
-            {plan.smartManualChecklist.doNotTouchYet.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </article>
-          <article>
-            <h3>review manually</h3>
-            {plan.smartManualChecklist.reviewManually.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </article>
-          <article>
-            <h3>low risk cleanup</h3>
-            {plan.smartManualChecklist.lowRiskCleanup.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </article>
-          <article>
-            <h3>high attention files</h3>
-            {plan.smartManualChecklist.highAttentionFiles.map((item) => (
-              <p key={item}>{item}</p>
-            ))}
-          </article>
+        <div className="tag-row">
+          {futureVision.map((item) => (
+            <span className="tech-pill" key={item}>{item}</span>
+          ))}
         </div>
       </section>
 
       <section className="section-block personal-safety" aria-labelledby="personal-safety-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Safety boundary</p>
+          <p className="result-eyebrow">Human-centered boundaries</p>
           <h2 className="section-title" id="personal-safety-heading">
-            Personal usefulness without unsafe automation
+            Guidance without hidden control
           </h2>
+          <p>This page represents a responsible vision. It cannot inspect, remember, send, move, or automate real life.</p>
         </div>
 
-        <div className="email-safety-strip" aria-label="Personal Organizer safety indicators">
-          <strong>Controlled daily mode</strong>
-          <span>readOnlyFirst: true</span>
-          <span>proposalFirst: true</span>
-          <span>approvalRequired: true</span>
-          <span>actionExecuted: false</span>
-          <span>filesystemWriteAccess: false</span>
-          <span>filesystemDeleteAccess: false</span>
-          <span>filesystemMoveAccess: false</span>
-          <span>emailSendAccess: false</span>
-          <span>No files moved</span>
-          <span>No files deleted</span>
-          <span>No email sent</span>
-          <span>Manual execution only</span>
-          <span>Owner approval required</span>
-          <span>backgroundAgents: false</span>
-        </div>
-
-        <div className="organization-checklist">
-          {plan.checklist.map((item) => (
-            <label key={item}>
-              <input checked readOnly type="checkbox" />
-              <span>{item}</span>
-            </label>
+        <div className="tag-row" aria-label="Personal Life OS safety boundaries">
+          {safetyBoundaries.map((boundary) => (
+            <span className="tech-pill" key={boundary}>
+              {boundary}
+            </span>
           ))}
         </div>
       </section>

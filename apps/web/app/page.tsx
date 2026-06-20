@@ -2,73 +2,65 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Humanity Guide OS - Governed AI Product Demo',
+  title: 'Humanity Guide OS - Human-centered AI Workspace',
   description:
-    'A governance-first, human-centered product demo for creating reviewable organization proposals from simulated data.'
+    'A governance-first workspace for learning, planning, interviews, personal organization, and responsible AI experimentation.'
 }
 
 const stackHighlights = [
-  'Humanity Guide OS',
+  'Universo Humano',
   'Governance-first',
   'Proposal-only',
   'Human-centered',
-  'Simulation-only',
-  'Next.js + React + TypeScript'
+  'Full Stack',
+  'Built through learning'
 ]
 
-const productStatus = [
+const connectedSystems = [
   {
-    label: 'Public Demo',
-    status: 'Current capability',
-    detail: 'A guided conversation UI with typed API boundaries and safe fallback behavior.'
+    label: 'Learning OS',
+    detail: 'Holberton, study plans, technical practice, and a path from questions to working knowledge.'
   },
   {
-    label: 'Private Lab',
-    status: 'Current capability',
-    detail: 'A simulation workspace for reviewing organization proposals, approvals, risk labels, and audit metadata.'
+    label: 'Human Interview OS',
+    detail: 'People, interviews, problems, follow-up, and plans organized with human context.'
   },
   {
-    label: 'GENIO',
-    status: 'Governance metadata',
-    detail: 'A visible policy profile that describes risk, approval, and orchestration boundaries. It is not an autonomous agent.'
+    label: 'Personal Organizer',
+    detail: 'Documents, emails, photos, priorities, and daily clarity represented through safe previews.'
   },
   {
-    label: 'Adapters and runtime',
-    status: 'Not implemented',
-    detail: 'There is no real filesystem, terminal, email, database, authentication, memory, or external execution.'
+    label: 'Private AI Lab',
+    detail: 'Governance, proposals, approvals, and simulations designed to stop before real execution.'
+  },
+  {
+    label: 'Builder Path',
+    detail: 'A journey from ideas and documentation to web apps, portfolios, and future tools.'
   }
 ]
 
-const capabilitySplit = [
+const presentAndFuture = [
   {
-    title: 'Current capabilities',
+    title: 'Present',
     items: [
-      'Public `/demo` route',
-      'Owner-gated `/lab` simulation',
-      'Owner-facing `/personal` route',
-      'Mock organization proposals',
-      'Approval and risk metadata',
-      'In-memory audit events'
+      'Public demo',
+      'Private lab simulation',
+      'Personal organizer preview',
+      'Documentation architecture',
+      'Professional portfolio',
+      'Proposal-only workflows'
     ]
   },
   {
-    title: 'Future blueprints',
+    title: 'Future blueprint',
     items: [
-      'Real owner authentication',
-      'Persistent audit storage',
-      'Read-only external adapters',
-      'Controlled information retrieval',
-      'Secure runtime sandbox'
-    ]
-  },
-  {
-    title: 'Not implemented',
-    items: [
-      'No real filesystem or email access',
-      'No terminal or runtime execution',
-      'No database or real authentication',
-      'No persistent memory',
-      'No autonomous agents or background workers'
+      'Controlled Notion integration',
+      'Real scheduling',
+      'Safe, scoped memory',
+      'Personalized learning paths',
+      'Interview workflows',
+      'Community layer',
+      'Builder tools'
     ]
   }
 ]
@@ -76,23 +68,18 @@ const capabilitySplit = [
 const governanceContract = [
   {
     label: 'Proposal',
-    value: 'not execution',
-    detail: 'The product prepares reviewable options and never presents a proposal as completed work.'
+    value: '!= execution',
+    detail: 'A generated plan is a reviewable suggestion, never a completed real-world action.'
   },
   {
-    label: 'Approval',
-    value: 'metadata only',
-    detail: 'Approval states demonstrate governance. They do not trigger workers, adapters, or external actions.'
+    label: 'Human approval',
+    value: 'remains mandatory',
+    detail: 'The person keeps final authority over every meaningful decision and external action.'
   },
   {
-    label: 'Simulation',
-    value: 'mock data only',
-    detail: 'Sensitive workflows remain simulated, reversible, and visibly marked as not executed.'
-  },
-  {
-    label: 'Human',
-    value: 'final authority',
-    detail: 'The system explains options and tradeoffs. A person remains responsible for every real-world action.'
+    label: 'Sensitive workflows',
+    value: 'simulation-only',
+    detail: 'Private data, scheduling, memory, integrations, and automation remain controlled future visions.'
   }
 ]
 
@@ -106,7 +93,7 @@ const demoNavigation = [
   {
     href: '/lab',
     label: 'Private Lab',
-    title: 'Inspect governance',
+    title: 'Explore the private lab',
     detail: 'See simulated proposals, approval states, audit events, and no-execution indicators.'
   },
   {
@@ -117,20 +104,7 @@ const demoNavigation = [
   }
 ]
 
-const engineeringSignals = [
-  {
-    title: 'Product clarity',
-    detail: 'The interface separates working demo surfaces from future architecture and unavailable capabilities.'
-  },
-  {
-    title: 'Typed implementation',
-    detail: 'Next.js, React, and TypeScript support clear UI, API, and domain boundaries.'
-  },
-  {
-    title: 'Responsible scope',
-    detail: 'Safety limits are part of the product experience, not hidden in technical documentation.'
-  }
-]
+const socialChannels = ['GitHub', 'LinkedIn', 'Instagram', 'TikTok', 'Facebook', 'X / Twitter', 'YouTube', 'Email']
 
 export default function HomePage() {
   return (
@@ -138,10 +112,10 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
           <span className="hero-badge">Humanity Guide OS</span>
-          <h1>Governed AI organization demo</h1>
+          <h1>Human-centered AI workspace for learning, planning, interviews and personal organization.</h1>
           <p>
-            Humanity Guide OS turns simulated digital clutter into reviewable organization proposals. It is a
-            human-centered product demo with visible governance and no real-world execution.
+            A governance-first system built from real learning, Holberton practice, Notion organization, and Full
+            Stack experimentation.
           </p>
 
           <div className="tag-row">
@@ -157,56 +131,58 @@ export default function HomePage() {
               Try public demo
             </Link>
             <Link className="secondary-button" href="/lab">
-              Explore governance lab
+              Explore private lab
             </Link>
             <Link className="secondary-button" href="/about">
               Review architecture
+            </Link>
+            <Link className="secondary-button" href="/portfolio">
+              View portfolio
             </Link>
           </div>
         </div>
 
         <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">Product boundary</p>
-          <h2>Analysis {'->'} Proposal {'->'} Human decision</h2>
+          <p className="result-eyebrow">A personal system with professional depth</p>
+          <h2>Learn {'->'} Organize {'->'} Build {'->'} Grow</h2>
           <p className="meta-text">
-            The current product demonstrates interaction, proposal review, and governance metadata. It does not
-            provide autonomous agents, persistent memory, external automation, or a real execution runtime.
+            Universo Humano brings together a personal workspace, private lab, professional portfolio, and future
+            learning platform without overstating what the current web product can do.
           </p>
 
           <div className="metrics-grid">
             <article className="metric-card">
-              <strong className="metric-value">Current</strong>
-              <span className="metric-label">Interactive demo surfaces</span>
-            </article>
-            <article className="metric-card">
-              <strong className="metric-value">Mock</strong>
-              <span className="metric-label">Data and sensitive workflows</span>
-            </article>
-            <article className="metric-card">
-              <strong className="metric-value">0</strong>
-              <span className="metric-label">Real external actions</span>
-            </article>
-            <article className="metric-card">
               <strong className="metric-value">Human</strong>
-              <span className="metric-label">Final authority</span>
+              <span className="metric-label">Centered on real needs</span>
+            </article>
+            <article className="metric-card">
+              <strong className="metric-value">Private</strong>
+              <span className="metric-label">Lab for safe exploration</span>
+            </article>
+            <article className="metric-card">
+              <strong className="metric-value">Full Stack</strong>
+              <span className="metric-label">Built through practice</span>
+            </article>
+            <article className="metric-card">
+              <strong className="metric-value">Governed</strong>
+              <span className="metric-label">Proposal before action</span>
             </article>
           </div>
         </aside>
       </section>
 
-      <section className="section-block" aria-labelledby="status-heading">
+      <section className="section-block" aria-labelledby="connections-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Product status</p>
-          <h2 className="section-title" id="status-heading">
-            What exists today
+          <p className="result-eyebrow">Universo Humano</p>
+          <h2 className="section-title" id="connections-heading">
+            What this system connects
           </h2>
-          <p>Working demo surfaces are clearly separated from governance concepts and unimplemented infrastructure.</p>
+          <p>One evolving system for the work of learning, understanding people, organizing life, and building.</p>
         </div>
 
-        <div className="architecture-summary">
-          {productStatus.map((item) => (
-            <article className="architecture-summary__item" key={item.label}>
-              <span>{item.status}</span>
+        <div className="showcase-grid">
+          {connectedSystems.map((item) => (
+            <article className="showcase-card" key={item.label}>
               <h3>{item.label}</h3>
               <p>{item.detail}</p>
             </article>
@@ -214,17 +190,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-block" aria-labelledby="capabilities-heading">
+      <section className="section-block" aria-labelledby="present-future-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Capability map</p>
-          <h2 className="section-title" id="capabilities-heading">
-            Current capabilities, future blueprints, and not implemented
+          <p className="result-eyebrow">Honest product scope</p>
+          <h2 className="section-title" id="present-future-heading">
+            Present vs Future
           </h2>
-          <p>Blueprints describe a possible governed direction. They are not claims about the current product.</p>
+          <p>
+            The present is a working product showcase. Integrations, scheduling, memory, community, and advanced
+            tools remain controlled blueprints rather than current capabilities.
+          </p>
         </div>
 
         <div className="capability-split">
-          {capabilitySplit.map((group) => (
+          {presentAndFuture.map((group) => (
             <article className="capability-column" key={group.title}>
               <h3>{group.title}</h3>
               <ul>
@@ -240,10 +219,10 @@ export default function HomePage() {
       <section className="governance-contract" aria-labelledby="governance-heading">
         <div className="governance-contract__intro">
           <p className="result-eyebrow">Governance boundaries</p>
-          <h2 id="governance-heading">Designed to stop before execution</h2>
+          <h2 id="governance-heading">Responsible by design</h2>
           <p>
-            Humanity Guide OS is responsible because its limits are explicit, inspectable, and present throughout
-            the experience.
+            Notion is not connected to production, ChatGPT is not directly integrated, and the website does not
+            control VS Code. There are no real autonomous agents, total memory, user backend, or working agenda.
           </p>
         </div>
 
@@ -255,6 +234,19 @@ export default function HomePage() {
               <p>{item.detail}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="section-block presentation-band" aria-labelledby="why-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Why it matters</p>
+          <h2 className="section-title" id="why-heading">
+            Technology should help people move forward
+          </h2>
+          <p>
+            The goal is not to replace people. The goal is to reduce chaos, organize knowledge, and help humans move
+            from learning to action.
+          </p>
         </div>
       </section>
 
@@ -279,22 +271,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-block" aria-labelledby="engineering-heading">
-        <div className="section-head">
-          <p className="result-eyebrow">Why this project matters</p>
-          <h2 className="section-title" id="engineering-heading">
-            Product engineering with measured AI claims
-          </h2>
-        </div>
+      <section className="section-block" aria-labelledby="social-heading">
+        <article className="story-card">
+          <div>
+            <p className="result-eyebrow">Build in public · Social presence · Future community layer</p>
+            <h2 className="section-title" id="social-heading">
+              Connect with the journey
+            </h2>
+            <p>
+              Follow the evolution of Humanity Guide OS, Holberton learning, Full Stack projects, responsible AI
+              experiments and future community tools through an open learning journey.
+            </p>
+          </div>
 
-        <div className="signal-grid">
-          {engineeringSignals.map((item) => (
-            <article className="signal-card" key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.detail}</p>
-            </article>
-          ))}
-        </div>
+          <nav className="story-card__actions" aria-label="Humanity Guide OS social channels">
+            {socialChannels.map((channel) => (
+              <a
+                aria-label={`${channel} profile — coming soon`}
+                className="tech-pill"
+                href="#"
+                key={channel}
+              >
+                {channel}
+              </a>
+            ))}
+          </nav>
+        </article>
       </section>
     </main>
   )
