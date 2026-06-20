@@ -74,15 +74,16 @@ export default function PersonalOrganizerPage() {
     <main className="page-shell personal-page">
       <section className="hero personal-hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Humanity Guide OS</span>
-          <h1>Personal Life OS</h1>
+          <span className="hero-badge">Humanity Guide OS · Personal Life OS</span>
+          <h1>Create more calm around the life you are building.</h1>
           <p>
-            A calm space for learning, priorities, projects, memories and daily clarity. This is the everyday-life
-            vision of Humanity Guide OS.
+            A human-centered space for learning, priorities, projects, family, memories, and daily clarity—designed
+            for long-term growth without hidden automation.
           </p>
           <div className="tag-row">
             <span className="tech-pill">Calm</span>
             <span className="tech-pill">Human-centered</span>
+            <span className="tech-pill">Full Stack Journey</span>
             <span className="tech-pill">Long-term growth</span>
             <span className="tech-pill">Proposal-only</span>
           </div>
@@ -92,6 +93,9 @@ export default function PersonalOrganizerPage() {
             </Link>
             <Link className="secondary-button" href="/demo">
               Open public demo
+            </Link>
+            <Link className="tech-pill" href="/portfolio">
+              Follow the builder journey
             </Link>
           </div>
         </div>

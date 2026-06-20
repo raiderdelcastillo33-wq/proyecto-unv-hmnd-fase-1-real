@@ -357,11 +357,11 @@ export default function LabPage() {
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">AI Engineering Laboratory</span>
-          <h1>Private AI Lab</h1>
+          <span className="hero-badge">Humanity Guide OS · AI Engineering Laboratory</span>
+          <h1>Explore future AI capabilities without surrendering control.</h1>
           <p>
-            A governance-first environment for exploring future AI capabilities through safe simulations and
-            controlled proposals.
+            A private, governance-first environment for safe simulations, controlled proposals, owner approval,
+            execution planning, and auditable decisions.
           </p>
 
           <div className="tag-row">
@@ -369,6 +369,19 @@ export default function LabPage() {
             <span className="tech-pill">Owner approval</span>
             <span className="tech-pill">Proposal != Execution</span>
             <span className="tech-pill">Simulation-only</span>
+            <span className="tech-pill">Responsible AI</span>
+          </div>
+
+          <div className="hero-actions">
+            <a className="primary-button" href={unlocked ? '#approval-flow' : '#private-access'}>
+              {unlocked ? 'Open proposal workspace' : 'Enter private lab'}
+            </a>
+            <a className="secondary-button" href={unlocked ? '#agent-catalog' : '#governance'}>
+              {unlocked ? 'Explore agent catalog' : 'Review governance'}
+            </a>
+            <a className="tech-pill" href={unlocked ? '#future-blueprints' : '#private-access'}>
+              {unlocked ? 'Review blueprints' : 'Blueprints after access'}
+            </a>
           </div>
         </div>
 
@@ -416,7 +429,7 @@ export default function LabPage() {
       </section>
 
       {!unlocked ? (
-        <section className="workspace">
+        <section className="workspace" id="private-access">
           <form className="panel" onSubmit={handleUnlock}>
             <div className="panel-heading">
               <p className="result-eyebrow">Private access</p>

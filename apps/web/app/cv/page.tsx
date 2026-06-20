@@ -86,13 +86,47 @@ export default function CvPage() {
 
   return (
     <main className="page-shell cv-page">
-      <section className="page-intro">
-        <span className="status-pill status-pill--success">Professional profile</span>
-        <h1>Raider Del Castillo Abalos</h1>
-        <p>
-          Junior Full Stack developer building practical foundations through Holberton, real projects, disciplined
-          documentation, and responsible AI product thinking.
-        </p>
+      <section className="hero">
+        <div className="hero-copy hero-copy--stacked">
+          <span className="hero-badge">Raider del Castillo · Professional Profile</span>
+          <h1>Junior Full Stack developer with a builder mindset.</h1>
+          <p>
+            Building practical foundations through Holberton, real projects, Git workflow, disciplined
+            documentation, and responsible human-centered AI product thinking.
+          </p>
+
+          <div className="tag-row">
+            {profileSignals.map((signal) => (
+              <span className="tech-pill" key={signal}>{signal}</span>
+            ))}
+          </div>
+
+          <div className="hero-actions">
+            {hasPdf ? (
+              <a className="primary-button" download="raider-cv.pdf" href="/cv/raider-cv.pdf">
+                Download CV
+              </a>
+            ) : (
+              <a className="primary-button" href="#professional-summary">
+                Review profile
+              </a>
+            )}
+            <a className="secondary-button" href="/portfolio">View portfolio</a>
+            <a className="tech-pill" href="/demo">Try the product</a>
+          </div>
+        </div>
+
+        <aside className="hero-card hero-card--spotlight">
+          <p className="result-eyebrow">Recruiter signal</p>
+          <h2>Reliable learning. Responsible building.</h2>
+          <p className="meta-text">
+            A junior profile with clear scope, strong documentation habits, verification discipline, and a
+            long-term commitment to useful products.
+          </p>
+          <div className="response-meta">
+            {recruiterSignals.map((signal) => <span className="info-chip" key={signal}>{signal}</span>)}
+          </div>
+        </aside>
       </section>
 
       <section className="cv-layout">
@@ -101,12 +135,6 @@ export default function CvPage() {
             <p className="result-eyebrow">Profile</p>
             <h2>Full Stack builder in progress</h2>
             <p className="cv-title">Learning deeply, building carefully, improving continuously.</p>
-          </div>
-
-          <div className="tag-row">
-            {profileSignals.map((signal) => (
-              <span className="tech-pill" key={signal}>{signal}</span>
-            ))}
           </div>
 
           <div className="cv-download-card">
@@ -150,7 +178,7 @@ export default function CvPage() {
         </aside>
 
         <div className="cv-content">
-          <article className="info-card cv-section">
+          <article className="info-card cv-section" id="professional-summary">
             <p className="result-eyebrow">Professional summary</p>
             <h2>Junior profile built through practice</h2>
             <p>

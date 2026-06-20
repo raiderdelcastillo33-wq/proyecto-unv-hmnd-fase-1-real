@@ -386,15 +386,15 @@ export default function DemoPage() {
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Humanity Guide OS</span>
-          <h1>Interactive AI Demo</h1>
+          <span className="hero-badge">Humanity Guide OS · Public Experience</span>
+          <h1>Try a responsible conversational product.</h1>
           <p>
-            Experience the public conversational layer of Humanity Guide OS. Test guided conversations, safe
-            fallbacks and responsible AI boundaries.
+            Explore guided conversations, specialist perspectives, safe fallbacks, and visible boundaries in a
+            public demo built for humans—not autonomous execution.
           </p>
 
           <div className="tag-row">
-            {['Multi-agent demo', 'Runtime status', 'Safe fallback', 'Human-centered'].map((item) => (
+            {['Human-Centered AI', 'Specialist roles', 'Safe fallback', 'Proposal-only', 'Runtime status'].map((item) => (
               <span className="tech-pill" key={item}>
                 {item}
               </span>
@@ -407,6 +407,9 @@ export default function DemoPage() {
             </a>
             <a className="secondary-button" href="#agents">
               Choose an agent
+            </a>
+            <a className="tech-pill" href="#capabilities-heading">
+              View current scope
             </a>
           </div>
         </div>

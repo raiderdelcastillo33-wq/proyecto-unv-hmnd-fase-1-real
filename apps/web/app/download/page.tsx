@@ -1,87 +1,118 @@
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import Link from 'next/link'
 
-const downloadItems = [
+const recruiterResources = [
   {
-    title: 'Curriculum Vitae',
-    description: 'CV professionnel avec expérience en développement frontend, intégration IA et architecture de systèmes.',
-    href: '/cv/raider-cv.pdf',
-    filename: 'Raider-del-Castillo-CV.pdf',
-    icon: '📄'
+    title: 'Portfolio',
+    description: 'Projets, stack technique, méthode de travail et parcours d’apprentissage.',
+    href: '/portfolio',
+    label: 'Voir le portfolio'
   },
   {
-    title: 'Projet Complet',
-    description: 'Code source du portfolio complet avec architecture Next.js, backend Node.js et intégration IA.',
-    href: 'https://github.com/tu-usuario/proyecto-unv-hmnd',
-    external: true,
-    icon: '💻'
+    title: 'Architecture overview',
+    description: 'Principes governance-first, limites actuelles et séparation entre présent et futur.',
+    href: '/about',
+    label: 'Explorer l’architecture'
+  },
+  {
+    title: 'Public AI Demo',
+    description: 'Couche conversationnelle publique avec rôles spécialisés, runtime visible et fallback sûr.',
+    href: '/demo',
+    label: 'Tester la démo'
+  },
+  {
+    title: 'Private AI Lab',
+    description: 'Simulations, propositions contrôlées, approbation humaine et audit en mémoire.',
+    href: '/lab',
+    label: 'Ouvrir le laboratoire'
   }
 ]
 
+const contactPlaceholders = ['GitHub', 'LinkedIn', 'Email']
+
 export default function DownloadPage() {
+  const pdfPath = path.join(process.cwd(), 'public', 'cv', 'raider-cv.pdf')
+  const hasPdf = existsSync(pdfPath)
+
   return (
     <main className="page-shell">
-      <section className="page-intro">
-        <span className="status-pill status-pill--success">Téléchargements disponibles</span>
-        <h1>Ressources professionnelles</h1>
-        <p>
-          Téléchargez mon CV à jour et accédez au code source complet du projet.
-          Tout le contenu est préparé pour une évaluation technique et le recrutement.
-        </p>
+      <section className="hero">
+        <div className="hero-copy hero-copy--stacked">
+          <span className="hero-badge">Download & Recruiter Packet</span>
+          <h1>Les ressources essentielles du projet</h1>
+          <p>
+            Un point d’entrée simple pour consulter le profil, les projets, l’architecture et les expériences
+            interactives de Humanity Guide OS.
+          </p>
+
+          <div className="tag-row">
+            <span className="tech-pill">Profil junior Full Stack</span>
+            <span className="tech-pill">Holberton</span>
+            <span className="tech-pill">Human-centered AI</span>
+            <span className="tech-pill">Governance-first</span>
+          </div>
+        </div>
+
+        <aside className="hero-card hero-card--spotlight">
+          <p className="result-eyebrow">CV</p>
+          <h2>{hasPdf ? 'CV PDF disponible' : 'Profil web disponible'}</h2>
+          <p className="meta-text">
+            {hasPdf
+              ? 'Le document PDF peut être téléchargé directement. La page CV reste disponible pour une lecture web.'
+              : 'Aucun PDF final n’est publié actuellement. La page CV présente le profil sans inventer de fichier téléchargeable.'}
+          </p>
+          <div className="hero-actions">
+            {hasPdf ? (
+              <a className="primary-button" download="raider-cv.pdf" href="/cv/raider-cv.pdf">
+                Télécharger le CV
+              </a>
+            ) : null}
+            <Link className={hasPdf ? 'secondary-button' : 'primary-button'} href="/cv">
+              Consulter le CV
+            </Link>
+          </div>
+        </aside>
       </section>
 
-      <section className="download-grid">
-        {downloadItems.map((item) => (
-          <article className="download-card" key={item.title}>
-            <div className="download-icon">
-              {item.icon}
-            </div>
+      <section className="section-block" aria-labelledby="packet-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Recruiter packet</p>
+          <h2 className="section-title" id="packet-heading">Comprendre rapidement le profil et le produit</h2>
+          <p>Chaque ressource correspond à une page existante et vérifiable du projet.</p>
+        </div>
 
-            <div className="download-content">
-              <h2>{item.title}</h2>
-              <p>{item.description}</p>
-
-              {item.external ? (
-                <a
-                  className="download-button"
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Ver en GitHub
-                </a>
-              ) : (
-                <a
-                  className="download-button"
-                  href={item.href}
-                  download={item.filename}
-                >
-                  Descargar
-                </a>
-              )}
-            </div>
-          </article>
-        ))}
+        <div className="showcase-grid">
+          {recruiterResources.map((resource) => (
+            <article className="showcase-card" key={resource.href}>
+              <h3>{resource.title}</h3>
+              <p>{resource.description}</p>
+              <Link className="secondary-button" href={resource.href}>
+                {resource.label}
+              </Link>
+            </article>
+          ))}
+        </div>
       </section>
 
-      <section className="section-block">
+      <section className="section-block" aria-labelledby="github-heading">
         <article className="story-card">
           <div>
-            <p className="result-eyebrow">Intéressé par le projet ?</p>
-            <h2 className="section-title">Explorez plus de contenu technique</h2>
+            <p className="result-eyebrow">GitHub & contact · Placeholders</p>
+            <h2 className="section-title" id="github-heading">Présence professionnelle en préparation</h2>
             <p>
-              Consultez l’architecture du système, testez la démo interactive ou
-              explorez les actifs visuels du portfolio.
+              Les liens publics seront connectés lorsqu’ils seront confirmés. Aucun profil ou moyen de contact
+              externe n’est inventé ici.
             </p>
           </div>
 
-          <div className="story-card__actions">
-            <Link className="primary-button" href="/demo">
-              Tester la démo
-            </Link>
-            <Link className="secondary-button" href="/about">
-              Voir l’architecture
-            </Link>
-          </div>
+          <nav className="story-card__actions" aria-label="Liens professionnels à venir">
+            {contactPlaceholders.map((item) => (
+              <a aria-label={`${item} — lien à venir`} className="tech-pill" href="#" key={item}>
+                {item}
+              </a>
+            ))}
+          </nav>
         </article>
       </section>
     </main>

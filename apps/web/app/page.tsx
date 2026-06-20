@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 }
 
 const stackHighlights = [
-  'Universo Humano',
+  'Raider del Castillo',
+  'Full Stack Journey',
+  'Learning in Public',
   'Governance-first',
   'Proposal-only',
-  'Human-centered',
-  'Full Stack',
-  'Built through learning'
+  'Responsible AI'
 ]
 
 const connectedSystems = [
@@ -83,6 +83,29 @@ const governanceContract = [
   }
 ]
 
+const recruiterClarity = [
+  {
+    status: 'Exists today',
+    title: 'Working web experience',
+    detail: 'Public demo, private lab, personal mode, architecture, portfolio, gallery, and CV routes.'
+  },
+  {
+    status: 'Simulation',
+    title: 'Sensitive workflows',
+    detail: 'Organization, approvals, audit events, and planning previews use controlled or mock data.'
+  },
+  {
+    status: 'Blueprint',
+    title: 'Future capabilities',
+    detail: 'Memory, scheduling, integrations, learning paths, and community tools remain future architecture.'
+  },
+  {
+    status: 'Intentionally blocked',
+    title: 'Real execution',
+    detail: 'No autonomous agents, filesystem control, terminal execution, background workers, or hidden automation.'
+  }
+]
+
 const demoNavigation = [
   {
     href: '/demo',
@@ -111,11 +134,11 @@ export default function HomePage() {
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Humanity Guide OS</span>
-          <h1>Human-centered AI workspace for learning, planning, interviews and personal organization.</h1>
+          <span className="hero-badge">Raider del Castillo · Humanity Guide OS</span>
+          <h1>Build a clearer path from learning to action.</h1>
           <p>
-            A governance-first system built from real learning, Holberton practice, Notion organization, and Full
-            Stack experimentation.
+            A human-centered Full Stack journey shaped through Holberton practice, responsible AI experiments,
+            personal organization, and learning in public.
           </p>
 
           <div className="tag-row">
@@ -133,10 +156,10 @@ export default function HomePage() {
             <Link className="secondary-button" href="/lab">
               Explore private lab
             </Link>
-            <Link className="secondary-button" href="/about">
+            <Link className="tech-pill" href="/about">
               Review architecture
             </Link>
-            <Link className="secondary-button" href="/portfolio">
+            <Link className="tech-pill" href="/portfolio">
               View portfolio
             </Link>
           </div>
@@ -184,6 +207,26 @@ export default function HomePage() {
           {connectedSystems.map((item) => (
             <article className="showcase-card" key={item.label}>
               <h3>{item.label}</h3>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="recruiter-clarity-heading">
+        <div className="section-head">
+          <p className="result-eyebrow">Recruiter clarity</p>
+          <h2 className="section-title" id="recruiter-clarity-heading">
+            What exists, what is simulated, and what stays blocked
+          </h2>
+          <p>Human approval remains mandatory for every meaningful real-world action.</p>
+        </div>
+
+        <div className="architecture-summary">
+          {recruiterClarity.map((item) => (
+            <article className="architecture-summary__item" key={item.status}>
+              <span>{item.status}</span>
+              <h3>{item.title}</h3>
               <p>{item.detail}</p>
             </article>
           ))}

@@ -89,33 +89,38 @@ const waysOfWorking = [
 const learningJourney = [
   {
     step: '01',
-    title: 'Cuba',
-    description: 'Curiosity, resourcefulness, and the human experiences behind the work.'
+    title: 'Curiosity',
+    description: 'Questions about technology, learning, and human potential become the starting point for building.'
   },
   {
     step: '02',
-    title: 'France',
-    description: 'A new environment for rebuilding, learning, and expanding professional possibilities.'
+    title: 'Holberton School',
+    description: 'Project-based foundations develop independence, systems thinking, collaboration, and engineering discipline.'
   },
   {
     step: '03',
-    title: 'Holberton',
-    description: 'Project-based foundations in software engineering, collaboration, and independent problem solving.'
+    title: 'Full Stack Journey',
+    description: 'Frontend, backend, APIs, Git, Docker learning, documentation, and deployment begin to connect.'
   },
   {
     step: '04',
-    title: 'Full Stack',
-    description: 'Connecting interfaces, APIs, architecture, tooling, and deployment into complete product experiences.'
+    title: 'Humanity Guide OS',
+    description: 'Learning and personal experience evolve into a human-centered system for clarity, planning, and growth.'
   },
   {
     step: '05',
-    title: 'AI',
-    description: 'Exploring useful AI experiences with governance, restraint, and human needs at the center.'
+    title: 'Private AI Lab',
+    description: 'Governance, owner approval, safe simulations, and proposal-only workflows make responsible limits visible.'
   },
   {
     step: '06',
-    title: 'Builder path',
-    description: 'Continuing from personal experiments toward thoughtful tools, learning systems, and responsible products.'
+    title: 'Future Community',
+    description: 'A blueprint for learning in public and future community tools—not an active platform today.'
+  },
+  {
+    step: '07',
+    title: 'Helping People',
+    description: 'The long-term direction: reduce chaos, organize knowledge, and build technology that supports human action.'
   }
 ]
 
@@ -148,20 +153,26 @@ const futureInterests = [
   'Responsible products'
 ]
 
+const socialPresence = ['GitHub', 'LinkedIn', 'Instagram', 'Facebook', 'TikTok', 'X', 'YouTube', 'Email']
+
 export default function PortfolioPage() {
   return (
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Raider Del Castillo Abalos</span>
+          <span className="hero-badge">Raider del Castillo · Full Stack Journey</span>
           <h1>From curiosity to systems.</h1>
-          <p>Built through learning, experimentation and continuous practice.</p>
+          <p>
+            A professional and human story built through Holberton, continuous practice, responsible AI thinking,
+            and the desire to create tools that help people move forward.
+          </p>
 
           <div className="tag-row">
             <span className="tech-pill">Full Stack Builder</span>
             <span className="tech-pill">Human-Centered AI Systems</span>
             <span className="tech-pill">Holberton Student</span>
             <span className="tech-pill">Governance-first mindset</span>
+            <span className="tech-pill">Learning in Public</span>
           </div>
 
           <div className="hero-actions">
@@ -171,9 +182,12 @@ export default function PortfolioPage() {
             <Link className="secondary-button" href="/about">
               Review architecture
             </Link>
-            <Link className="secondary-button" href="/cv">
+            <Link className="tech-pill" href="/cv">
               View CV
             </Link>
+            <a className="tech-pill" href="#journey-heading">
+              Explore the journey
+            </a>
           </div>
         </div>
 
@@ -298,6 +312,26 @@ export default function PortfolioPage() {
         <div className="tag-row">
           {futureInterests.map((item) => <span className="tech-pill" key={item}>{item}</span>)}
         </div>
+      </section>
+
+      <section className="section-block" aria-labelledby="portfolio-social-heading">
+        <article className="story-card">
+          <div>
+            <p className="result-eyebrow">Social presence · Build in public</p>
+            <h2 className="section-title" id="portfolio-social-heading">Follow the learning journey</h2>
+            <p>
+              Placeholder channels for future public learning, project updates, and community storytelling. No active
+              campaign or community platform is claimed.
+            </p>
+          </div>
+          <nav className="story-card__actions" aria-label="Future social presence">
+            {socialPresence.map((channel) => (
+              <a aria-label={`${channel} profile — coming soon`} className="tech-pill" href="#" key={channel}>
+                {channel}
+              </a>
+            ))}
+          </nav>
+        </article>
       </section>
     </main>
   )
