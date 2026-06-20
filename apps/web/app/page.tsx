@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Humanity Guide OS - Human-centered AI Workspace',
+  title: 'Humanity Guide OS - Human-centered Full Stack Journey',
   description:
-    'A governance-first workspace for learning, planning, interviews, personal organization, and responsible AI experimentation.'
+    'Learning in public through Full Stack projects, responsible experimentation, and proposal-first product design.'
 }
 
 const stackHighlights = [
@@ -52,8 +52,8 @@ const governanceContract = [
   },
   {
     label: 'Sensitive workflows',
-    value: 'simulation-only',
-    detail: 'Private data, scheduling, memory, integrations, and automation remain controlled future visions.'
+    value: 'controlled only',
+    detail: 'Sensitive examples are simulated. The only local exception is user-selected, browser-only file metadata preview.'
   }
 ]
 
@@ -61,12 +61,12 @@ const recruiterClarity = [
   {
     status: 'Exists today',
     title: 'Working web experience',
-    detail: 'Public demo, private lab, personal mode, architecture, portfolio, gallery, and CV routes.'
+    detail: 'Working routes plus an owner-started, browser-local preview of manually selected file metadata.'
   },
   {
     status: 'Simulation',
     title: 'Sensitive workflows',
-    detail: 'Organization, approvals, audit events, and planning previews use controlled or mock data.'
+    detail: 'Mock organization, email, approval, audit, and planning examples remain controlled simulations.'
   },
   {
     status: 'Blueprint',

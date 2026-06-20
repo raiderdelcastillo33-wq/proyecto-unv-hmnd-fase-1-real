@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     template: '%s | UNV-HMND'
   },
   description:
-    'Humanity Guide OS demo built with Next.js, TypeScript, governed AI workflows, simulation-only lab UX, and production-ready portfolio architecture.',
-  keywords: ['Next.js', 'TypeScript', 'Humanity Guide OS', 'AI Governance', 'App Router', 'Vercel', 'Portfolio Frontend'],
+    'A human-centered Full Stack journey built through learning in public, responsible experimentation, and proposal-first product design.',
+  keywords: ['Next.js', 'TypeScript', 'Humanity Guide OS', 'Responsible AI', 'Full Stack', 'Learning in Public', 'Portfolio'],
   authors: [{ name: 'Raider del Castillo' }],
   creator: 'Raider del Castillo',
   applicationName: 'UNV-HMND',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Humanity Guide OS | UNV-HMND',
     description:
-      'Production-oriented Next.js portfolio demonstrating governed AI UX, public demo flow, and simulation-only Private Lab architecture.',
+      'A human-centered Full Stack journey exploring responsible product design, guided demos, and controlled proposals.',
     type: 'website',
     siteName: 'UNV-HMND'
   },
@@ -47,18 +47,18 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Humanity Guide OS | UNV-HMND',
     description:
-      'Recruiter-friendly AI product demo with a governed public demo and simulation-only Private Lab.'
+      'Learning in public through Full Stack projects, responsible experimentation, and proposal-first design.'
   }
 }
 
 const navigationItems = [
-  { href: '/', label: 'Accueil' },
-  { href: '/demo', label: 'Démo' },
+  { href: '/', label: 'Home' },
+  { href: '/demo', label: 'Demo' },
   { href: '/lab', label: 'Private Lab' },
   { href: '/personal', label: 'Personal' },
   { href: '/about', label: 'Architecture' },
   { href: '/portfolio', label: 'Portfolio' },
-  { href: '/gallery', label: 'Galerie' },
+  { href: '/gallery', label: 'Gallery' },
   { href: '/cv', label: 'CV' }
 ]
 
@@ -74,7 +74,7 @@ const footerNavigationItems = [
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <body>
         <header className="site-header">
           <div className="site-shell site-header__inner">

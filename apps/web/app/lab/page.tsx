@@ -360,15 +360,15 @@ export default function LabPage() {
           <span className="hero-badge">Humanity Guide OS · AI Engineering Laboratory</span>
           <h1>Explore future AI capabilities without surrendering control.</h1>
           <p>
-            A private, governance-first environment for safe simulations, controlled proposals, owner approval,
-            execution planning, and auditable decisions.
+            A private, governance-first environment combining safe simulations with one owner-started, browser-local
+            metadata preview. Every output remains controlled and non-executing.
           </p>
 
           <div className="tag-row">
             <span className="tech-pill">Governance-first</span>
             <span className="tech-pill">Owner approval</span>
             <span className="tech-pill">Proposal != Execution</span>
-            <span className="tech-pill">Simulation-only</span>
+            <span className="tech-pill">Simulations + local preview</span>
             <span className="tech-pill">Responsible AI</span>
           </div>
 
@@ -389,8 +389,8 @@ export default function LabPage() {
           <p className="result-eyebrow">Laboratory boundary</p>
           <h2>Explore {'->'} Propose {'->'} Review</h2>
           <p className="meta-text">
-            The lab models engineering decisions and approval flows. It has no filesystem, terminal, autonomous
-            execution, background workers, or AGI capability.
+            The lab has no autonomous filesystem access, terminal, writes, background workers, autonomous execution,
+            or AGI capability. A user may manually select local files for browser-only metadata analysis.
           </p>
           <span className="status-pill status-pill--pending">{unlocked ? 'Private lab unlocked' : 'Owner access required'}</span>
         </aside>
@@ -400,7 +400,7 @@ export default function LabPage() {
         <div className="section-head">
           <p className="result-eyebrow">01 · Governance</p>
           <h2 className="section-title" id="governance-heading">Human authority remains central</h2>
-          <p>GENIO represents the policy and risk layer. It governs proposals but does not operate real systems.</p>
+          <p>GENIO represents the policy and risk layer. It governs proposals but does not autonomously operate external systems.</p>
         </div>
 
         <div className="governance-contract__grid">
@@ -412,7 +412,7 @@ export default function LabPage() {
           <article className="governance-contract__item">
             <span>Execution</span>
             <strong>blocked</strong>
-            <p>Approval records a decision. It never triggers a terminal, worker, adapter, or filesystem action.</p>
+            <p>Approval records a decision. It never triggers a terminal, worker, write, move, delete, or background action.</p>
           </article>
           <article className="governance-contract__item">
             <span>Observability</span>
@@ -422,7 +422,7 @@ export default function LabPage() {
         </div>
 
         <div className="tag-row">
-          {['No filesystem', 'No terminal', 'No AGI', 'No autonomous execution', 'No background workers'].map((boundary) => (
+          {['No autonomous filesystem', 'No writes or deletes', 'No terminal', 'No autonomous execution', 'No background workers'].map((boundary) => (
             <span className="tech-pill" key={boundary}>{boundary}</span>
           ))}
         </div>
@@ -462,7 +462,7 @@ export default function LabPage() {
             <div className="panel-heading">
               <p className="result-eyebrow">What opens</p>
               <h2>A controlled engineering workspace</h2>
-              <p>Review governed agents, tools, simulations, approval states, audit events, and future blueprints.</p>
+              <p>Review simulations, proposal roles, approval states, audit events, future blueprints, and the owner-started local metadata preview.</p>
             </div>
             <div className="tag-row">
               <span className="tech-pill">Safe simulations</span>
@@ -532,8 +532,12 @@ export default function LabPage() {
 
           <section className="section-block" aria-labelledby="simulations-heading">
             <div className="section-head">
-              <p className="result-eyebrow">Controlled simulations</p>
-              <h2 className="section-title" id="simulations-heading">Explore without touching real systems</h2>
+              <p className="result-eyebrow">Simulations and local preview</p>
+              <h2 className="section-title" id="simulations-heading">Two controlled modes, clearly separated</h2>
+              <p>
+                Organization, email, and execution-planning examples are simulated. File metadata preview runs only
+                after manual browser selection and cannot write, move, delete, upload, or scan the host.
+              </p>
             </div>
             <OrganizationSimulationPanel />
             <ControlledReadOnlyPreviewPanel />

@@ -39,18 +39,19 @@ export function ControlledReadOnlyPreviewPanel() {
     <section className="read-only-preview-panel" aria-labelledby="read-only-preview-heading">
       <div className="organization-hero">
         <div className="panel-heading">
-          <p className="result-eyebrow">Controlled Read-Only Organization Preview</p>
-          <h2 id="read-only-preview-heading">Real utility, limited to browser-selected metadata.</h2>
+          <p className="result-eyebrow">Owner-started local metadata preview</p>
+          <h2 id="read-only-preview-heading">A real local preview—not autonomous filesystem access.</h2>
           <p>
-            Select a folder manually to preview file metadata patterns. Nothing is uploaded, read by the server,
-            moved, renamed, deleted, or written.
+            This is separate from the Lab simulations. You manually choose files through the browser, which exposes
+            limited metadata for local analysis. Nothing is uploaded, read by the server, moved, renamed, deleted,
+            or written.
           </p>
         </div>
         <div className="simulation-badge-system">
-          <span className="info-chip">simulationOnly: false</span>
-          <span className="info-chip">executionMode: read-only-preview</span>
-          <span className="info-chip">actionExecuted: false</span>
-          <span className="info-chip">No write/delete/move</span>
+          <span className="info-chip">Local preview: not simulated</span>
+          <span className="info-chip">User selection required</span>
+          <span className="info-chip">No action executed</span>
+          <span className="info-chip">No write, delete, move, or upload</span>
         </div>
       </div>
 
@@ -84,7 +85,7 @@ export function ControlledReadOnlyPreviewPanel() {
           >
             Generate read-only preview
           </button>
-          <span className="meta-text">Approval-required preview. No file operation will run.</span>
+          <span className="meta-text">Browser-local metadata analysis only. No file operation will run.</span>
         </div>
       </div>
 

@@ -14,7 +14,7 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '¡Hola! Soy tu asistente de IA. ¿En qué puedo ayudarte?',
+      text: 'Welcome. This is a local guided conversation with simulated responses. What would you like to explore?',
       sender: 'bot',
       timestamp: new Date()
     }
@@ -34,11 +34,11 @@ export function ChatWidget() {
     setMessages(prev => [...prev, userMessage])
     setInputValue('')
 
-    // Simular respuesta del bot
+    // Simulate a local guided response.
     setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Gracias por tu mensaje. Esta es una demo del sistema de chat integrado.',
+        text: 'Thanks for your message. This local experience uses a predefined simulated response and is not an integrated AI assistant.',
         sender: 'bot',
         timestamp: new Date()
       }
@@ -55,24 +55,22 @@ export function ChatWidget() {
 
   return (
     <>
-      {/* Botón flotante */}
       <button
         className="chat-toggle"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Abrir chat"
+        aria-label="Open guided conversation demo"
       >
         {isOpen ? '✕' : '💬'}
       </button>
 
-      {/* Ventana de chat */}
       {isOpen && (
         <div className="chat-widget">
           <div className="chat-header">
-            <h3>Asistente IA</h3>
+            <h3>Guided Demo · Simulated</h3>
             <button
               onClick={() => setIsOpen(false)}
               className="chat-close"
-              aria-label="Cerrar chat"
+              aria-label="Close guided conversation demo"
             >
               ✕
             </button>
@@ -98,7 +96,7 @@ export function ChatWidget() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Escribe tu mensaje..."
+              placeholder="Write a message for the local demo..."
               maxLength={500}
             />
             <button
@@ -106,7 +104,7 @@ export function ChatWidget() {
               disabled={!inputValue.trim()}
               className="send-button"
             >
-              Enviar
+              Send
             </button>
           </div>
         </div>
