@@ -1,22 +1,36 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Architecture Technique - Portfolio Développeur Frontend',
-  description: 'Résumé technique de l’architecture du Système d’Agents IA, décisions de delivery et stratégie de déploiement.'
+  title: 'UNV-HMND & Humanity Guide OS - Architecture Governance-First',
+  description:
+    'Présentation de l’architecture UNV-HMND et Humanity Guide OS : documentation-first, governance-first et proposal-only.'
 }
 
 const principles = [
   {
-    title: 'App Router comme base',
-    description: 'Pages, layouts et routes serveur sont organisés dans une structure Next.js moderne et lisible qui évolue avec le projet.'
+    title: 'Architecture centrée sur l’humain',
+    description:
+      'La technologie soutient la compréhension et la décision humaine sans remplacer la responsabilité, le jugement ou l’approbation.'
   },
   {
-    title: 'Proxy d’API interne',
-    description: 'Le navigateur communique d’abord avec Next.js ; Next retransmet les requêtes vers le backend via des routes internes.'
+    title: 'Documentation avant complexité',
+    description:
+      'Les principes, relations, limites et étapes d’évolution sont documentés avant l’ajout de capacités techniques supplémentaires.'
   },
   {
-    title: 'Chemin de déploiement monorepo',
-    description: 'Le frontend réside dans `apps/web`, avec un pipeline de build sécurisé en production et une config Vercel-friendly.'
+    title: 'Proposal != Execution',
+    description:
+      'Les sorties restent des propositions ou des simulations. Une approbation humaine ne déclenche jamais implicitement une exécution.'
+  },
+  {
+    title: 'Présent séparé du futur',
+    description:
+      'La démo et l’architecture actuelles sont distinguées des idées futures comme la mémoire, les agents connectés ou la production.'
+  },
+  {
+    title: 'Limites explicites',
+    description:
+      'Aucune revendication d’AGI, de conscience artificielle ou d’exécution autonome : le système reste contrôlé et proposal-only.'
   }
 ]
 
@@ -30,12 +44,12 @@ const stack = [
 ]
 
 const delivery = [
-  'Page d’accueil avec narration claire pour recrutement',
-  'Démo fonctionnelle via `/demo`',
-  'Actifs visuels du portfolio',
-  'Surface de présentation du CV',
-  'Documentation prête à déployer',
-  'Repo public propre pour export'
+  'Architecture UNV-HMND documentée',
+  'Humanity Guide OS présenté comme couche produit',
+  'Démo contrôlée via `/demo`',
+  'Séparation explicite entre présent et futur',
+  'Gouvernance et limites visibles',
+  'Documentation cohérente avec une approche proposal-only'
 ]
 
 export default function AboutPage() {
@@ -43,10 +57,11 @@ export default function AboutPage() {
     <main className="page-shell">
       <section className="page-intro">
         <span className="status-pill status-pill--success">Résumé Technique</span>
-        <h1>Architecture du Système</h1>
+        <h1>Architecture UNV-HMND</h1>
         <p>
-          UNV-HMND est structuré pour démontrer une exécution frontend soignée, une intégration backend réaliste
-          et un chemin de déploiement propre dans une configuration monorepo.
+          UNV-HMND et Humanity Guide OS ne constituent pas seulement une démo frontend. Ils décrivent une
+          architecture de produit IA responsable, documentée, governance-first, documentation-first et limitée à
+          la simulation et aux propositions, avec approbation humaine obligatoire.
         </p>
       </section>
 
@@ -64,10 +79,11 @@ export default function AboutPage() {
         <article className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Flux d’exécution</p>
-            <h2>Browser → Next.js → API Node</h2>
+            <h2>Navigateur → Next.js → Proxy API</h2>
             <p>
-              Le frontend ne dépend pas d’appels directs du navigateur vers le service backend. Les pages interactives
-              passent par des routes serveur Next.js, ce qui rend le système plus robuste, déployable et publicisable.
+              La structure technique prévoit que les interactions passent par les routes serveur de Next.js avant un
+              éventuel backend externe. Cette organisation constitue une architecture de démonstration ; elle
+              n’implique ni agents autonomes, ni mémoire persistante, ni base de données ou authentification réelles.
             </p>
           </div>
 
@@ -96,7 +112,7 @@ export default function AboutPage() {
         <article className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Livrables publics</p>
-            <h2>Version pour recruteur</h2>
+            <h2>État actuel du projet</h2>
           </div>
 
           <ul className="bullet-list bullet-list--dense">
@@ -109,10 +125,11 @@ export default function AboutPage() {
         <article className="panel">
           <div className="panel-heading">
             <p className="result-eyebrow">Déploiement</p>
-            <h2>Production</h2>
+            <h2>Chemin de déploiement</h2>
             <p>
-              Le frontend est prêt à être déployé sur Vercel avec `apps/web` comme racine de projet. `UNV_API_BASE_URL`
-              est optionnel et sert uniquement si vous pointez l’app vers un backend externe.
+              Le monorepo est configuré pour permettre le déploiement du frontend sur Vercel avec `apps/web` comme
+              racine de projet. `UNV_API_BASE_URL` reste optionnel et ne signifie pas qu’un backend de production,
+              une mémoire, une base de données ou une authentification réels sont actuellement disponibles.
             </p>
           </div>
 
