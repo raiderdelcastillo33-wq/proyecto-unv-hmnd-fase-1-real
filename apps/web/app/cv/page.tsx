@@ -88,7 +88,7 @@ export default function CvPage() {
     <main className="page-shell cv-page">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Raider del Castillo · Professional Profile</span>
+          <span className="hero-badge">Humanity Guide OS · Raider del Castillo</span>
           <h1>Junior Full Stack developer with a builder mindset.</h1>
           <p>
             Building practical foundations through Holberton, real projects, Git workflow, disciplined
@@ -169,12 +169,6 @@ export default function CvPage() {
             </ul>
           </div>
 
-          <div className="cv-contact-card">
-            <p className="result-eyebrow">Recruiter signal</p>
-            <ul className="bullet-list">
-              {recruiterSignals.map((signal) => <li key={signal}>{signal}</li>)}
-            </ul>
-          </div>
         </aside>
 
         <div className="cv-content">

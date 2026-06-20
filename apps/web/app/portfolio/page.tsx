@@ -147,20 +147,18 @@ const architectureWork = [
 
 const futureInterests = [
   'Applied AI',
-  'Responsible automation',
+  'Human-centered tools',
   'Humanity Pro University',
   'Learning systems',
   'Responsible products'
 ]
-
-const socialPresence = ['GitHub', 'LinkedIn', 'Instagram', 'Facebook', 'TikTok', 'X', 'YouTube', 'Email']
 
 export default function PortfolioPage() {
   return (
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Raider del Castillo · Full Stack Journey</span>
+          <span className="hero-badge">Humanity Guide OS · Raider del Castillo</span>
           <h1>From curiosity to systems.</h1>
           <p>
             A professional and human story built through Holberton, continuous practice, responsible AI thinking,
@@ -314,25 +312,6 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      <section className="section-block" aria-labelledby="portfolio-social-heading">
-        <article className="story-card">
-          <div>
-            <p className="result-eyebrow">Social presence · Build in public</p>
-            <h2 className="section-title" id="portfolio-social-heading">Follow the learning journey</h2>
-            <p>
-              Placeholder channels for future public learning, project updates, and community storytelling. No active
-              campaign or community platform is claimed.
-            </p>
-          </div>
-          <nav className="story-card__actions" aria-label="Future social presence">
-            {socialPresence.map((channel) => (
-              <a aria-label={`${channel} profile — coming soon`} className="tech-pill" href="#" key={channel}>
-                {channel}
-              </a>
-            ))}
-          </nav>
-        </article>
-      </section>
     </main>
   )
 }

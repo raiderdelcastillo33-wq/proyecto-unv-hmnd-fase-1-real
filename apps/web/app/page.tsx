@@ -39,32 +39,6 @@ const connectedSystems = [
   }
 ]
 
-const presentAndFuture = [
-  {
-    title: 'Present',
-    items: [
-      'Public demo',
-      'Private lab simulation',
-      'Personal organizer preview',
-      'Documentation architecture',
-      'Professional portfolio',
-      'Proposal-only workflows'
-    ]
-  },
-  {
-    title: 'Future blueprint',
-    items: [
-      'Controlled Notion integration',
-      'Real scheduling',
-      'Safe, scoped memory',
-      'Personalized learning paths',
-      'Interview workflows',
-      'Community layer',
-      'Builder tools'
-    ]
-  }
-]
-
 const governanceContract = [
   {
     label: 'Proposal',
@@ -134,7 +108,7 @@ export default function HomePage() {
     <main className="page-shell">
       <section className="hero">
         <div className="hero-copy hero-copy--stacked">
-          <span className="hero-badge">Raider del Castillo · Humanity Guide OS</span>
+          <span className="hero-badge">Humanity Guide OS · Raider del Castillo</span>
           <h1>Build a clearer path from learning to action.</h1>
           <p>
             A human-centered Full Stack journey shaped through Holberton practice, responsible AI experiments,
@@ -166,10 +140,10 @@ export default function HomePage() {
         </div>
 
         <aside className="hero-card hero-card--spotlight">
-          <p className="result-eyebrow">A personal system with professional depth</p>
+          <p className="result-eyebrow">Human-centered Full Stack journey</p>
           <h2>Learn {'->'} Organize {'->'} Build {'->'} Grow</h2>
           <p className="meta-text">
-            Universo Humano brings together a personal workspace, private lab, professional portfolio, and future
+            Humanity Guide OS brings together a personal workspace, private lab, professional portfolio, and future
             learning platform without overstating what the current web product can do.
           </p>
 
@@ -196,7 +170,7 @@ export default function HomePage() {
 
       <section className="section-block" aria-labelledby="connections-heading">
         <div className="section-head">
-          <p className="result-eyebrow">Universo Humano</p>
+          <p className="result-eyebrow">What I am building</p>
           <h2 className="section-title" id="connections-heading">
             What this system connects
           </h2>
@@ -228,32 +202,6 @@ export default function HomePage() {
               <span>{item.status}</span>
               <h3>{item.title}</h3>
               <p>{item.detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block" aria-labelledby="present-future-heading">
-        <div className="section-head">
-          <p className="result-eyebrow">Honest product scope</p>
-          <h2 className="section-title" id="present-future-heading">
-            Present vs Future
-          </h2>
-          <p>
-            The present is a working product showcase. Integrations, scheduling, memory, community, and advanced
-            tools remain controlled blueprints rather than current capabilities.
-          </p>
-        </div>
-
-        <div className="capability-split">
-          {presentAndFuture.map((group) => (
-            <article className="capability-column" key={group.title}>
-              <h3>{group.title}</h3>
-              <ul>
-                {group.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
             </article>
           ))}
         </div>
@@ -317,7 +265,7 @@ export default function HomePage() {
       <section className="section-block" aria-labelledby="social-heading">
         <article className="story-card">
           <div>
-            <p className="result-eyebrow">Build in public · Social presence · Future community layer</p>
+            <p className="result-eyebrow">Learning in public · Future community layer</p>
             <h2 className="section-title" id="social-heading">
               Connect with the journey
             </h2>

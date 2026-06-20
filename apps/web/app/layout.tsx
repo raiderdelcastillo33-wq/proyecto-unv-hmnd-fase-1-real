@@ -72,8 +72,6 @@ const footerNavigationItems = [
   { href: '/cv', label: 'CV' }
 ]
 
-const socialPresenceItems = ['GitHub', 'LinkedIn', 'Instagram', 'TikTok', 'Facebook', 'X / Twitter', 'YouTube', 'Email']
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
@@ -82,7 +80,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="site-shell site-header__inner">
             <Link className="brand" href="/">
               <strong>Humanity Guide OS</strong>
-              <span>UNV-HMND · Human-centered systems</span>
+              <span>Human-centered Full Stack journey</span>
             </Link>
 
             <nav aria-label="Primary navigation" className="site-nav">
@@ -100,15 +98,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <footer className="site-footer">
           <div className="site-shell site-footer__grid">
             <section className="site-footer__identity" aria-labelledby="footer-brand-heading">
-              <p className="site-footer__eyebrow">Humanity Guide OS / UNV-HMND</p>
-              <h2 id="footer-brand-heading">Built around people, learning, and responsible growth.</h2>
-              <p>
-                Human-centered AI systems, Full Stack learning and responsible product architecture.
-              </p>
+              <p className="site-footer__eyebrow">Humanity Guide OS · UNV-HMND</p>
+              <h2 id="footer-brand-heading">Human-centered systems</h2>
               <div className="site-footer__principles" aria-label="Project principles">
-                <span>Human-centered</span>
-                <span>Governance-first</span>
-                <span>Proposal-only</span>
+                <span>Learning in public</span>
+                <span>Responsible AI</span>
+                <span>Full Stack journey</span>
               </div>
             </section>
 
@@ -122,23 +117,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 ))}
               </div>
             </nav>
-
-            <nav aria-label="Future social presence" className="site-footer__section">
-              <p className="site-footer__title">Social Presence</p>
-              <p className="site-footer__note">Build in public and future community layer.</p>
-              <div className="site-footer__socials">
-                {socialPresenceItems.map((item) => (
-                  <a aria-label={`${item} profile — coming soon`} href="#" key={item}>
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </nav>
           </div>
 
           <div className="site-shell site-footer__bottom">
+            <span>© Raider Del Castillo Abalos</span>
             <span>Humanity Guide OS · UNV-HMND</span>
-            <span>Learning in public. Building with human approval.</span>
+            <span>Built with Next.js + React + TypeScript</span>
+            <span>Learning in public.</span>
           </div>
         </footer>
 

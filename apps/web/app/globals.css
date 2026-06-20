@@ -193,7 +193,7 @@ textarea:focus-visible {
 
 .site-footer__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(170px, 0.65fr) minmax(240px, 0.9fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(200px, 0.5fr);
   gap: 48px;
   align-items: start;
 }
@@ -221,15 +221,7 @@ textarea:focus-visible {
   letter-spacing: -0.04em;
 }
 
-.site-footer__identity > p:not(.site-footer__eyebrow),
-.site-footer__note {
-  color: var(--muted);
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.site-footer__principles,
-.site-footer__socials {
+.site-footer__principles {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -239,8 +231,7 @@ textarea:focus-visible {
   margin-top: 22px;
 }
 
-.site-footer__principles span,
-.site-footer__socials a {
+.site-footer__principles span {
   padding: 8px 12px;
   border: 1px solid rgba(105, 211, 255, 0.16);
   border-radius: 999px;
@@ -267,24 +258,9 @@ textarea:focus-visible {
   transform: translateX(3px);
 }
 
-.site-footer__note {
-  margin: -4px 0 16px;
-  font-size: 0.9rem;
-}
-
-.site-footer__socials a {
-  transition: color 150ms ease, background 150ms ease, border-color 150ms ease, transform 150ms ease;
-}
-
-.site-footer__socials a:hover {
-  color: var(--text);
-  background: rgba(105, 211, 255, 0.12);
-  border-color: rgba(105, 211, 255, 0.32);
-  transform: translateY(-2px);
-}
-
 .site-footer__bottom {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 24px;
   margin-top: 48px;
@@ -2671,10 +2647,6 @@ textarea:focus-visible {
     gap: 36px;
   }
 
-  .site-footer__section:last-child {
-    grid-column: 1 / -1;
-  }
-
   .section-block,
   .governance-contract {
     margin-top: clamp(40px, 7vw, 56px);
@@ -3281,27 +3253,18 @@ textarea:focus-visible {
     gap: 34px;
   }
 
-  .site-footer__section:last-child {
-    grid-column: auto;
-  }
-
   .site-footer__bottom {
     flex-direction: column;
     margin-top: 36px;
     gap: 8px;
   }
 
-  .site-footer__principles span,
-  .site-footer__socials a {
+  .site-footer__principles span {
     padding: 8px 10px;
   }
 
   .site-footer__links {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .site-footer__socials {
-    gap: 8px;
   }
 
   .chat-widget {
