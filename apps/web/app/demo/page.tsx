@@ -333,7 +333,7 @@ export default function DemoPage() {
     const trimmedInput = input.trim()
 
     if (trimmedInput.length < 5) {
-      setError('Please enter at least 5 characters before sending the demo request.')
+      setError('Escribe al menos 5 caracteres antes de enviar la consulta.')
       return
     }
 
@@ -451,22 +451,25 @@ export default function DemoPage() {
         </div>
       </section>
 
-      <section className="workspace" id="try-demo">
-        <form className="panel" onSubmit={handleSubmit}>
+      <section className="workspace demo-chat-workspace" id="try-demo">
+        <form className="panel demo-composer" onSubmit={handleSubmit}>
           <div className="panel-heading">
-            <p className="result-eyebrow">Try the product</p>
-            <h2>Ask {selectedAgent.label}</h2>
+            <p className="result-eyebrow">Consulta guiada</p>
+            <div className="demo-composer__title">
+              <h2>Conversa con {selectedAgent.label}</h2>
+              <span className="demo-agent-badge">{selectedAgent.label}</span>
+            </div>
             <p>{selectedAgent.description}</p>
           </div>
 
           <label className="field-label" htmlFor="demo-input">
-            Your message
+            Describe tu consulta
           </label>
           <textarea
             id="demo-input"
-            className="prompt-input"
+            className="prompt-input demo-prompt-input"
             onChange={(event) => setInput(event.target.value)}
-            placeholder={`Ask ${selectedAgent.label} about a real learning or technical challenge...`}
+            placeholder={`Comparte con ${selectedAgent.label} un reto real de aprendizaje o tecnología...`}
             value={input}
           />
 
@@ -474,57 +477,85 @@ export default function DemoPage() {
 
           <div className="actions">
             <button className="primary-button" disabled={isSubmitDisabled} type="submit">
-              {loading ? 'Sending...' : `Ask ${selectedAgent.label}`}
+              {loading ? 'Enviando…' : `Enviar a ${selectedAgent.label}`}
             </button>
-            <span className="meta-text">Controlled response · No external action</span>
+            <span className="meta-text">Respuesta guiada · Sin ejecución externa</span>
           </div>
         </form>
 
-        <aside className="panel">
-          <div className="panel-heading">
-            <p className="result-eyebrow">Live result</p>
-            <h2>Conversation</h2>
-            <p>Current-session history only. No database or persistent memory.</p>
+        <aside className="panel demo-conversation">
+          <div className="panel-heading demo-conversation__heading">
+            <div>
+              <p className="result-eyebrow">Sesión local</p>
+              <h2>Conversación guiada</h2>
+            </div>
+            <span className="demo-agent-badge demo-agent-badge--active">
+              {selectedAgent.label}
+            </span>
+            <p>Contexto temporal de esta sesión. Sin base de datos ni memoria persistente.</p>
           </div>
 
-          {loading && !typing ? (
-            <section className="result-state">
-              <p className="result-eyebrow">Thinking</p>
-              <h3>Preparing a controlled response</h3>
-            </section>
-          ) : conversation.length > 0 ? (
+          {conversation.length > 0 || loading ? (
             <>
-              {conversation.map((message) => (
-                <section className="result-state" key={message.id}>
-                  <p className="result-eyebrow">{message.role === 'user' ? 'You' : 'Assistant'}</p>
-                  <h3>{message.content}</h3>
-                  <div className="response-meta">
-                    <span className="info-chip">{message.agentId}</span>
-                    <span className="info-chip">{new Date(message.createdAt).toLocaleTimeString()}</span>
-                  </div>
-                </section>
-              ))}
-              <div className="actions">
+              <div className="demo-message-list" aria-live="polite">
+                {conversation.map((message) => {
+                  const messageAgent =
+                    agentOptions.find((agent) => agent.id === message.agentId)?.label ?? selectedAgent.label
+
+                  return (
+                    <article
+                      className={`demo-message demo-message--${message.role}`}
+                      key={message.id}
+                    >
+                      <div className="demo-message__header">
+                        <strong>{message.role === 'user' ? 'Consulta' : messageAgent}</strong>
+                        <time dateTime={message.createdAt}>
+                          {new Date(message.createdAt).toLocaleTimeString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </time>
+                      </div>
+                      <p className="demo-message__content">
+                        {message.content || 'Preparando respuesta…'}
+                      </p>
+                    </article>
+                  )
+                })}
+                {loading && !typing ? (
+                  <article className="demo-message demo-message--assistant">
+                    <div className="demo-message__header">
+                      <strong>{selectedAgent.label}</strong>
+                      <time>Ahora</time>
+                    </div>
+                    <p className="demo-message__content">Preparando una respuesta guiada…</p>
+                  </article>
+                ) : null}
+              </div>
+              <div className="actions demo-conversation__actions">
                 <button
-                  className="secondary-button"
+                  className="ghost-button"
                   onClick={() => {
                     cancelTyping()
                     setConversation([])
                   }}
                   type="button"
                 >
-                  Clear conversation
+                  Limpiar conversación
                 </button>
                 <span className="meta-text">
-                  {typing ? 'Writing response...' : `Up to ${MAX_CONVERSATION_MESSAGES} local session messages`}
+                  {typing
+                    ? 'Redactando respuesta…'
+                    : `Hasta ${MAX_CONVERSATION_MESSAGES} mensajes en esta sesión local`}
                 </span>
               </div>
             </>
           ) : (
-            <section className="result-state">
-              <p className="result-eyebrow">Ready</p>
-              <h3>Your conversation will appear here</h3>
-              <p>Choose an agent and send a question to begin.</p>
+            <section className="demo-conversation__empty">
+              <span className="demo-conversation__empty-mark" aria-hidden="true">HG</span>
+              <p className="result-eyebrow">Listo para comenzar</p>
+              <h3>Tu conversación aparecerá aquí</h3>
+              <p>Elige una perspectiva y envía una consulta para iniciar la experiencia.</p>
             </section>
           )}
         </aside>

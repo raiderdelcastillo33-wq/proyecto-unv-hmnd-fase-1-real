@@ -1030,6 +1030,179 @@ textarea:focus-visible {
   line-height: 1.15;
 }
 
+.demo-chat-workspace {
+  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.18fr);
+  align-items: start;
+}
+
+.demo-composer,
+.demo-conversation {
+  box-shadow: var(--shadow-card);
+}
+
+.demo-composer__title,
+.demo-conversation__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.demo-composer__title h2,
+.demo-conversation__heading h2 {
+  margin: 0;
+}
+
+.demo-conversation__heading > div {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.demo-conversation__heading > p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.demo-agent-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(105, 211, 255, 0.22);
+  background: rgba(105, 211, 255, 0.08);
+  color: var(--primary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.demo-agent-badge--active::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-right: 7px;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 4px rgba(116, 240, 186, 0.08);
+}
+
+.demo-prompt-input {
+  min-height: 210px;
+}
+
+.demo-message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 580px;
+  overflow-y: auto;
+  padding: 4px 6px 4px 2px;
+  scrollbar-color: rgba(105, 211, 255, 0.28) transparent;
+  scrollbar-width: thin;
+}
+
+.demo-message {
+  width: min(92%, 620px);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px 18px 18px 6px;
+  background: rgba(7, 12, 19, 0.9);
+  padding: 14px 16px;
+}
+
+.demo-message--user {
+  align-self: flex-end;
+  width: min(84%, 560px);
+  border-color: rgba(105, 211, 255, 0.22);
+  border-radius: 18px 18px 6px 18px;
+  background:
+    linear-gradient(135deg, rgba(105, 211, 255, 0.12), rgba(105, 211, 255, 0.04)),
+    rgba(8, 13, 22, 0.94);
+}
+
+.demo-message--assistant {
+  align-self: flex-start;
+  border-color: rgba(116, 240, 186, 0.16);
+  background:
+    linear-gradient(135deg, rgba(116, 240, 186, 0.07), rgba(255, 255, 255, 0)),
+    rgba(7, 12, 19, 0.92);
+}
+
+.demo-message__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.demo-message__header strong {
+  color: var(--primary);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.demo-message--user .demo-message__header strong {
+  color: var(--text);
+}
+
+.demo-message__header time {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.demo-message .demo-message__content {
+  margin: 0;
+  color: rgba(239, 246, 255, 0.94);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.demo-conversation__empty {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  min-height: 240px;
+  align-content: center;
+  border: 1px dashed rgba(105, 211, 255, 0.18);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(circle at top left, rgba(105, 211, 255, 0.08), transparent 44%),
+    rgba(6, 10, 18, 0.54);
+  padding: var(--space-card);
+}
+
+.demo-conversation__empty-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(105, 211, 255, 0.24);
+  background: rgba(105, 211, 255, 0.09);
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.demo-conversation__empty h3,
+.demo-conversation__empty p {
+  margin: 0;
+}
+
+.demo-conversation__actions {
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
 .response-output {
   margin: 18px 0 0;
   padding: 18px;
@@ -2852,6 +3025,20 @@ textarea:focus-visible {
   .story-card__actions a,
   .actions button {
     width: 100%;
+  }
+
+  .demo-message,
+  .demo-message--user {
+    width: 100%;
+  }
+
+  .demo-message-list {
+    max-height: none;
+  }
+
+  .demo-conversation__actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .site-nav {
